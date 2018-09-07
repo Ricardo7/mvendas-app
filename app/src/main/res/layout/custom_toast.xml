@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:background="@color/colorAlert"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="5dp" >
+
+    <!--
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/important" />
+    -->
+
+    <TextView
+        android:id="@+id/custom_toast_text_message"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp"
+        android:text="Atenção "
+        android:layout_gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorAlertText" />
+
+</LinearLayout>

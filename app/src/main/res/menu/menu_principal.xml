@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:visible="false">
+        <item
+            android:id="@+id/menu_principal_pedidos"
+            android:icon="@mipmap/ic_pedido"
+            android:title="@string/menu_principal_pedidos"
+            />
+
+        <item
+            android:id="@+id/menu_principal_catalogo"
+            android:icon="@mipmap/ic_produtos"
+            android:title="@string/menu_principal_catalogo"
+            />
+
+        <item
+            android:id="@+id/menu_principal_clientes"
+            android:icon="@mipmap/ic_clientes"
+            android:title="@string/menu_principal_clientes"
+            />
+
+        <item
+            android:id="@+id/menu_principal_agenda"
+            android:icon="@mipmap/ic_agenda"
+            android:title="@string/menu_principal_agenda"
+            />
+
+        <item
+            android:id="@+id/menu_principal_configuracoes"
+            android:icon="@mipmap/ic_config"
+            android:title="@string/menu_principal_configuracoes"
+            />
+        <item
+            android:id="@+id/menu_principal_sair"
+            android:icon="@mipmap/ic_logout"
+            android:title="@string/menu_principal_sair"
+            />
+    </group>
+</menu>

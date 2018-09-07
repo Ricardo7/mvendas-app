@@ -1,0 +1,12 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_item_menu">20sp</dimen>
+    <dimen name="textTextHeaderMenuPrincipal">25sp</dimen>
+    <dimen name="sizeTextButtonSave">20sp</dimen>
+    <dimen name="textTextLinhaCabecalho">18sp</dimen>
+    <dimen name="textTextLinhaCorpo">14sp</dimen>
+    <dimen name="cadastro_pedido_fim_text">25sp</dimen>
+    <dimen name="detalhes_produto_text">22sp</dimen>
+    <dimen name="configuracao_text">20sp</dimen>
+    <dimen name="configuracao_text_versao">15sp</dimen>
+</resources>

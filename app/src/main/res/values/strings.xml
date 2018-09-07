@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Mais Vendas</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_principal_pedidos">Pedidos</string>
+    <string name="menu_principal_catalogo">Catálogo</string>
+    <string name="menu_principal_clientes">Clientes</string>
+    <string name="menu_principal_agenda">Agenda</string>
+    <string name="menu_principal_configuracoes">Configurações</string>
+    <string name="menu_principal_sair">Sair</string>
+    <string name="activity_login_nome">Email</string>
+    <string name="activity_login_senha">Senha</string>
+    <string name="activity_login_login">Login</string>
+    <string name="button_cadastrar">Cadastrar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_inicio_pedido">Inicio</string>
+    <string name="button_fim_pedido">Fim</string>
+    <string name="button_itens_pedido">Itens</string>
+    <string name="button_enviar_pedido">Enviar</string>
+    <string name="button_excluir_pedido">Excluir</string>
+    <string name="button_sinc_man">Sincronização Manual</string>
+    <string name="button_sincronizar">Sincronizar</string>
+    <string name="frag_produto">Produto</string>
+    <string name="frag_observacoes">Observações</string>
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/border_line_view">
+
+    <TextView
+        android:id="@+id/linha_lista_itens_pedido_codigo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:layout_weight="1"
+        android:textSize="@dimen/textTextLinhaCabecalho"
+        android:textColor="@color/linhaViewText" />
+
+        <TextView
+            android:id="@+id/linha_lista_itens_pedido_descricao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/linhaViewText"
+            android:layout_weight="2"/>
+
+    <TextView
+        android:id="@+id/linha_lista_itens_pedido_quantidade"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/linhaViewText"
+        android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/linha_lista_itens_pedido_vlr_unit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/linhaViewText"
+            android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/linha_lista_itens_pedido_vlr_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/linhaViewText"
+        android:layout_weight="1"/>
+    <TextView
+        android:id="@+id/linha_lista_itens_pedido_vlr_total"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/linhaViewText"
+        android:layout_weight="1"/>
+
+</LinearLayout>

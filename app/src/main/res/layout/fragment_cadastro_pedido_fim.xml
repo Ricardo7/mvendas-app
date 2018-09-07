@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:layout_weight="8"
+        android:textColor="@color/linhaViewText"
+        android:textSize="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:text="Condição de Pagamento" />
+
+        <Spinner
+            android:id="@+id/fragment_cadastro_pedido_fim_spinner_condicao_pgto"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/border_field" />
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textSize="@dimen/cadastro_pedido_fim_text"
+            android:textColor="@color/cadastro_pedido_text_total_label"
+        android:textAlignment="center"
+        android:text="Valor Total"/>
+
+        <TextView
+            android:id="@+id/fragment_cadastro_pedido_fim_text_vlr_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/cadastro_pedido_fim_text"
+            android:textColor="@color/cadastro_pedido_text_total_vlr"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/cadastro_pedido_fim_text"
+            android:textColor="@color/cadastro_pedido_text_desc_label"
+            android:textAlignment="center"
+            android:text="Valor Desconto"/>
+
+        <TextView
+            android:id="@+id/fragment_cadastro_pedido_fim_text_vlr_desconto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/cadastro_pedido_fim_text"
+            android:textColor="@color/cadastro_pedido_text_desc_vlr"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/cadastro_pedido_fim_text"
+            android:textColor="@color/cadastro_pedido_text_final_label"
+            android:textAlignment="center"
+            android:text="Valor Final"/>
+
+        <TextView
+            android:id="@+id/fragment_cadastro_pedido_fim_text_vlr_final"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/cadastro_pedido_fim_text"
+            android:textColor="@color/cadastro_pedido_text_final_vlr"
+            android:textAlignment="center" />
+
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/fragment_cadastro_pedido_fim_button_excluir"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/customborderbutton"
+        android:text="@string/button_excluir_pedido"
+        android:textColor="@color/buttonText"
+        android:textSize="@dimen/sizeTextButtonSave" />
+    <Button
+        android:id="@+id/fragment_cadastro_pedido_fim_button_enviar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/customborderbutton"
+        android:text="@string/button_enviar_pedido"
+        android:textColor="@color/buttonText"
+        android:textSize="@dimen/sizeTextButtonSave" />
+
+    <Button
+        android:id="@+id/fragment_cadastro_pedido_fim_button_ant"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/customborderbutton"
+        android:text="@string/button_itens_pedido"
+        android:textColor="@color/buttonText"
+        android:textSize="@dimen/sizeTextButtonSave" />
+
+</LinearLayout>
+
