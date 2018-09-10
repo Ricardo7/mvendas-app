@@ -3,18 +3,57 @@ package lr.maisvendas.tela;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.util.List;
 
 import lr.maisvendas.R;
+import lr.maisvendas.modelo.Cidade;
+import lr.maisvendas.modelo.Cliente;
+import lr.maisvendas.modelo.Estado;
+import lr.maisvendas.modelo.Pais;
+import lr.maisvendas.repositorio.sql.CidadeDAO;
+import lr.maisvendas.repositorio.sql.ClienteDAO;
+import lr.maisvendas.repositorio.sql.EstadoDAO;
+import lr.maisvendas.repositorio.sql.PaisDAO;
+import lr.maisvendas.tela.adaptador.ListaCidadesSpinnerAdapter;
+import lr.maisvendas.tela.adaptador.ListaEstadosSpinnerAdapter;
+import lr.maisvendas.utilitarios.Exceptions;
+import lr.maisvendas.utilitarios.Ferramentas;
+import lr.maisvendas.utilitarios.TipoPessoa;
 
-public class CadastroClienteActivity extends BaseActivity implements View.OnClickListener{
+public class CadastroClienteActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "CadastroClienteActivity";
     public static final String PARAM_CLIENTE = "PARAM_CLIENTE";
 
     //Campos da tela
+    private CheckBox checkAtivo;
+    private EditText editRazSocial;
+    private EditText editNomeFant;
+    private EditText editCnpj;
+    private EditText editInsEst;
+    private EditText editEmail;
+    private EditText editFone;
+    private EditText editCep;
+    private Spinner spinnerEstado;
+    private Spinner spinnerCidade;
+    private EditText editBairro;
+    private EditText editLogradouro;
+    private EditText editNumero;
     private Button buttonCadastrar;
 
+    //Variáveis
+    private List<Estado> listaEstados;
+    private List<Cidade> listaCidades;
+    private Cliente cliente;
+    private Ferramentas ferramentas;
+    private ListaEstadosSpinnerAdapter listaEstadosSpinnerAdapter;
+    private ListaCidadesSpinnerAdapter listaCidadesSpinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,18 +64,157 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         setNavigationViewId(R.id.navigation_view);
         super.onCreate(savedInstanceState);
 
-
-
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_retornar);
 
+        checkAtivo = (CheckBox) findViewById(R.id.activity_cadastro_cliente_check_ativo);
+        editRazSocial = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_raz_social);
+        editNomeFant = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_nome_fant);
+        editCnpj = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_cnpj);
+        editInsEst = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_insc_est);
+        editEmail = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_email);
+        editFone = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_fone);
+        editCep = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_cep);
+        spinnerEstado = (Spinner) findViewById(R.id.activity_cadastro_cliente_spinner_estado);
+        spinnerCidade = (Spinner) findViewById(R.id.activity_cadastro_cliente_spinner_cidade);
+        editBairro = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_bairro);
+        editLogradouro = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_logradouro);
+        editNumero = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_numero);
         buttonCadastrar = (Button) findViewById(R.id.activity_cadastro_cliente_button_salvar);
 
+        ferramentas = new Ferramentas();
+
+        loadDataFromActivity();
+
         buttonCadastrar.setOnClickListener(this);
+        spinnerEstado.setOnItemSelectedListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        if (view == buttonCadastrar){
+            try {
+                salvaDados();
+            } catch (Exceptions ex) {
+                ferramentas.customToast(this,ex.getMessage());
+            }
+        }
+    }
 
+    //Metodo para carregar informação ao abriar a Activity.
+    public void loadDataFromActivity() {
+        cliente = (Cliente) getIntent().getSerializableExtra(PARAM_CLIENTE);
+
+        //Objeto para setar o primeiro item do spinner com default
+        Estado estado = new Estado();
+        estado.setId(0);
+        //produto.setCodInterno(0);
+        estado.setSigla("");
+        estado.setDescricao("Selecione");
+
+        //Inicialmente o pais será setado como Default Brasil
+        PaisDAO paisDAO = PaisDAO.getInstance(this);
+        Pais pais = paisDAO.buscaPaisSigla("BR");
+        //Popula o spinner de estados
+        EstadoDAO estadoDAO = EstadoDAO.getInstance(this);
+        listaEstados = estadoDAO.buscaEstadoPais(pais.getId());
+        listaEstados.add(0,estado);
+
+        if (listaEstados != null) {
+            listaEstadosSpinnerAdapter = new ListaEstadosSpinnerAdapter(this, listaEstados);
+            spinnerEstado.setAdapter(listaCidadesSpinnerAdapter);
+        }
+
+        if (cliente != null){
+
+            editRazSocial.setText(cliente.getRazaoSocial());
+            editNomeFant.setText(cliente.getNomeFantasia());
+            editCnpj.setText(ferramentas.formatCnpjCpf(cliente.getCnpj(), TipoPessoa.juridica));
+            editInsEst.setText(cliente.getInscricaoEstadual());
+            editEmail.setText(cliente.getEmail());
+            editFone.setText(cliente.getFone());
+            editCep.setText(cliente.getCep());
+            //Busca o estado a partir da Cidade
+            estado = estadoDAO.buscaEstadoId(cliente.getCidade().getEstado().getId());
+            spinnerEstado.setSelection(listaEstadosSpinnerAdapter.getPosition(estado));
+            spinnerCidade.setSelection(listaCidadesSpinnerAdapter.getPosition(cliente.getCidade()));
+            editBairro.setText(cliente.getBairro());
+            editLogradouro.setText(cliente.getLogradouro());
+            editNumero.setText(cliente.getNumero());
+
+            if (cliente.getStatus() == 1) {
+                checkAtivo.setChecked(true);
+            } else {
+                checkAtivo.setChecked(false);
+            }
+        }else {
+            checkAtivo.setChecked(true);
+        }
+
+    }
+
+    public void salvaDados() throws Exceptions {
+        if (editRazSocial.getText().toString().equals("")) {
+            throw new Exceptions("Razão Social não informada.");
+        } else if (editCnpj.getText().toString().equals("")){
+            throw new Exceptions("CNPJ não informada.");
+        } else if (editEmail.getText().toString().equals("")){
+            throw new Exceptions("Email não informada.");
+        } else if (editFone.getText().toString().equals("")){
+            throw new Exceptions("Fone não informada.");
+        } else if (editCep.getText().toString().equals("")){
+            throw new Exceptions("CEP não informada.");
+        } else if (spinnerEstado.getSelectedItem() == null || cliente.getId() == 0 ){
+            throw new Exceptions("Estado não selecionado.");
+        } else if (spinnerCidade.getSelectedItem() == null || cliente.getId() == 0 ){
+            throw new Exceptions("Cidade não selecionado.");
+        } else if (editBairro.getText().toString().equals("")) {
+            throw new Exceptions("Bairro não informada.");
+        } else if (editLogradouro.getText().toString().equals("")) {
+            throw new Exceptions("Logradouro não informada.");
+        } else if (editNumero.getText().toString().equals("")) {
+            throw new Exceptions("Número não informada.");
+        }
+
+        ClienteDAO clienteDAO = ClienteDAO.getInstance(this);
+        //Verifica se o cliente já existe
+        Cliente clienteTeste = clienteDAO.buscaClienteCnpj(editCnpj.getText().toString());
+
+        if(clienteTeste != null && clienteTeste.getId().equals(cliente.getId()) == false){
+            throw new Exceptions("Cliente já cadastrado com este CNPJ.");
+        }
+
+        if (cliente == null) {
+            cliente = new Cliente();
+            cliente.setDtCadastro(ferramentas.getCurrentDate());
+        }
+
+        if (checkAtivo.isChecked()) {
+            cliente.setStatus(1);
+        } else {
+            cliente.setStatus(0);
+        }
+        cliente.setRazaoSocial(editRazSocial.getText().toString());
+        cliente.setNomeFantasia(editNomeFant.getText().toString());
+        cliente.setCnpj(editCnpj.getText().toString());
+        cliente.setInscricaoEstadual(editInsEst.getText().toString());
+        cliente.setEmail(editEmail.getText().toString());
+        cliente.setFone(editFone.getText().toString());
+        cliente.setCep(Integer.valueOf(editCep.getText().toString()));
+        cliente.setCidade((Cidade) spinnerCidade.getSelectedItem());
+        cliente.setBairro(editBairro.getText().toString());
+        cliente.setLogradouro(editLogradouro.getText().toString());
+        cliente.setNumero(Integer.valueOf(editNumero.getText().toString()));
+        cliente.setDtAtualizacao(ferramentas.getCurrentDate());
+
+        if(cliente.getId() == null || cliente.getId() <= 0) {
+            //Insere o produto na base de dados
+            clienteDAO.insereCliente(cliente);
+        }else {
+            //Atualiza o produto na base de dados
+            clienteDAO.atualizaCliente(cliente);
+        }
+
+        finish();
     }
 
     @Override
@@ -52,4 +230,34 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+        if (view == spinnerEstado){
+            Estado estado = (Estado) spinnerEstado.getSelectedItem();
+            if (estado.getId() != 0){
+                //Objeto para setar o primeiro item do spinner com default
+                Cidade cidade = new Cidade();
+                cidade.setId(0);
+                //produto.setCodInterno(0);
+                cidade.setSigla("");
+                cidade.setDescricao("Selecione");
+
+                //Popula o spinner de cidades de acordo com estado selecionado
+                CidadeDAO cidadeDAO = CidadeDAO.getInstance(this);
+                listaCidades = cidadeDAO.buscaCidadeEstado(estado.getId());
+                listaCidades.add(0,cidade);
+                if (listaCidades != null) {
+                    listaCidadesSpinnerAdapter = new ListaCidadesSpinnerAdapter(this, listaCidades);
+                    spinnerCidade.setAdapter(listaCidadesSpinnerAdapter);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }

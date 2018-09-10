@@ -16,12 +16,13 @@ public class UsuarioAdap {
 
     public Usuario sqlToUsuario(Cursor cursor) {
         Usuario usuario = new Usuario();
-        usuario.setId(cursor.getInt(0));
-        usuario.setNome(cursor.getString(1));
-        usuario.setEmail(cursor.getString(2));
-        usuario.setSenha(cursor.getString(3));
-        usuario.setAtivo(cursor.getInt(4));
-        usuario.setToken(cursor.getString(5));
+        usuario.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        usuario.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
+        usuario.setNome(cursor.getString(cursor.getColumnIndex("NOME")));
+        usuario.setEmail(cursor.getString(cursor.getColumnIndex("EMAIL")));
+        usuario.setSenha(cursor.getString(cursor.getColumnIndex("SENHA")));
+        usuario.setAtivo(cursor.getInt(cursor.getColumnIndex("ATIVO")));
+        usuario.setToken(cursor.getString(cursor.getColumnIndex("TOKEN")));
 
         return usuario;
     }
@@ -30,6 +31,7 @@ public class UsuarioAdap {
 
         ContentValues content = new ContentValues();
         content.put("ID", usuario.getId());
+        content.put("ID_WS", usuario.getIdWS());
         content.put("NOME", usuario.getNome());
         content.put("EMAIL", usuario.getEmail());
         content.put("SENHA", usuario.getSenha());

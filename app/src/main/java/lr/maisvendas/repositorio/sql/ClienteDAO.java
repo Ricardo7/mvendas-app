@@ -11,6 +11,7 @@ import java.util.List;
 import lr.maisvendas.adaptadorModelo.ClienteAdap;
 import lr.maisvendas.modelo.Cliente;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 
 public class ClienteDAO {
@@ -21,11 +22,14 @@ public class ClienteDAO {
 
     public static final String CLIENTE_TABLE_CREATE = "CREATE TABLE if not exists " + CLIENTE_TABLE_NAME + " ("+
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "ID_WS INTEGER, " +
                     "CODIGO TEXT NOT NULL, " +
                     "CNPJ TEXT NOT NULL, " +
                     "RAZAO_SOCIAL TEXT NOT NULL, " +
                     "NOME_FAN TEXT," +
                     "INS_EST TEXT," +
+                    "EMAIL TEXT," +
+                    "FONE TEXT," +
                     "CID_ID INTEGER NOT NULL, " +
                     "BAIRRO TEXT NOT NULL,"+
                     "LOGRADOURO TEXT NOT NULL," +
@@ -79,7 +83,57 @@ public class ClienteDAO {
 
         return cliente;
     }
-    
+
+    public Cliente buscaClienteIdWs(Integer clienteIdWs){
+        Cliente cliente = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tclientes WHERE id_ws = "+ clienteIdWs;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ClienteAdap clienteAdap = new ClienteAdap();
+
+            CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
+            SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                cliente = clienteAdap.sqlToCliente(cursor);
+
+                cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
+                cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+            }
+            cursor.close();
+        }
+
+        return cliente;
+    }
+
+    public Cliente buscaClienteCnpj(String clienteCnpj){
+        Cliente cliente = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tclientes WHERE cnpj = '"+ clienteCnpj+"'";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ClienteAdap clienteAdap = new ClienteAdap();
+
+            CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
+            SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                cliente = clienteAdap.sqlToCliente(cursor);
+
+                cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
+                cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+            }
+            cursor.close();
+        }
+
+        return cliente;
+    }
+
     public List<Cliente> buscaClientes(){
         List<Cliente> clientes = new ArrayList<>();
         Cliente cliente;
@@ -110,6 +164,38 @@ public class ClienteDAO {
 
     }
 
+    public List<Cliente> buscaClientesData(String dataAt){
+
+        List<Cliente> clientes = new ArrayList<>();
+        Cliente cliente;
+
+        //Busca o cliente
+        String sql = "SELECT * " +
+                "  FROM clientes " +
+                " WHERE dt_atualizacao >= ifnull('" + dataAt +"','1990-01-01 00:00:00')";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ClienteAdap clienteAdap = new ClienteAdap();
+
+            CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
+            SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                cliente = clienteAdap.sqlToCliente(cursor);
+                Ferramentas ferramentas = new Ferramentas();
+                cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
+                cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+                clientes.add(cliente);
+            }
+            cursor.close();
+        }
+
+        return clientes;
+    }
+
+
     public Cliente insereCliente(Cliente cliente) {
 
         ClienteAdap clienteAdap = new ClienteAdap();
@@ -126,7 +212,25 @@ public class ClienteDAO {
 
         return cliente;
 
-    }    
+    }
+
+    public Cliente atualizaCliente(Cliente cliente) throws Exceptions {
+
+        ClienteAdap clienteAdap = new ClienteAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = clienteAdap.clienteToContentValue(cliente);
+        String sqlWhere = "id = "+cliente.getId();
+
+        //Insere o cliente no banco
+        Integer executou = (int) dataBase.update(CLIENTE_TABLE_NAME, content,sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar o Cliente (ID: "+cliente.getId()+")");
+        }
+
+        return cliente;
+
+    }
 
     public void truncateClientes(){
         dataBase.delete(CLIENTE_TABLE_NAME,null,null);

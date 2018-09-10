@@ -1,29 +1,26 @@
-package lr.maisvendas.comunicacao.usuario;
+package lr.maisvendas.comunicacao.cliente;
 
 import android.os.AsyncTask;
 
 import lr.maisvendas.config.EnderecoHost;
+import lr.maisvendas.modelo.Cliente;
 import lr.maisvendas.modelo.Response;
 import lr.maisvendas.modelo.ResponseStatus;
-import lr.maisvendas.modelo.Usuario;
-import lr.maisvendas.servico.UsuarioServico;
+import lr.maisvendas.servico.ClienteServico;
+import lr.maisvendas.tela.BaseActivity;
 import lr.maisvendas.utilitarios.Ferramentas;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-/**
- * Created by Ronaldo on 16/08/2017.
- */
+public class EditarClienteCom extends AsyncTask<Cliente,Void,Response<Cliente>> {
 
-public class LogarCom extends AsyncTask<String,Void,Response<Usuario>> {
-
-    private UsuarioServico service;
-    private LogarTaskCallBack delegate;
-    private String TAG = "LogarCom";
+    private ClienteServico service;
+    private EditarClienteTaskCallBack delegate;
+    private String TAG = "EditarClienteTask";
     private Ferramentas ferramentas;
 
-    public LogarCom(LogarTaskCallBack delegate) {
+    public EditarClienteCom(EditarClienteTaskCallBack delegate) {
         EnderecoHost enderecoHost = new EnderecoHost();
         // Configura o retrofit através da baseUrl e do conversor que irá transformar o resultado de JSON para Java
         Retrofit retrofit = new Retrofit.Builder()
@@ -32,27 +29,29 @@ public class LogarCom extends AsyncTask<String,Void,Response<Usuario>> {
                 .build();
 
         // Solicita para que o Retrofit crie uma classe responsável pelo serviço
-        this.service = retrofit.create(UsuarioServico.class);
+        this.service = retrofit.create(ClienteServico.class);
 
         // Armazena o delegate para chamar informando sucesso ou falha
         this.delegate = delegate;
+
         ferramentas = new Ferramentas();
     }
 
     @Override
-    protected Response<Usuario> doInBackground(String... loginRequests) {
-        if (loginRequests.length == 0) {
+    protected Response<Cliente> doInBackground(Cliente... cliente) {
+        //==DEVE ser testado o funcionamento, foi utilizaod dessa forma pois não é possível passrar o token por parâmetro
+        String token = BaseActivity.getUsuario().getToken();
+
+        if (cliente.length == 0) {
             return null;
         }
 
         // Cria a chamada para o método
-        Call<Response<Usuario>> logarAppCall = service.logarApp(loginRequests[0],loginRequests[1]);
+        Call<Response<Cliente>> editarClienteCall = service.editarCliente(token,cliente[0].getIdWS(),cliente[0]);
 
         try {
             // Executa a chamada e pega o retorno para devolver para a task no método "onPostExecute"
-            Response<Usuario> response = logarAppCall.execute().body();
-            ferramentas.customLog(TAG,response.getCod().toString());
-            return response;
+            return editarClienteCall.execute().body();
         } catch (Exception e) {
             Response response = new Response();
             response.setCod(500);
@@ -64,19 +63,18 @@ public class LogarCom extends AsyncTask<String,Void,Response<Usuario>> {
     }
 
     @Override
-    protected void onPostExecute(Response<Usuario> response) {
-        ferramentas.customLog(TAG,response.getStatus().toString());
-        if (response.getStatus().toString().equals("SUCCESS")) {
-            delegate.onLogarSuccess(response.getData());
+    protected void onPostExecute(Response<Cliente> cliente) {
+
+        if (cliente.getStatus().toString().equals("SUCCESS")) {
+            delegate.onEditarClienteSuccess(cliente.getData());
         } else {
-            ferramentas.customLog(TAG,response.getMessage());
-            delegate.onLogarFailure();
+            delegate.onEditarClienteFailure(cliente.getMessage());
         }
     }
 
-    public interface LogarTaskCallBack {
+    public interface EditarClienteTaskCallBack {
 
-        public void onLogarSuccess(Usuario usuario);
-        public void onLogarFailure();
+        public void onEditarClienteSuccess(Cliente cliente);
+        public void onEditarClienteFailure(String mensagem);
     }
 }

@@ -17,21 +17,24 @@ public class ClienteAdap {
     public Cliente sqlToCliente(Cursor cursor){
         Cliente cliente = new Cliente();
 
-        cliente.setId(cursor.getInt(0));
-        cliente.setCod(cursor.getString(1));
-        cliente.setCnpj(cursor.getString(2));
-        cliente.setRazaoSocial(cursor.getString(3));
-        cliente.setNomeFantasia(cursor.getString(4));
-        cliente.setInscricaoEstadual(cursor.getString(5));
-        //Cidade
-        cliente.setBairro(cursor.getString(7));
-        cliente.setLogradouro(cursor.getString(8));
-        cliente.setNumero(cursor.getInt(9));
-        cliente.setStatus(cursor.getInt(10));
-        cliente.setAtivo(cursor.getInt(11));
-        //SegmentoMercado
-        cliente.setDtCadastro(cursor.getString(13));
-        cliente.setDtAtualizacao(cursor.getString(14));
+        cliente.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        cliente.setIdWS(cursor.getInt(cursor.getColumnIndex("ID_WS")));
+        cliente.setCod(cursor.getString(cursor.getColumnIndex("CODIGO")));
+        cliente.setCnpj(cursor.getString(cursor.getColumnIndex("CNPJ")));
+        cliente.setRazaoSocial(cursor.getString(cursor.getColumnIndex("RAZAO_SOCIAL")));
+        cliente.setNomeFantasia(cursor.getString(cursor.getColumnIndex("NOME_FAN")));
+        cliente.setInscricaoEstadual(cursor.getString(cursor.getColumnIndex("INS_EST")));
+        cliente.setEmail(cursor.getString(cursor.getColumnIndex("EMAIL")));
+        cliente.setFone(cursor.getString(cursor.getColumnIndex("FONE")));
+        cliente.setCep(cursor.getInt(cursor.getColumnIndex("CEP")));
+        cliente.setBairro(cursor.getString(cursor.getColumnIndex("BAIRRO")));
+        cliente.setLogradouro(cursor.getString(cursor.getColumnIndex("LOGRADOURO")));
+        cliente.setNumero(cursor.getInt(cursor.getColumnIndex("NUMERO")));
+        cliente.setStatus(cursor.getInt(cursor.getColumnIndex("STATUS")));
+        cliente.setAtivo(cursor.getInt(cursor.getColumnIndex("ATIVO")));
+        cliente.setDtCadastro(cursor.getString(cursor.getColumnIndex("DT_CADASTRO")));
+        cliente.setDtAtualizacao(cursor.getString(cursor.getColumnIndex("DT_ATUALIZACAO")));
+
 
         return cliente;
     }
@@ -40,11 +43,15 @@ public class ClienteAdap {
         ContentValues content = new ContentValues();
 
         content.put("ID", cliente.getId());
+        content.put("ID_WS", cliente.getIdWS());
         content.put("CODIGO", cliente.getCod());
         content.put("CNPJ", cliente.getCnpj());
         content.put("RAZAO_SOCIAL", cliente.getRazaoSocial());
         content.put("NOME_FAN", cliente.getNomeFantasia());
         content.put("INS_EST", cliente.getInscricaoEstadual());
+        content.put("EMAIL", cliente.getEmail());
+        content.put("FONE", cliente.getFone());
+        content.put("CEP", cliente.getCep());
         content.put("CID_ID", cliente.getCidade().getId());
         content.put("BAIRRO", cliente.getBairro());
         content.put("LOGRADOURO", cliente.getLogradouro());

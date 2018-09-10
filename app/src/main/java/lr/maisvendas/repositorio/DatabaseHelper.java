@@ -9,6 +9,7 @@ import lr.maisvendas.repositorio.sql.CidadeDAO;
 import lr.maisvendas.repositorio.sql.ClienteDAO;
 import lr.maisvendas.repositorio.sql.CondicaoPgtoDAO;
 import lr.maisvendas.repositorio.sql.ConfiguracaoDAO;
+import lr.maisvendas.repositorio.sql.DispositivoDAO;
 import lr.maisvendas.repositorio.sql.EstadoDAO;
 import lr.maisvendas.repositorio.sql.ImagemDAO;
 import lr.maisvendas.repositorio.sql.ItemPedidoDAO;
@@ -63,6 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(ProdutoDAO.PRODUTO_TABLE_CREATE);
         db.execSQL(SegmentoMercadoDAO.SEGMENTO_MERCADO_TABLE_CREATE);
         db.execSQL(TabelaPrecoDAO.TABELA_PRECOS_TABLE_CREATE);
+        db.execSQL(DispositivoDAO.DISPOSITIVO_TABLE_CREATE);
     }
 
     @Override
@@ -85,6 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(ProdutoDAO.SCRIPT_DELECAO_TABELA);
         db.execSQL(SegmentoMercadoDAO.SCRIPT_DELECAO_TABELA);
         db.execSQL(TabelaPrecoDAO.SCRIPT_DELECAO_TABELA);
+        db.execSQL(DispositivoDAO.SCRIPT_DELECAO_TABELA);
 
         onCreate(db);
     }

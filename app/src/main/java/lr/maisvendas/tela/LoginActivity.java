@@ -45,14 +45,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (v == btnLogar) {
             //<TESTE>
             //Chama activity principal
-            Intent intent = new Intent(this, TelaInicialActivity.class);
-            //intent.putExtra(TelaInicialActivity.PARAM_USUARIO, usuario);
-            startActivity(intent);
+            //Intent intent = new Intent(this, TelaInicialActivity.class);
+            //--intent.putExtra(TelaInicialActivity.PARAM_USUARIO, usuario);
+            //startActivity(intent);
             //</TESTE>
 
             String usuario = editUsuario.getText().toString();
             String senha = editSenha.getText().toString();
             String md5Hash = ferramentas.getMd5Hash(senha);
+
+            ferramentas.customLog(TAG,md5Hash);
 
             if (usuario.isEmpty() || usuario.equals("") || senha.isEmpty() || senha.equals("")) {
                 ferramentas.customToast(this, "Usuário ou senha não informados.");

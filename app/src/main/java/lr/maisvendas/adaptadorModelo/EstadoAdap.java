@@ -18,6 +18,7 @@ public class EstadoAdap {
         Estado estado = new Estado();
 
         estado.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        estado.setIdWS(cursor.getInt(cursor.getColumnIndex("ID_WS")));
         estado.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
         estado.setSigla(cursor.getString(cursor.getColumnIndex("SIGLA")));
 
@@ -28,6 +29,7 @@ public class EstadoAdap {
         ContentValues content = new ContentValues();
 
         content.put("ID",estado.getId());
+        content.put("ID_WS",estado.getIdWS());
         content.put("DESCRICAO",estado.getDescricao());
         content.put("SIGLA",estado.getSigla());
         content.put("PAIS_ID",estado.getPais().getId());

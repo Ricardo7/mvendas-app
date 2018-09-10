@@ -5,9 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lr.maisvendas.adaptadorModelo.CidadeAdap;
 import lr.maisvendas.modelo.Cidade;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class CidadeDAO {
 	
@@ -17,6 +21,7 @@ public class CidadeDAO {
 
     public static final String CIDADE_TABLE_CREATE = "CREATE TABLE if not exists " + CIDADE_TABLE_NAME + " ("
             + "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + "ID_WS INTEGER, "
             + "DESCRICAO TEXT NOT NULL, "
             + "SIGLA TEXT NOT NULL, "
             + "ESTADO_ID INTEGER NOT NULL);";
@@ -63,6 +68,56 @@ public class CidadeDAO {
 
     }
 
+    public Cidade buscaCidadeIdWs(Integer cidadeIdWs){
+        Cidade cidade = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tcidades WHERE id_ws = "+ cidadeIdWs;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            CidadeAdap cidadeAdap = new CidadeAdap();
+            EstadoDAO estadoDAO = EstadoDAO.getInstance(context);
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                cidade = cidadeAdap.sqlToCidade(cursor);
+                cidade.setEstado(estadoDAO.buscaEstadoId(cursor.getInt(cursor.getColumnIndex("ESTADO_ID"))));
+            }
+            cursor.close();
+        }
+
+        return cidade;
+
+    }
+
+    public List<Cidade> buscaCidadeEstado(Integer estadoId){
+        List<Cidade> cidades = new ArrayList<>();
+        Cidade cidade = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tcidades WHERE estado_id = "+ estadoId ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            CidadeAdap cidadeAdap = new CidadeAdap();
+            EstadoDAO estadoDAO = EstadoDAO.getInstance(context);
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                cidade = cidadeAdap.sqlToCidade(cursor);
+                cidade.setEstado(estadoDAO.buscaEstadoId(cursor.getInt(cursor.getColumnIndex("ESTADO_ID"))));
+
+                cidades.add(cidade);
+            }
+
+            cursor.close();
+        }
+
+        return cidades;
+
+    }
+
     public Cidade insereCidade(Cidade cidade) {
 
         CidadeAdap cidadeAdap = new CidadeAdap();
@@ -76,6 +131,23 @@ public class CidadeDAO {
         }
         */
         cidade.setId(cidadeId);
+
+        return cidade;
+
+    }
+
+    public Cidade atualizaCidade(Cidade cidade) throws Exceptions{
+
+        CidadeAdap cidadeAdap = new CidadeAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = cidadeAdap.cidadeToContentValue(cidade);
+        String sqlWhere = "id = "+cidade.getId();
+        //Insere o cidade no banco
+        Integer executou = (int) dataBase.update(CIDADE_TABLE_NAME, content,sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar a Cidade (ID: "+cidade.getId()+")");
+        }
 
         return cidade;
 

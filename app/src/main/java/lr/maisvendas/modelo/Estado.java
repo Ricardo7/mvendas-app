@@ -1,15 +1,26 @@
 package lr.maisvendas.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Estado implements Serializable {
 
+    @JsonProperty("ID")
     private Integer id;
+    @JsonProperty("IDWS")
+    private Integer idWS;
+    @JsonProperty("Descricao")
     private String descricao;
+    @JsonProperty("Sigla")
     private String sigla;
+    @JsonProperty("Pais")
     private Pais pais;
 
-    public Estado () {}
 
     public Integer getId() {
         return id;
@@ -17,6 +28,14 @@ public class Estado implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getIdWS() {
+        return idWS;
+    }
+
+    public void setIdWS(Integer idWS) {
+        this.idWS = idWS;
     }
 
     public String getDescricao() {

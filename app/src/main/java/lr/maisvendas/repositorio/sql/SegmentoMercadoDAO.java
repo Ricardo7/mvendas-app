@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import lr.maisvendas.adaptadorModelo.SegmentoMercadoAdap;
 import lr.maisvendas.modelo.SegmentoMercado;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class SegmentoMercadoDAO {
 	
@@ -18,6 +19,7 @@ public class SegmentoMercadoDAO {
 
     public static final String SEGMENTO_MERCADO_TABLE_CREATE = "CREATE TABLE if not exists " + SEGMENTO_MERCADO_TABLE_NAME + " ("
             + "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + "ID_WS INTEGER, "
             + "DESCRICAO TEXT NOT NULL);";
 
     public static final String SCRIPT_DELECAO_TABELA =  "DROP TABLE IF EXISTS " + SEGMENTO_MERCADO_TABLE_NAME;
@@ -60,6 +62,26 @@ public class SegmentoMercadoDAO {
 
     }
 
+    public SegmentoMercado buscaSegmentoMercadoIdWs(Integer segmentoMercadoIdWs){
+        SegmentoMercado segmentoMercado = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tsegmentos_mercado WHERE id_ws = "+ segmentoMercadoIdWs ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            SegmentoMercadoAdap segmentoMercadoAdap = new SegmentoMercadoAdap();
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                segmentoMercado = segmentoMercadoAdap.sqlToSegmentoMercado(cursor);
+            }
+            cursor.close();
+        }
+
+        return segmentoMercado;
+
+    }
 
     public SegmentoMercado insereSegmentoMercado(SegmentoMercado segmentoMercado) {
 
@@ -74,6 +96,24 @@ public class SegmentoMercadoDAO {
         }
         */
         segmentoMercado.setId(segmentoMercadoId);
+
+        return segmentoMercado;
+
+    }
+
+    public SegmentoMercado atualizaSegmentoMercado(SegmentoMercado segmentoMercado) throws Exceptions {
+
+        SegmentoMercadoAdap segmentoMercadoAdap = new SegmentoMercadoAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = segmentoMercadoAdap.segmentoMercadoToContentValue(segmentoMercado);
+        String sqlWhere = "id = "+segmentoMercado.getId();
+
+        //Insere o segmentoMercado no banco
+        Integer executou = (int) dataBase.update(SEGMENTO_MERCADO_TABLE_NAME, content, sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível inserir o Segmento de Mercado (ID: "+segmentoMercado.getId()+")");
+        }
 
         return segmentoMercado;
 

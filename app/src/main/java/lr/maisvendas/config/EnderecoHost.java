@@ -6,8 +6,8 @@ package lr.maisvendas.config;
 
 public class EnderecoHost {
 
-    private final String hostHTTP = "http://www.maisvendas.com.br/app/";
-    private final String hostHTTPRaiz= "http://www.maisvendas.com.br";
+    private final String hostHTTP = "https://webservice.conveyor.cloud/api/";
+    private final String hostHTTPRaiz= "http://192.168.56.1:45456/";
 
     public String getHostHTTP() {
         return hostHTTP;

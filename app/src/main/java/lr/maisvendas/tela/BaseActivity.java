@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 
 import lr.maisvendas.R;
+import lr.maisvendas.modelo.Usuario;
+import lr.maisvendas.repositorio.sql.UsuarioDAO;
 //import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
@@ -29,7 +31,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     private int toolbarId;
     private int icMenuId;
     private int navigationViewId;
-    //private static Login login;
+    private static Usuario usuario;
     //private Tools tools;
     private int itemId;
     private MenuItem menuSearch;
@@ -80,6 +82,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     public void setNavigationViewId(int navigationViewId) {
         this.navigationViewId = navigationViewId;
+    }
+
+    public static Usuario getUsuario() {
+        return usuario;
     }
 
     public MenuItem getMenuSearch() {
@@ -164,6 +170,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void validaMenus() {
+        UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(this);
+        usuario = usuarioDAO.buscaUsuarioLoginToken();
+
         NavigationView navigation = (NavigationView) findViewById(navigationViewId);
         Menu menu = navigation.getMenu();
         MenuItem menuItem;

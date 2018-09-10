@@ -18,6 +18,7 @@ public class UsuarioDAO {
 
     public static final String USUARIO_TABLE_CREATE = "CREATE TABLE if not exists " + USUARIO_TABLE_NAME + " (" +
             "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "ID_WS TEXT, " +
             "NOME TEXT NOT NULL, " +
             "EMAIL TEXT NOT NULL, " +
             "SENHA TEXT NOT NULL, " +

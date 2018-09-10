@@ -9,4 +9,5 @@
     <dimen name="detalhes_produto_text">22sp</dimen>
     <dimen name="configuracao_text">20sp</dimen>
     <dimen name="configuracao_text_versao">15sp</dimen>
+    <dimen name="text_size_linha_spinner">25sp</dimen>
 </resources>
