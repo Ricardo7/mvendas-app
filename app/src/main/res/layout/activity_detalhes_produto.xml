@@ -48,7 +48,7 @@
                     android:id="@+id/activity_detalhes_produto_tab_detalhes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/colorPrimary"
+                    android:background="#bddaf5dc"
                     app:tabGravity="fill"
                     app:tabMode="fixed"
                     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
@@ -92,7 +92,8 @@
                         <EditText
                             android:id="@+id/activity_detalhes_produto_edit_per_desc"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:inputType="numberDecimal" />
 
                     </LinearLayout>
                     <!--Coluna 02-->
@@ -110,7 +111,8 @@
                         <EditText
                             android:id="@+id/activity_detalhes_produto_edit_vlr_desc"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:inputType="numberDecimal" />
 
                     </LinearLayout>
 
@@ -146,7 +148,8 @@
                         <EditText
                             android:id="@+id/activity_detalhes_produto_edit_quantidade"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:inputType="numberDecimal" />
 
                     </LinearLayout>
                     <!--Coluna 02-->
@@ -159,12 +162,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/cadastro_pedido_text_total_label"
                             android:text="Total"/>
 
                         <EditText
                             android:id="@+id/activity_detalhes_produto_edit_total"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:textColor="@color/cadastro_pedido_text_total_vlr"
+                            android:enabled="false"
+                            android:inputType="numberDecimal"/>
 
                     </LinearLayout>
                     <LinearLayout

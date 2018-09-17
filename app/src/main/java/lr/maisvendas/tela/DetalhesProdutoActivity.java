@@ -4,10 +4,15 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import lr.maisvendas.R;
@@ -15,14 +20,17 @@ import lr.maisvendas.modelo.ItemPedido;
 import lr.maisvendas.modelo.ItemTabelaPreco;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.Produto;
+import lr.maisvendas.repositorio.sql.ItemPedidoDAO;
 import lr.maisvendas.tela.adaptador.DetalhesProdutoImgAdapter;
 import lr.maisvendas.tela.adaptador.DetalhesProdutoTabAdapter;
 import lr.maisvendas.tela.fragmentos.DetalhesProdutoTabObsFragment;
 import lr.maisvendas.tela.fragmentos.DetalhesProdutoTabProdutoFragment;
 import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
 import lr.maisvendas.tela.interfaces.ComunicadorDetalhesProduto;
+import lr.maisvendas.utilitarios.Exceptions;
+import lr.maisvendas.utilitarios.Ferramentas;
 
-public class DetalhesProdutoActivity extends BaseActivity implements ComunicadorDetalhesProduto, ComunicadorCadastroPedido{
+public class DetalhesProdutoActivity extends BaseActivity implements ComunicadorDetalhesProduto, ComunicadorCadastroPedido, View.OnClickListener, TextWatcher {
 
     private static final String TAG = "DetalhesProdutoActivity";
     public static final String PARAM_PRODUTO = "PARAM_PRODUTO";
@@ -34,13 +42,16 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     private EditText editVlrDesc;
     private EditText editQuantidade;
     private EditText editTotal;
-    private ImageButton buttonProduto;
+    private ImageButton buttonPedido;
     private ViewPager viewPagerImagens;
 
     //Variáveis
     private Produto produto;
     private Pedido pedido;
     private ItemTabelaPreco itemTabelaPreco;
+    private ItemPedido itemPedido;
+    private Ferramentas ferramentas;
+    private Boolean editandoAutomarico = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +70,44 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         editVlrDesc = (EditText) findViewById(R.id.activity_detalhes_produto_edit_vlr_desc);
         editQuantidade = (EditText) findViewById(R.id.activity_detalhes_produto_edit_quantidade);
         editTotal = (EditText) findViewById(R.id.activity_detalhes_produto_edit_total);
-        buttonProduto = (ImageButton) findViewById(R.id.activity_detalhes_produto_button_pedido);
+        buttonPedido = (ImageButton) findViewById(R.id.activity_detalhes_produto_button_pedido);
         viewPagerImagens = (ViewPager) findViewById(R.id.activity_detalhes_produto_img_produtos);
 
+        ferramentas = new Ferramentas();
 
         loadDataFromActivity();
+
+        //Chama a rotina para inserir tratamento após digitar em um dos campos de valor
+        //addTextChangedListener();
+        editPercDesc.addTextChangedListener(this);
+        editVlrDesc.addTextChangedListener(this);
+        editQuantidade.addTextChangedListener(this);
+
+        buttonPedido.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view == buttonPedido){
+
+            if (itemPedido != null){
+                //Se o item estiver no pedido irá remover o item do pedido
+                ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
+                itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(),produto.getId());
+
+                buttonPedido.setBackgroundResource(R.mipmap.ic_carrinho_add);
+            }else{
+
+                try {
+                    //Chama método para salvar o item no pedido
+                    salvaDados();
+                } catch (Exceptions ex) {
+                    ferramentas.customToast(this,ex.getMessage());
+                }
+            }
+        }
+
     }
 
     //Metodo para carregar informação ao abriar a Activity.
@@ -71,28 +115,31 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
 
         produto = (Produto) getIntent().getSerializableExtra(PARAM_PRODUTO);
         pedido = (Pedido) getIntent().getSerializableExtra(PARAM_PEDIDO);
+
         itemTabelaPreco = (ItemTabelaPreco) getIntent().getSerializableExtra(PARAM_ITEM_TABELA_PRECO);
 
 
         if (pedido != null) {
             List<ItemPedido> itensPedido = pedido.getItensPedido();
-            ItemPedido itemPedido = null;
-            for (ItemPedido itemPdv : itensPedido) {
 
-                if (itemPdv.getProduto().getId() == produto.getId()) {
+            for (ItemPedido itemPdv : itensPedido) {
+                if (itemPdv.getProduto().getId().equals(produto.getId())) {
                     itemPedido = itemPdv;
                 }
 
             }
             if (itemPedido != null) {
+
                 Double percDesc = 100 / itemPedido.getVlrUnitario() * itemPedido.getVlrDesconto();
                 editPercDesc.setText(percDesc.toString());
                 editVlrDesc.setText(itemPedido.getVlrDesconto().toString());
                 editQuantidade.setText(itemPedido.getQuantidade().toString());
                 editTotal.setText(itemPedido.getVlrTotal().toString());
+
+                buttonPedido.setBackgroundResource(R.mipmap.ic_carrinho_remov);
             }
 
-            buttonProduto.setBackgroundResource(R.mipmap.ic_carrinho_remov);
+
         }
 
         //Carrega imagens
@@ -113,6 +160,30 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
 
         //editPercDesc.setText();
 
+    }
+
+    private void salvaDados() throws Exceptions{
+        if (editQuantidade.getText().toString().equals("")) {
+            throw new Exceptions("Quantidade não informada.");
+        }else if (editTotal.getText().toString().equals("")){
+            throw new Exceptions("Valor total não informado.");
+        }else if(editPercDesc.getText() != null && Double.valueOf(editPercDesc.getText().toString()) > itemTabelaPreco.getMaxDesc()){
+            throw new Exceptions("Desconto informado não permitido, o maior desconto permitido para este item é "+itemTabelaPreco.getMaxDesc()+".");
+        }
+
+        ItemPedido itemPedido = new ItemPedido();
+        itemPedido.setVlrUnitario(itemTabelaPreco.getVlrUnitario());
+        itemPedido.setQuantidade(Double.valueOf(editQuantidade.getText().toString()));
+        itemPedido.setVlrDesconto(Double.valueOf(editVlrDesc.getText().toString()));
+        itemPedido.setVlrTotal(Double.valueOf(editTotal.getText().toString()));
+        itemPedido.setProduto(produto);
+        itemPedido.setDtCriacao(ferramentas.getCurrentDate());
+        itemPedido.setDtAtualizacao(ferramentas.getCurrentDate());
+
+        ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
+        itemPedidoDAO.insereItemPedido(itemPedido,pedido.getId());
+
+        buttonPedido.setBackgroundResource(R.mipmap.ic_carrinho_remov);
     }
 
     @Override
@@ -155,5 +226,83 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
             default:break;
         }
         return true;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        BigDecimal bd = null;
+        Double percDesc = 0.0;
+        Double valorDesc = 0.0;
+        Double valorTotal = 0.0;
+        Double valorUnitario;
+        if (itemTabelaPreco != null) {
+            valorUnitario = itemTabelaPreco.getVlrUnitario();
+        }else{
+            valorUnitario = 0.0;
+        }
+
+        if (!editandoAutomarico) {
+            if(editPercDesc.hasFocus()){
+                editandoAutomarico = true;
+                if (editQuantidade.getText().toString().equals("")) {
+                    editQuantidade.setText("0.0");
+                }
+                if (!editPercDesc.getText().toString().equals("")) {
+                    //Calcula o valor para o campo de valor a partir do percentual de desconto
+                    valorDesc = (valorUnitario / 100.00) * Double.valueOf(editable.toString());
+                    bd = new BigDecimal(valorDesc).setScale(2, RoundingMode.HALF_EVEN);
+                    editVlrDesc.setText(String.valueOf(bd.doubleValue()));
+                    //Calcula o valor para o campo total
+                    valorTotal = Double.valueOf(editQuantidade.getText().toString()) * (valorUnitario - valorDesc);
+                    bd = new BigDecimal(valorTotal).setScale(2, RoundingMode.HALF_EVEN);
+                    editTotal.setText(String.valueOf(bd.doubleValue()));
+                } else {
+                    editVlrDesc.setText("0.0");
+                }
+                editandoAutomarico = false;
+            }else if(editVlrDesc.hasFocus()) {
+                editandoAutomarico = true;
+                if (editQuantidade.getText().toString().equals("")) {
+                    editQuantidade.setText("0.0");
+                }
+                if (!editVlrDesc.getText().toString().equals("")) {
+                    //Calcula o valor para o campo de percentual a partir do valor de desconto
+                    percDesc = (100.00 / valorUnitario) * Double.valueOf(editable.toString());
+                    bd = new BigDecimal(percDesc).setScale(2, RoundingMode.HALF_EVEN);
+                    editPercDesc.setText(String.valueOf(bd.doubleValue()));
+
+                    //Calcula o valor para o campo total
+                    valorTotal = Double.valueOf(editQuantidade.getText().toString()) * (valorUnitario - Double.valueOf(editable.toString()));
+                    bd = new BigDecimal(valorTotal).setScale(2, RoundingMode.HALF_EVEN);
+                    editTotal.setText(String.valueOf(bd.doubleValue()));
+                } else {
+                    editPercDesc.setText("0.0");
+                }
+                editandoAutomarico = false;
+            }else if(editQuantidade.hasFocus()){
+
+                editandoAutomarico = true;
+                if (editVlrDesc.getText().toString().equals("")) {
+                    editVlrDesc.setText("0.0");
+                }
+                if (!editQuantidade.getText().toString().equals("")) {
+
+                    valorDesc = Double.valueOf(editVlrDesc.getText().toString());
+                    valorTotal = Double.valueOf(editable.toString()) * (valorUnitario - valorDesc);
+                    editTotal.setText(valorTotal.toString());
+                }
+                editandoAutomarico = false;
+            }
+        }
     }
 }

@@ -22,9 +22,12 @@ import lr.maisvendas.repositorio.sql.EstadoDAO;
 import lr.maisvendas.repositorio.sql.PaisDAO;
 import lr.maisvendas.tela.adaptador.ListaCidadesSpinnerAdapter;
 import lr.maisvendas.tela.adaptador.ListaEstadosSpinnerAdapter;
+import lr.maisvendas.utilitarios.EditTextMask;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
+import lr.maisvendas.utilitarios.TipoMask;
 import lr.maisvendas.utilitarios.TipoPessoa;
+import lr.maisvendas.utilitarios.ValidaCampos;
 
 public class CadastroClienteActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -74,12 +77,17 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         editEmail = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_email);
         editFone = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_fone);
         editCep = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_cep);
-        spinnerEstado = (Spinner) findViewById(R.id.activity_cadastro_cliente_spinner_estado);
+        spinnerEstado = (Spinner) findViewById(R.id.activity_cadastro_cliente_spinner_estado3);
         spinnerCidade = (Spinner) findViewById(R.id.activity_cadastro_cliente_spinner_cidade);
         editBairro = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_bairro);
         editLogradouro = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_logradouro);
         editNumero = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_numero);
         buttonCadastrar = (Button) findViewById(R.id.activity_cadastro_cliente_button_salvar);
+
+        //Seta o gerador de máscaras
+        editCnpj.addTextChangedListener(EditTextMask.insert(editCnpj, TipoMask.CNPJ));
+        editFone.addTextChangedListener(EditTextMask.insert(editFone, TipoMask.FONE));
+        editCep.addTextChangedListener(EditTextMask.insert(editCep, TipoMask.CEP));
 
         ferramentas = new Ferramentas();
 
@@ -118,10 +126,10 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         EstadoDAO estadoDAO = EstadoDAO.getInstance(this);
         listaEstados = estadoDAO.buscaEstadoPais(pais.getId());
         listaEstados.add(0,estado);
-
-        if (listaEstados != null) {
+        if (listaEstados.isEmpty() == false) {
             listaEstadosSpinnerAdapter = new ListaEstadosSpinnerAdapter(this, listaEstados);
-            spinnerEstado.setAdapter(listaCidadesSpinnerAdapter);
+            spinnerEstado.setAdapter(listaEstadosSpinnerAdapter);
+
         }
 
         if (cliente != null){
@@ -132,14 +140,30 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
             editInsEst.setText(cliente.getInscricaoEstadual());
             editEmail.setText(cliente.getEmail());
             editFone.setText(cliente.getFone());
-            editCep.setText(cliente.getCep());
+            editCep.setText(cliente.getCep().toString());
+
             //Busca o estado a partir da Cidade
-            estado = estadoDAO.buscaEstadoId(cliente.getCidade().getEstado().getId());
-            spinnerEstado.setSelection(listaEstadosSpinnerAdapter.getPosition(estado));
+            estado = cliente.getCidade().getEstado();
+            //Objeto para setar o primeiro item do spinner com default
+            Cidade cidade = new Cidade();
+            cidade.setId(0);
+            cidade.setSigla("");
+            cidade.setDescricao("Selecione");
+
+            //Popula o spinner de cidades de acordo com estado selecionado
+            CidadeDAO cidadeDAO = CidadeDAO.getInstance(this);
+            listaCidades = cidadeDAO.buscaCidadeEstado(estado.getId());
+            listaCidades.add(0,cidade);
+            if (listaCidades != null) {
+                listaCidadesSpinnerAdapter = new ListaCidadesSpinnerAdapter(this, listaCidades);
+                spinnerCidade.setAdapter(listaCidadesSpinnerAdapter);
+            }
+
+            spinnerEstado.setSelection(listaEstadosSpinnerAdapter.getPosition(cliente.getCidade().getEstado()));
             spinnerCidade.setSelection(listaCidadesSpinnerAdapter.getPosition(cliente.getCidade()));
             editBairro.setText(cliente.getBairro());
             editLogradouro.setText(cliente.getLogradouro());
-            editNumero.setText(cliente.getNumero());
+            editNumero.setText(cliente.getNumero().toString());
 
             if (cliente.getStatus() == 1) {
                 checkAtivo.setChecked(true);
@@ -163,9 +187,9 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
             throw new Exceptions("Fone não informada.");
         } else if (editCep.getText().toString().equals("")){
             throw new Exceptions("CEP não informada.");
-        } else if (spinnerEstado.getSelectedItem() == null || cliente.getId() == 0 ){
+        } else if (spinnerEstado.getSelectedItem() == null){
             throw new Exceptions("Estado não selecionado.");
-        } else if (spinnerCidade.getSelectedItem() == null || cliente.getId() == 0 ){
+        } else if (spinnerCidade.getSelectedItem() == null){
             throw new Exceptions("Cidade não selecionado.");
         } else if (editBairro.getText().toString().equals("")) {
             throw new Exceptions("Bairro não informada.");
@@ -173,6 +197,15 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
             throw new Exceptions("Logradouro não informada.");
         } else if (editNumero.getText().toString().equals("")) {
             throw new Exceptions("Número não informada.");
+        }
+
+        ValidaCampos validaCampos = new ValidaCampos();
+        if (validaCampos.validaCNPJ(editCnpj.getText().toString()) == false){
+            throw new Exceptions("O CNPJ informado não é válido.");
+        }else if (validaCampos.validaCep(editCep.getText().toString()) == false){
+            throw new Exceptions("O CEP informado não é válido.");
+        }else if (validaCampos.validaEmail(editEmail.getText().toString()) == false){
+            throw new Exceptions("O EMAIL informado não é válido.");
         }
 
         ClienteDAO clienteDAO = ClienteDAO.getInstance(this);
@@ -195,11 +228,11 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         }
         cliente.setRazaoSocial(editRazSocial.getText().toString());
         cliente.setNomeFantasia(editNomeFant.getText().toString());
-        cliente.setCnpj(editCnpj.getText().toString());
+        cliente.setCnpj(editCnpj.getText().toString().replaceAll("[^0-9]*",""));
         cliente.setInscricaoEstadual(editInsEst.getText().toString());
         cliente.setEmail(editEmail.getText().toString());
-        cliente.setFone(editFone.getText().toString());
-        cliente.setCep(Integer.valueOf(editCep.getText().toString()));
+        cliente.setFone(editFone.getText().toString().replaceAll("[^0-9]*",""));
+        cliente.setCep(Integer.valueOf(editCep.getText().toString().replaceAll("[^0-9]*","")));
         cliente.setCidade((Cidade) spinnerCidade.getSelectedItem());
         cliente.setBairro(editBairro.getText().toString());
         cliente.setLogradouro(editLogradouro.getText().toString());
@@ -233,7 +266,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-        if (view == spinnerEstado){
+        if (adapterView == spinnerEstado){
             Estado estado = (Estado) spinnerEstado.getSelectedItem();
             if (estado.getId() != 0){
                 //Objeto para setar o primeiro item do spinner com default

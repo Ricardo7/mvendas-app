@@ -8,10 +8,10 @@
     <color name="loginButton">#eb423363</color>
     <color name="cadastrarButton">#eb9064f5</color>
     <color name="loginContent">#8f72fa</color>
-    <color name="colorField">#e7cfcef2</color>
+    <color name="colorField">#4935d477</color>
     <color name="buttonText">#33236b</color>
     <color name="buttonTextLogin">#b2a7d6</color>
-    <color name="colorAlert">#ff4a4a</color>
+    <color name="colorAlert">#c7e76767</color>
     <color name="colorAlertText">#f7caca</color>
     <color name="linhaViewDefault">#c9b0f4</color>
     <color name="linhaViewText">#0e0c2e</color>

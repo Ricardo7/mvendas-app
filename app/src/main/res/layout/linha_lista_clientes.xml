@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/border_line_view">
+    android:background="@drawable/border_line_view"
+    android:layout_marginBottom="5dp">
 
     <TextView
         android:id="@+id/linha_lista_clientes_razao_social"

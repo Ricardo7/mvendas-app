@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     >
 
+    <!--
     <TextView
         android:id="@+id/linha_lista_cidades_spinner_sigla"
         android:layout_width="wrap_content"
@@ -13,6 +14,7 @@
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
         android:textSize="@dimen/text_size_linha_spinner"/>
+    -->
 
     <TextView
         android:id="@+id/linha_lista_cidades_spinner_descricao"

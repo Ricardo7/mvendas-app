@@ -22,14 +22,15 @@ public class ClienteDAO {
 
     public static final String CLIENTE_TABLE_CREATE = "CREATE TABLE if not exists " + CLIENTE_TABLE_NAME + " ("+
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "ID_WS INTEGER, " +
-                    "CODIGO TEXT NOT NULL, " +
+                    "ID_WS TEXT, " +
+                    "CODIGO TEXT, " +
                     "CNPJ TEXT NOT NULL, " +
                     "RAZAO_SOCIAL TEXT NOT NULL, " +
                     "NOME_FAN TEXT," +
                     "INS_EST TEXT," +
                     "EMAIL TEXT," +
                     "FONE TEXT," +
+                    "CEP INTEGER," +
                     "CID_ID INTEGER NOT NULL, " +
                     "BAIRRO TEXT NOT NULL,"+
                     "LOGRADOURO TEXT NOT NULL," +
@@ -84,11 +85,11 @@ public class ClienteDAO {
         return cliente;
     }
 
-    public Cliente buscaClienteIdWs(Integer clienteIdWs){
+    public Cliente buscaClienteIdWs(String clienteIdWs){
         Cliente cliente = null;
 
         //Busca o grupo
-        String sql = "SELECT * FROM tclientes WHERE id_ws = "+ clienteIdWs;
+        String sql = "SELECT * FROM tclientes WHERE id_ws = '"+ clienteIdWs +"'";
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){

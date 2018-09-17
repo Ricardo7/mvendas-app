@@ -22,8 +22,8 @@ public interface ClienteServico {
     public Call<Response<Cliente>>criarCliente(@Header("X-Auth-Token") String token, @Body Cliente cliente);
 
     @POST("Cliente/EditCliente") //Atualiza
-    public Call<Response<Cliente>>editarCliente(@Header("X-Auth-Token") String token, @Query("ID_WS") Integer idWS, @Body Cliente cliente);
+    public Call<Response<Cliente>>editarCliente(@Header("X-Auth-Token") String token, @Query("IDWS") String idWS, @Body Cliente cliente);
 
     @DELETE("Cliente/DeleteCliente") //Deleta
-    public Call<Response<Boolean>>excluirCliente(@Header("X-Auth-Token") String token, @Query("ID_WS") Integer id);
+    public Call<Response<Boolean>>excluirCliente(@Header("X-Auth-Token") String token, @Query("IDWS") Integer id);
 }

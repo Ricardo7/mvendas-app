@@ -9,5 +9,7 @@
     <dimen name="detalhes_produto_text">22sp</dimen>
     <dimen name="configuracao_text">20sp</dimen>
     <dimen name="configuracao_text_versao">15sp</dimen>
-    <dimen name="text_size_linha_spinner">25sp</dimen>
+    <dimen name="text_size_linha_spinner">20sp</dimen>
+    <dimen name="text_size_edit_text_filder">20sp</dimen>
+    <dimen name="height_edit_text_filder">50dp</dimen>
 </resources>

@@ -1,5 +1,6 @@
 package lr.maisvendas.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,10 +11,10 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Pais implements Serializable {
 
-    @JsonProperty("ID")
+    @JsonIgnore
     private Integer id;
     @JsonProperty("IDWS")
-    private Integer idWS;
+    private String idWS;
     @JsonProperty("Descricao")
     private String descricao;
     @JsonProperty("Sigla")
@@ -29,11 +30,11 @@ public class Pais implements Serializable {
         this.id = id;
     }
 
-    public Integer getIdWS() {
+    public String getIdWS() {
         return idWS;
     }
 
-    public void setIdWS(Integer idWS) {
+    public void setIdWS(String idWS) {
         this.idWS = idWS;
     }
 

@@ -18,7 +18,7 @@ public class PaisDAO {
 
     public static final String PAIS_TABLE_CREATE = "CREATE TABLE if not exists " + PAIS_TABLE_NAME + " ("
             + "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "ID_WS INTEGER, "
+            + "ID_WS TEXT, "
             + "DESCRICAO TEXT NOT NULL, "
             + "SIGLA TEXT NOT NULL);";
 
@@ -60,11 +60,11 @@ public class PaisDAO {
         return pais;
     }
 
-    public Pais buscaPaisIdWs(Integer paisIdWs){
+    public Pais buscaPaisIdWs(String paisIdWs){
         Pais pais = null;
 
         //Busca o grupo
-        String sql = "SELECT * FROM tpaises WHERE id_ws = "+ paisIdWs ;
+        String sql = "SELECT * FROM tpaises WHERE id_ws = '"+ paisIdWs +"'" ;
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){

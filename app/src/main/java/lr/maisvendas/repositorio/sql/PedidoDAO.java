@@ -82,6 +82,36 @@ public class PedidoDAO {
         return pedido;
     }
 
+    public Pedido buscaPedidoStatus(Integer statusPedido){
+        Pedido pedido = null;
+        String sql = "SELECT pd.* " +
+                     " FROM tpedidos pd" +
+                     " WHERE pd.status = "+statusPedido;
+
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            PedidoAdap pedidoAdap = new PedidoAdap();
+            ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(context);
+            ClienteDAO clienteDAO = ClienteDAO.getInstance(context);
+            CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(context);
+            TabelaPrecoDAO tabelaPrecoDAO = TabelaPrecoDAO.getInstance(context);
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                pedido = pedidoAdap.sqlToPedido(cursor);
+                pedido.setItensPedido(itemPedidoDAO.buscaItemPedido(cursor.getInt(cursor.getColumnIndex("ID"))));
+                pedido.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
+                pedido.setCondicaoPgto(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
+                pedido.setTabelaPreco(tabelaPrecoDAO.buscaTabelaPrecoId(cursor.getInt(cursor.getColumnIndex("TABELA_PRECO_ID"))));
+
+            }
+            cursor.close();
+        }
+
+        return pedido;
+    }
+
     public List<Pedido> buscaPedidos(){
         List<Pedido> pedidos = new ArrayList<>();
         Pedido pedido;

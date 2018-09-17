@@ -21,7 +21,7 @@ public class CidadeDAO {
 
     public static final String CIDADE_TABLE_CREATE = "CREATE TABLE if not exists " + CIDADE_TABLE_NAME + " ("
             + "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "ID_WS INTEGER, "
+            + "ID_WS TEXT, "
             + "DESCRICAO TEXT NOT NULL, "
             + "SIGLA TEXT NOT NULL, "
             + "ESTADO_ID INTEGER NOT NULL);";
@@ -68,11 +68,11 @@ public class CidadeDAO {
 
     }
 
-    public Cidade buscaCidadeIdWs(Integer cidadeIdWs){
+    public Cidade buscaCidadeIdWs(String cidadeIdWs){
         Cidade cidade = null;
 
         //Busca o grupo
-        String sql = "SELECT * FROM tcidades WHERE id_ws = "+ cidadeIdWs;
+        String sql = "SELECT * FROM tcidades WHERE id_ws = '"+ cidadeIdWs + "'";
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){

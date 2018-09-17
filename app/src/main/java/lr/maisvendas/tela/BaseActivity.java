@@ -129,8 +129,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 return true;
             case R.id.menu_principal_sair:
-                /*intent = new Intent(this,NomeDaClasse.class);
-                startActivity(intent);*/
+                usuario.setToken(null);
+                UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(this);
+
+                intent = new Intent(this,LoginActivity.class);
+                startActivity(intent);
                 return true;
         }
 

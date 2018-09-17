@@ -10,15 +10,15 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Cliente implements Serializable {
 
-    @JsonProperty("ID")
+    @JsonProperty("IDAP")
     private Integer id;
     @JsonProperty("IDWS")
-    private Integer idWS;
+    private String idWS;
     @JsonProperty("Cod")
     private String cod;
     @JsonProperty("Cnpj")
     private String cnpj;
-    @JsonProperty("RazaoSocil")
+    @JsonProperty("RazaoSocial")
     private String razaoSocial;
     @JsonProperty("NomeFantasia")
     private String nomeFantasia;
@@ -57,11 +57,11 @@ public class Cliente implements Serializable {
         this.id = id;
     }
 
-    public Integer getIdWS() {
+    public String getIdWS() {
         return idWS;
     }
 
-    public void setIdWS(Integer idWS) {
+    public void setIdWS(String idWS) {
         this.idWS = idWS;
     }
 

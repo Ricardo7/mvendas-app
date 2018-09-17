@@ -14,6 +14,6 @@ public interface UsuarioServico {
     public Call<Response<Usuario>> logarApp(@Query("email") String email, @Query("senha") String password);
 
     //Eventos
-    @GET("mantemLogin")
+    @GET("Usuario/ValidarUsuarioToken")
     public Call<Response<Boolean>> verificaToken(@Header("X-Auth-Token")  String token);
 }

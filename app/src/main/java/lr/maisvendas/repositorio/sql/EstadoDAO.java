@@ -21,7 +21,7 @@ public class EstadoDAO {
 
     public static final String ESTADO_TABLE_CREATE = "CREATE TABLE if not exists " + ESTADO_TABLE_NAME + " ("
             + "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "ID_WS INTEGER, "
+            + "ID_WS TEXT, "
             + "DESCRICAO TEXT NOT NULL, "
             + "SIGLA TEXT NOT NULL, "
             + "PAIS_ID INTEGER NOT NULL);";
@@ -67,7 +67,7 @@ public class EstadoDAO {
         return estado;
     }
 
-    public Estado buscaEstadoIdWs(Integer estadoIdWs){
+    public Estado buscaEstadoIdWs(String estadoIdWs){
         Estado estado = null;
 
         //Busca o grupo
@@ -94,7 +94,7 @@ public class EstadoDAO {
         Estado estado = null;
 
         //Busca o grupo
-        String sql = "SELECT * FROM testados WHERE pais_id = "+ paisId ;
+        String sql = "SELECT * FROM testados WHERE pais_id = '"+ paisId +"'" ;
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){

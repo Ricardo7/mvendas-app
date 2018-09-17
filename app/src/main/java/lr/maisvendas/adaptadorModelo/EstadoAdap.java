@@ -18,7 +18,7 @@ public class EstadoAdap {
         Estado estado = new Estado();
 
         estado.setId(cursor.getInt(cursor.getColumnIndex("ID")));
-        estado.setIdWS(cursor.getInt(cursor.getColumnIndex("ID_WS")));
+        estado.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         estado.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
         estado.setSigla(cursor.getString(cursor.getColumnIndex("SIGLA")));
 

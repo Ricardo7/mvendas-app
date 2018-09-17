@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Se usuário já existe irá atualizar, senão irá inserir
         if (usuarioOld != null) {
             try {
+                usuario.setId(usuarioOld.getId());
                 usuarioDAO.atualizaUsuario(usuario);
             } catch (Exceptions ex) {
                 ferramentas.customLog(TAG,ex.getMessage());

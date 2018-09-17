@@ -91,6 +91,13 @@ public class ItemPedidoDAO {
         return itemPedido;
 
     }
+
+    public void deletaItemPedidoProduto(Integer pedidoId, Integer produtoId){
+        String sqlWhere = "PEDIDO_ID = " + pedidoId +
+                          " AND PRODUTO_ID = " + produtoId;
+
+        dataBase.delete(ITEM_PEDIDO_TABLE_NAME,sqlWhere,null);
+    }
     
     public void truncateItems(){
         dataBase.delete(ITEM_PEDIDO_TABLE_NAME,null,null);

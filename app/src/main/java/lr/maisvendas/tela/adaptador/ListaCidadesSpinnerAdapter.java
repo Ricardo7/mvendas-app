@@ -28,7 +28,7 @@ public class ListaCidadesSpinnerAdapter extends ArrayAdapter<Cidade> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View linhaView = convertView;
-        TextView textSigla;
+        //TextView textSigla;
         TextView textDescricao;
 
         //Se a view ainda não foi criada irá criá-la
@@ -37,12 +37,12 @@ public class ListaCidadesSpinnerAdapter extends ArrayAdapter<Cidade> {
             linhaView = inflater.inflate(R.layout.linha_lista_cidades_spinner,parent, false);
         }
 
-        textSigla = (TextView) linhaView.findViewById(R.id.linha_lista_cidades_spinner_sigla);
+        //textSigla = (TextView) linhaView.findViewById(R.id.linha_lista_cidades_spinner_sigla);
         textDescricao = (TextView) linhaView.findViewById(R.id.linha_lista_cidades_spinner_descricao);
 
         Cidade cidade = getItem(position);
 
-        textSigla.setText(cidade.getSigla());
+        //textSigla.setText(cidade.getSigla());
         textDescricao.setText(cidade.getDescricao());
 
         return linhaView;

@@ -33,8 +33,7 @@
         <activity android:name=".tela.ListaProdutosActivity" />
         <activity android:name=".tela.ConfiguracaoActivity" />
         <activity android:name=".tela.SincronicacaoManualActivity" />
-        <activity android:name=".tela.CustomMarkerView" />
-        <activity android:name=".tela.DetalhesProdutoActivity"></activity>
+        <activity android:name=".tela.DetalhesProdutoActivity" />
     </application>
 
 </manifest>

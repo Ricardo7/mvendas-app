@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,9 +16,14 @@ import java.util.List;
 
 import lr.maisvendas.R;
 import lr.maisvendas.modelo.Imagem;
+import lr.maisvendas.modelo.ItemTabelaPreco;
+import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.Produto;
+import lr.maisvendas.repositorio.sql.ItemTabelaPrecoDAO;
+import lr.maisvendas.repositorio.sql.PedidoDAO;
 import lr.maisvendas.tela.interfaces.ItemProdutoClickListener;
 import lr.maisvendas.utilitarios.Ferramentas;
+import lr.maisvendas.utilitarios.StatusPedido;
 
 public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdapter.ProdutoViewHolder> {//implements Filterable {
 
@@ -27,6 +33,8 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
     //private ProdutoFilter filter = new ProdutoFilter();
     private Ferramentas ferramentas;
     private static ItemProdutoClickListener itemProdutoClickListener;
+    private Pedido pedido;
+    private ItemTabelaPreco itemTabelaPreco;
 
     public ListaProdutosAdapter(Context context, List<Produto> Produtos) {
         this.context = context;
@@ -34,58 +42,6 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
         ferramentas = new Ferramentas();
     }
 
-    /*
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Ferramentas ferramentas = new Ferramentas();
-        View linhaView = convertView;
-        TextView textCodigoDesc;
-        TextView textVlrUnit;
-
-        //Se a view ainda não foi criada irá criá-la
-        if (linhaView == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            linhaView = inflater.inflate(R.layout.linha_lista_produtos, parent, false);
-        }
-
-        textCodigoDesc = (TextView) linhaView.findViewById(R.id.linha_lista_produtos_codigo_desc);
-        textVlrUnit = (TextView) linhaView.findViewById(R.id.linha_lista_produtos_vlr_unit);
-
-        Produto produto = getItem(position);
-
-        textCodigoDesc.setText("("+produto.getCod()+") "+produto.getDescricao());
-        //textVlrUnit.setText(produto.get);
-
-        ImageView CampoImagem = (ImageView) linhaView.findViewById(R.id.linha_lista_produtos_imagem_produto);
-
-        String caminhoImagem = null;
-        for (Imagem imagem:produto.getImagens()) {
-            if (imagem.getPrincipal() == 1){
-                 caminhoImagem = imagem.getCaminho();
-            }
-        }
-        ferramentas.customLog("RRRRRR","Caminho: "+caminhoImagem);
-        if (caminhoImagem != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(caminhoImagem);
-            ferramentas.customLog("RRRRRR","Antes do Entrou no config");
-            if (bitmap != null) {
-                ferramentas.customLog("RRRRRR","Entrou no config");
-                Bitmap reduzirBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-                CampoImagem.setImageBitmap(reduzirBitmap);
-                CampoImagem.setScaleType(ImageView.ScaleType.FIT_XY);
-            }
-        }
-
-        return linhaView;
-
-    }
-
-    @Override
-    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return getView(position, convertView, parent);
-    }
-*/
     @Override
     public ProdutoViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.linha_lista_produtos, viewGroup, false);
@@ -98,6 +54,22 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
         viewHolder.textCodigoDesc.setText("("+produto.getCod()+") "+produto.getDescricao());
         viewHolder.textVlrUnit.setText("0");
 
+        //------------------------------------------------------------------
+        //Popula as variáveis com informações do pedido e item da tabel de preço, caso exista
+        //Verifica se tem um pedido no carrinho, em construção (Status = 0 )
+        PedidoDAO pedidoDAO = PedidoDAO.getInstance(context);
+        pedido = pedidoDAO.buscaPedidoStatusProduto(StatusPedido.emConstrucao,produto.getId());
+
+        //Busca o item da tabela de preço do pedido (Só irá ter valor)
+        if (pedido != null){
+            ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(context);
+            itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(),produto.getId());
+
+            viewHolder.imageAddPedido.setBackgroundResource(R.mipmap.ic_pedido_remov);
+        }else{
+            viewHolder.imageAddPedido.setBackgroundResource(R.mipmap.ic_pedido_add);
+        }
+        //------------------------------------------------------------------
 
         String caminhoImagem = null;
         for (Imagem imagem:produto.getImagens()) {
@@ -128,27 +100,35 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
         this.itemProdutoClickListener = itemProdutoClickListener;
     }
 
+
     protected static class ProdutoViewHolder  extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         protected TextView textCodigoDesc;
         protected TextView textVlrUnit;
         protected ImageView campoImagem;
+        protected ImageButton imageAddPedido;
 
         public ProdutoViewHolder(View itemView) {
             super(itemView);
             textCodigoDesc = (TextView) itemView.findViewById(R.id.linha_lista_produtos_codigo_desc);
             textVlrUnit = (TextView) itemView.findViewById(R.id.linha_lista_produtos_vlr_unit);
             campoImagem = (ImageView) itemView.findViewById(R.id.linha_lista_produtos_imagem_produto);
+            imageAddPedido = (ImageButton) itemView.findViewById(R.id.linha_lista_produto_button_pedido);
             itemView.setTag(itemView);
             itemView.setOnClickListener(this);
+            imageAddPedido.setOnClickListener(this);
 
         }
 
             @Override
             public void onClick(View view) {
-                if (itemProdutoClickListener != null) itemProdutoClickListener.onClick(view, getAdapterPosition());
-            }
+               if (view == imageAddPedido){
+                   itemProdutoClickListener.onAddPedidoClick(view,getAdapterPosition());
+               }else{
+                   itemProdutoClickListener.onItemProdutoClick(view,getAdapterPosition());
+               }
 
+            }
 
     }
 
@@ -157,6 +137,21 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
         return itens.get(position);
     }
 
+    public Pedido getPedido(){
+        return pedido;
+    };
+
+    public ItemTabelaPreco getItemTabelaPreco(){
+        return itemTabelaPreco;
+    }
+
+    public void setPedido(Pedido pedido){
+        this.pedido = pedido;
+    }
+
+    public void setItemTabelaPreco(ItemTabelaPreco itemTabelaPreco){
+        this.itemTabelaPreco = itemTabelaPreco;
+    }
     /*
     @Override
     public Filter getFilter() {

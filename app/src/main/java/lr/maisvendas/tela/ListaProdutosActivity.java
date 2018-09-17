@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageButton;
 
 import java.util.List;
 
@@ -13,15 +14,21 @@ import lr.maisvendas.R;
 import lr.maisvendas.modelo.ItemTabelaPreco;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.Produto;
+import lr.maisvendas.repositorio.sql.ItemPedidoDAO;
 import lr.maisvendas.repositorio.sql.ItemTabelaPrecoDAO;
 import lr.maisvendas.repositorio.sql.PedidoDAO;
 import lr.maisvendas.repositorio.sql.ProdutoDAO;
 import lr.maisvendas.tela.adaptador.ListaProdutosAdapter;
 import lr.maisvendas.tela.interfaces.ItemProdutoClickListener;
+import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.StatusPedido;
 
 public class ListaProdutosActivity extends BaseActivity implements ItemProdutoClickListener {
 
+    //Campos da tela
+    private ImageButton imagePedidoAdd;
+
+    //Variáveis
     private RecyclerView recyclerViewProdutos;
     private ListaProdutosAdapter listaProdutosAdapter;
     private List<Produto> listaProdutos;
@@ -39,6 +46,7 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
         setTitle("Produtos");
 
         recyclerViewProdutos = (RecyclerView) findViewById(R.id.activity_lista_produtos_list_view);
+        imagePedidoAdd = (ImageButton) findViewById(R.id.linha_lista_produto_button_pedido);
 
         recyclerViewProdutos.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -62,27 +70,80 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onItemProdutoClick(View view, int position) {
+        Ferramentas ferramentas = new Ferramentas();
 
-        Produto produto = listaProdutosAdapter.getItem(position);
-        //Verifica se tem um pedido no carrinho, em construção (Status = 0 )
-        PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
-        Pedido pedido = pedidoDAO.buscaPedidoStatusProduto(StatusPedido.emConstrucao,produto.getId());
+            Produto produto = listaProdutosAdapter.getItem(position);
+            //Verifica se tem um pedido no carrinho, em construção (Status = 0 )
+            PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
+            Pedido pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
+        ferramentas.customLog("RRRRR-PDV",pedido.getId().toString());
+        ferramentas.customLog("RRRRR-PRD",produto.getId().toString());
+            //Busca o item da tabela de preço do pedido (Só irá ter valor)
+            ItemTabelaPreco itemTabelaPreco = null;
+            if (pedido != null) {
+                ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
+                itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(), produto.getId());
 
-        //Busca o item da tabela de preço do pedido (Só irá ter valor)
-        ItemTabelaPreco itemTabelaPreco = null;
+                ferramentas.customLog("RRRRR-IT",itemTabelaPreco.getId().toString());
+            }
+
+            Intent intent = new Intent(this, DetalhesProdutoActivity.class);
+            intent.putExtra(DetalhesProdutoActivity.PARAM_PRODUTO, produto);
+            intent.putExtra(DetalhesProdutoActivity.PARAM_PEDIDO, pedido);
+            intent.putExtra(DetalhesProdutoActivity.PARAM_ITEM_TABELA_PRECO, itemTabelaPreco);
+            startActivity(intent);
+
+
+    }
+
+    @Override
+    public void onAddPedidoClick(View view, int position) {
+
+        Produto produto = (Produto) listaProdutosAdapter.getItem(position);
+        Pedido pedido = listaProdutosAdapter.getPedido();
+        //Se item estiver no pedido (pedido existe) irá remover. Senão, será tratado para direcionar a tela de inclusão de pedido ou produto.
         if (pedido != null){
-            ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
-            itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(),produto.getId());
+            /*VERIFICAR  A NECESSINDADE DE LIMPAR O PEDIDO DO PRODUTO, HOJE NÃO SERÁ LIMPADO
+            listaProdutosAdapter.setPedido(null);
+            listaProdutosAdapter.setItemTabelaPreco(null);
+            */
+
+            ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
+            itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(),produto.getId());
+
+            // Informa ao adapter que o conteúdo do array list foi modificado, logo o ListView deve ser atualizado
+            if(listaProdutosAdapter != null){
+                listaProdutosAdapter.notifyDataSetChanged();
+            }
+        } else{
+            //Verifica se existe algum pedido em aberto
+            PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
+            pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
+
+            Intent intent = null;
+            //Se existir pedido aberto, direciona para detalhes de itens para que o mesmo seja adicionado
+            if (pedido != null) {
+                ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
+                ItemTabelaPreco itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(), produto.getId());
+
+                intent = new Intent(this, DetalhesProdutoActivity.class);
+                intent.putExtra(DetalhesProdutoActivity.PARAM_PRODUTO, produto);
+                intent.putExtra(DetalhesProdutoActivity.PARAM_PEDIDO, pedido);
+                intent.putExtra(DetalhesProdutoActivity.PARAM_ITEM_TABELA_PRECO, itemTabelaPreco);
+                startActivity(intent);
+
+                // Informa ao adapter que o conteúdo do array list foi modificado, logo o ListView deve ser atualizado
+                if(listaProdutosAdapter != null){
+                    listaProdutosAdapter.notifyDataSetChanged();
+                }
+            }else{
+                //Se Não existir pedido aberto, direciona para cadastro de pedido
+                intent = new Intent(this,CadastroPedidoActivity.class);
+                startActivity(intent);
+            }
+
         }
-
-        Intent intent = new Intent(this,DetalhesProdutoActivity.class);
-        intent.putExtra(DetalhesProdutoActivity.PARAM_PRODUTO,produto);
-        intent.putExtra(DetalhesProdutoActivity.PARAM_PEDIDO,pedido);
-        intent.putExtra(DetalhesProdutoActivity.PARAM_ITEM_TABELA_PRECO,itemTabelaPreco);
-        startActivity(intent);
-
-
     }
 
     //Metodo para carregar informação ao abriar a Activity.
@@ -108,4 +169,5 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
 
 
     }
+
 }

@@ -18,7 +18,7 @@ public class PaisAdap {
         Pais pais = new Pais();
 
         pais.setId(cursor.getInt(cursor.getColumnIndex("ID")));
-        pais.setIdWS(cursor.getInt(cursor.getColumnIndex("ID_WS")));
+        pais.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         pais.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
         pais.setSigla(cursor.getString(cursor.getColumnIndex("SIGLA")));
 

@@ -130,7 +130,7 @@ public class ClienteSinc extends BaseActivity implements CarregarClienteCom.Carr
     private void trataRegistrosExternos(){
         ferramentas.customLog(TAG,"Inicio do tratamento de CLIENTES internos");
         for (Cliente clienteOld:clientesOld) {
-            if (clienteOld.getIdWS() != null && clienteOld.getIdWS() != 0) {
+            if (clienteOld.getIdWS() != null && clienteOld.getIdWS().equals("") == false ) {
                 //Se tiver IDs já existe no servidor, deverá ser atualizado
                 new EditarClienteCom(this).execute(clienteOld);
             } else{

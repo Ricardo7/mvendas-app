@@ -108,7 +108,7 @@
             android:layout_marginTop="25dp"
             android:text="Tabela de Preços" />
 
-        <EditText
+        <Spinner
             android:id="@+id/activity_cadastro_pedido_ini_spinner_tabela_preco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
             android:layout_marginTop="25dp"
             android:text="Cliente" />
 
-        <EditText
+        <Spinner
             android:id="@+id/activity_cadastro_pedido_ini_spinner_cliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

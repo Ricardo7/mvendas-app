@@ -18,7 +18,7 @@ public class ClienteAdap {
         Cliente cliente = new Cliente();
 
         cliente.setId(cursor.getInt(cursor.getColumnIndex("ID")));
-        cliente.setIdWS(cursor.getInt(cursor.getColumnIndex("ID_WS")));
+        cliente.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         cliente.setCod(cursor.getString(cursor.getColumnIndex("CODIGO")));
         cliente.setCnpj(cursor.getString(cursor.getColumnIndex("CNPJ")));
         cliente.setRazaoSocial(cursor.getString(cursor.getColumnIndex("RAZAO_SOCIAL")));
@@ -58,10 +58,9 @@ public class ClienteAdap {
         content.put("NUMERO", cliente.getNumero());
         content.put("STATUS", cliente.getStatus());
         content.put("ATIVO", cliente.getAtivo());
-        content.put("SEGMER_ID", cliente.getSegmentoMercado().getId());
         content.put("DT_CADASTRO", cliente.getDtCadastro());
         content.put("DT_ATUALIZACAO", cliente.getDtAtualizacao());
-        content.put("SEGMER_ID", cliente.getSegmentoMercado().getId());
+        //content.put("SEGMER_ID", cliente.getSegmentoMercado().getId());
         content.put("CID_ID", cliente.getCidade().getId());
 
         return content;

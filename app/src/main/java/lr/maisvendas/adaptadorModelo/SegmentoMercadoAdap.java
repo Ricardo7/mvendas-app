@@ -18,7 +18,7 @@ public class SegmentoMercadoAdap {
         SegmentoMercado segmentoMercado = new SegmentoMercado();
 
         segmentoMercado.setId(cursor.getInt(cursor.getColumnIndex("ID")));
-        segmentoMercado.setIdWS(cursor.getInt(cursor.getColumnIndex("ID_WS")));
+        segmentoMercado.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         segmentoMercado.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
 
         return segmentoMercado;

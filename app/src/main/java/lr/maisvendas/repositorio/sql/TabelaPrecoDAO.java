@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lr.maisvendas.adaptadorModelo.TabelaPrecoAdap;
 import lr.maisvendas.modelo.TabelaPreco;
 import lr.maisvendas.repositorio.DatabaseHelper;
@@ -60,6 +63,31 @@ public class TabelaPrecoDAO {
         }
 
         return tabelaPreco;
+    }
+
+    public List<TabelaPreco> buscaTabelasPreco(){
+        List<TabelaPreco> tabelasPreco = new ArrayList<>();
+        TabelaPreco tabelaPreco = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM ttabela_precos ";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            TabelaPrecoAdap tabelaPrecoAdap = new TabelaPrecoAdap();
+            ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(context);
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                tabelaPreco = tabelaPrecoAdap.sqlToTabelaPreco(cursor);
+                tabelaPreco.setItensTabelaPreco(itemTabelaPrecoDAO.buscaItensTabelaPreco(cursor.getInt(cursor.getColumnIndex("ID"))));
+
+                tabelasPreco.add(tabelaPreco);
+            }
+            cursor.close();
+        }
+
+        return tabelasPreco;
     }
 
     public TabelaPreco insereTabelaPreco(TabelaPreco tabelaPreco) {

@@ -4,7 +4,6 @@
     android:id="@+id/activity_cadastro_cliente_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".tela.CadastroClienteActivity">
 
     <LinearLayout
@@ -35,6 +34,7 @@
                     android:id="@+id/activity_cadastro_cliente_check_ativo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="25dp"
                     android:text="Ativo?"/>
 
@@ -42,12 +42,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
-                    android:text="Razão Social" />
+                    android:text="Razão Social *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_raz_social"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="text" />
@@ -61,7 +62,8 @@
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_nome_fant"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="text" />
@@ -70,12 +72,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="CNPJ" />
+                    android:text="CNPJ *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_cnpj"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="text" />
@@ -89,7 +92,8 @@
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_insc_est"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="text" />
@@ -98,12 +102,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Email" />
+                    android:text="Email *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="textEmailAddress" />
@@ -112,12 +117,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Fone" />
+                    android:text="Fone *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_fone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="phone" />
@@ -126,12 +132,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="CEP" />
+                    android:text="CEP *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_cep"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="text" />
@@ -140,25 +147,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Estado" />
+                    android:text="Estado *" />
 
-                <Spinner
-                    android:id="@+id/activity_cadastro_cliente_spinner_estado"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/border_field" />
+               <Spinner
+                   android:id="@+id/activity_cadastro_cliente_spinner_estado3"
+                   android:layout_width="match_parent"
+                   android:layout_height="@dimen/height_edit_text_filder"
+                   android:textSize="@dimen/text_size_edit_text_filder"
+                   android:layout_marginTop="5dp"
+                   android:background="@drawable/border_field" >
+
+               </Spinner>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Cidade" />
+                    android:text="Cidade *" />
 
                 <Spinner
                     android:id="@+id/activity_cadastro_cliente_spinner_cidade"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field" />
 
@@ -166,12 +177,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Bairro" />
+                    android:text="Bairro *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_bairro"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="text" />
@@ -180,12 +192,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Logradouro" />
+                    android:text="Logradouro *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_logradouro"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
                     android:inputType="text" />
@@ -194,15 +207,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Número" />
+                    android:text="Número *" />
 
                 <EditText
                     android:id="@+id/activity_cadastro_cliente_edit_numero"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/height_edit_text_filder"
+                    android:textSize="@dimen/text_size_edit_text_filder"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/border_field"
-                    android:inputType="text" />
+                    android:inputType="number" />
 
             </LinearLayout>
 

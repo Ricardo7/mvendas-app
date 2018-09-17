@@ -1,28 +1,30 @@
 package lr.maisvendas.tela;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import lr.maisvendas.R;
-import lr.maisvendas.modelo.Meta;
-import lr.maisvendas.repositorio.sql.MetaDAO;
 
 public class TelaInicialActivity extends BaseActivity {
 
     public static final String PARAM_USUARIO = "PARAM_USUARIO";
     private static final String TAG = "TelaInicialActivity";
 
-    //private LineChart grafico;
-    private BarChart grafico;
+    private PieChart pieChart;
 
-    float itensGrafico[] = {1.2f, 3.5f, 7.56f, 2.25f};
+    float itensGrafico[] = {1.2f, 3.5f };
 
-    String descricao[] = {"Item 1", "Item 2", "Item 3", "Item 4"};
+    String descricao[] = {"Orçado", "Realizado"};
 
 
 
@@ -37,84 +39,40 @@ public class TelaInicialActivity extends BaseActivity {
 
         setTitle("Mais Vendas");
 
-        //grafico = (LineChart) findViewById(R.id.activity_tela_inicial_linechart);
-        grafico = (HorizontalBarChart) findViewById(R.id.activity_tela_inicial_horizontalbarchart);
+        pieChart = (PieChart) findViewById(R.id.activity_tela_inicial_pieChart);
 
+        pieChart.setUsePercentValues(true);
 
-        //PopulaDadosTeste populaDadosTeste = new PopulaDadosTeste();
+        ArrayList<PieEntry> yValues = new ArrayList<>();
 
-        //List<Meta> metas = populaDadosTeste.populaMeta(this);
-        List<Meta> metas = null;
-
-        MetaDAO metaDAO = MetaDAO.getInstance(this);
-        metas = metaDAO.buscaMetas();
-
-        /*
-        List<Entry> entradasGrafico = new ArrayList<>();
-
-        for(int i = 0;i < itensGrafico.length; i++){
-            entradasGrafico.add(new PieEntry(itensGrafico[i],descricao[i]));
+        for(int i=0;i < itensGrafico.length; i++){
+            yValues.add(new PieEntry(itensGrafico[i], i));
         }
 
-        LineDataSet dataSet = new LineDataSet(entradasGrafico,"Legenda Gráfico");
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        PieDataSet dataSet = new PieDataSet(yValues, "Election Results");
 
-        LineData lineData = new LineData(dataSet);
-
-        grafico.setData(lineData);
-
-        grafico.invalidate();
-        */
-        /*
-        List<Entry> sinEntries = new ArrayList<>(); // List to store data-points of sine curve
-        List<Entry> cosEntries = new ArrayList<>(); // List to store data-points of cosine curve
-
-        // Obtaining data points by using Math.sin and Math.cos functions
-        Ferramentas ferramentas = new Ferramentas();
-        float j=0;
-        for (float i = 0; i <= 3000f; i += 500f) {
-            j=i;
-            if (i == 1500f){
-
-                i = i - 800f;
-                ferramentas.customLog(TAG,"Entrou: "+i);
-            }
-            sinEntries.add(new Entry(100,  150));
-            cosEntries.add(new Entry(100, 150));
+        ArrayList<String> xVals = new ArrayList<String>();
+        for(int i=0;i < descricao.length; i++) {
+            xVals.add(descricao[i]);
         }
 
+        PieData data = new PieData(dataSet);
+        // In Percentage
+        data.setValueFormatter(new PercentFormatter());
+        // Default value
+        //data.setValueFormatter(new DefaultValueFormatter(0));
+        pieChart.setData(data);
+        //pieChart.setDescription("This is Pie Chart");
+        pieChart.setDrawHoleEnabled(true);
+        //pieChart.setTransparentCircleRadius(58f);
 
-        --
-        for (Meta meta: metas) {
-            ferramentas.customLog(TAG,meta.getRealizado().floatValue()+"");
-            ferramentas.customLog(TAG,meta.getRealizado().floatValue()+"");
+        //pieChart.setHoleRadius(58f);
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 
-            sinEntries.add(new Entry(meta.getRealizado().floatValue(), meta.getRealizado().floatValue()));
-            cosEntries.add(new Entry(meta.getRealizado().floatValue(), meta.getRealizado().floatValue()));
+        data.setValueTextSize(13f);
+        data.setValueTextColor(Color.DKGRAY);
 
-            ferramentas.customLog(TAG,"Fim");
-        }
-        --
-
-        List<ILineDataSet> dataSets = new ArrayList<>(); // for adding multiple plots
-
-        LineDataSet sinSet = new LineDataSet(sinEntries, "sin curve");
-        LineDataSet cosSet = new LineDataSet(cosEntries, "cos curve");
-
-        // Adding colors to different plots
-        cosSet.setColor(Color.GREEN);
-        cosSet.setCircleColor(Color.GREEN);
-        sinSet.setColor(Color.BLUE);
-        sinSet.setCircleColor(Color.BLUE);
-
-        // Adding each plot data to a List
-        dataSets.add(sinSet);
-        dataSets.add(cosSet);
-
-        // Setting datapoints and invalidating chart to update with data points
-        grafico.setData(new LineData(dataSets));
-        grafico.invalidate();
-        */
+        //pieChart.setOnChartValueSelectedListener(this);
 
     }
 
