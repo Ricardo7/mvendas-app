@@ -14,7 +14,7 @@ public class Imagem implements Serializable {
     @JsonIgnore
     private Integer id;
     @JsonProperty("IDWS")
-    private Integer idWS;
+    private String idWS;
     @JsonProperty("Nome")
     private String nome;
     @JsonProperty("Principal")
@@ -38,11 +38,11 @@ public class Imagem implements Serializable {
         this.id = id;
     }
 
-    public Integer getIdWS() {
+    public String getIdWS() {
         return idWS;
     }
 
-    public void setIdWS(Integer idWS) {
+    public void setIdWS(String idWS) {
         this.idWS = idWS;
     }
 

@@ -18,6 +18,7 @@ public class ImagemAdap {
         Imagem imagem = new Imagem();
 
         imagem.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        imagem.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         imagem.setNome(cursor.getString(cursor.getColumnIndex("NOME")));
         imagem.setPrincipal(cursor.getInt(cursor.getColumnIndex("PRINCIPAL")));
         imagem.setTamanho(cursor.getInt(cursor.getColumnIndex("TAMANHO")));
@@ -32,6 +33,7 @@ public class ImagemAdap {
         ContentValues content = new ContentValues();
 
         content.put("ID",imagem.getId());
+        content.put("ID_WS",imagem.getIdWS());
         content.put("NOME",imagem.getNome());
         content.put("PRINCIPAL",imagem.getPrincipal());
         content.put("CAMINHO",imagem.getCaminho());

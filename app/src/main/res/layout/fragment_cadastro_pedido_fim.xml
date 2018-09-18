@@ -23,7 +23,7 @@
         <Spinner
             android:id="@+id/fragment_cadastro_pedido_fim_spinner_condicao_pgto"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/text_size_edit_text_filder"
             android:layout_marginTop="5dp"
             android:background="@drawable/border_field" />
 
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:textSize="@dimen/cadastro_pedido_fim_text"
-            android:textColor="@color/cadastro_pedido_text_total_label"
+        android:textColor="@color/cadastro_pedido_text_total_label"
         android:textAlignment="center"
         android:text="Valor Total"/>
 

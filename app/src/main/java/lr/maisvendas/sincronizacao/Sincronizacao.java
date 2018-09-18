@@ -53,6 +53,15 @@ public class Sincronizacao extends BaseActivity{
                         SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify);
                         segmentoMercadoSinc.sincronizaSegmentoMercado();
 
+                        ClienteSinc clienteSinc = new ClienteSinc(notify);
+                        clienteSinc.sincronizaCliente();
+
+                        ImagemSinc imagemSinc = new ImagemSinc(notify);
+                        imagemSinc.sincronizaImagem();
+
+                        ProdutoSinc produtoSinc = new ProdutoSinc(notify);
+                        produtoSinc.sincronizaProduto();
+
                         Dispositivo dispositivo = null;
                         DispositivoDAO dispositivoDAO = DispositivoDAO.getInstance(context);
                         dispositivo = dispositivoDAO.buscaDispositivo();

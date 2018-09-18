@@ -18,6 +18,7 @@ public class ProdutoAdap {
         Produto produto = new Produto();
 
         produto.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        produto.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         produto.setCod(cursor.getString(cursor.getColumnIndex("CODIGO")));
         produto.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
         produto.setObservacao(cursor.getString(cursor.getColumnIndex("OBSERVACAO")));
@@ -29,6 +30,7 @@ public class ProdutoAdap {
         ContentValues content = new ContentValues();
 
         content.put("ID",produto.getId());
+        content.put("ID_WS",produto.getIdWS());
         content.put("CODIGO",produto.getCod());
         content.put("DESCRICAO",produto.getDescricao());
         content.put("OBSERVACAO",produto.getObservacao());

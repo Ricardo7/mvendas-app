@@ -9,7 +9,7 @@ public class Pedido implements Serializable{
     private Integer id;
     private Integer numero;
     private Integer situacao;
-    private Integer Status;
+    private Integer status;
     private String dtCriacao;
     private String dtAtualizacao;
     private Cliente cliente;
@@ -44,11 +44,11 @@ public class Pedido implements Serializable{
     }
 
     public Integer getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(Integer status) {
-        Status = status;
+        status = status;
     }
 
     public String getDtCriacao() {

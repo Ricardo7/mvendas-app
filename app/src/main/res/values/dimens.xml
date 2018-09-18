@@ -6,6 +6,7 @@
     <dimen name="textTextLinhaCabecalho">18sp</dimen>
     <dimen name="textTextLinhaCorpo">14sp</dimen>
     <dimen name="cadastro_pedido_fim_text">25sp</dimen>
+    <dimen name="cadastro_pedido_ini_text">22sp</dimen>
     <dimen name="detalhes_produto_text">22sp</dimen>
     <dimen name="configuracao_text">20sp</dimen>
     <dimen name="configuracao_text_versao">15sp</dimen>

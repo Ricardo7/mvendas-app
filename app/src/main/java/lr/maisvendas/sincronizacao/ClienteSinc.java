@@ -140,7 +140,7 @@ public class ClienteSinc extends BaseActivity implements CarregarClienteCom.Carr
             }
         }
 
-        notify.setProgress(100,90,false);
+        notify.setProgress(100,40,false);
         ferramentas.customLog(TAG,"Fim do tratamento de CLIENTES internos");
     }
 

@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface EstadoServico {
 
-    @GET("Estado/GetListaEstados") //Busca
+    @GET("Locais/GetListaEstados") //Busca
     public Call<Response<List<Estado>>> carregarEstado(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("Estado") //Insere (não utilizado no estado)

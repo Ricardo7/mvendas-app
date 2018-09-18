@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lr.maisvendas.adaptadorModelo.CondicaoPgtoAdap;
 import lr.maisvendas.modelo.CondicaoPgto;
 import lr.maisvendas.repositorio.DatabaseHelper;
@@ -18,6 +21,7 @@ public class CondicaoPgtoDAO {
 
     public static final String CONDICAO_PGTO_TABLE_CREATE = "CREATE TABLE if not exists " + CONDICAO_PGTO_TABLE_NAME + " (" +
             "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "ID_WS TEXT," +
             "CODIGO TEXT, " +
             "DESCRICAO TEXT," +
             "DESC_ACR REAL);";
@@ -58,6 +62,28 @@ public class CondicaoPgtoDAO {
         }
 
         return condicaoPgto;
+    }
+
+    public List<CondicaoPgto> buscaCondicaoPgto(){
+        List<CondicaoPgto> condicoesPgto = new ArrayList<>();
+        CondicaoPgto condicaoPgto = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tcondicoes_pgto";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ) {
+            CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
+            while (cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                condicaoPgto = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
+
+                condicoesPgto.add(condicaoPgto);
+            }
+            cursor.close();
+
+        }
+        return condicoesPgto;
     }
 
     public CondicaoPgto insereCondicaoPgto(CondicaoPgto condicaoPgto) {

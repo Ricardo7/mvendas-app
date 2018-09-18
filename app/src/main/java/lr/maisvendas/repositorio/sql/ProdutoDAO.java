@@ -11,6 +11,7 @@ import java.util.List;
 import lr.maisvendas.adaptadorModelo.ProdutoAdap;
 import lr.maisvendas.modelo.Produto;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class ProdutoDAO {
 	
@@ -21,6 +22,7 @@ public class ProdutoDAO {
 
     public static final String PRODUTO_TABLE_CREATE = "CREATE TABLE if not exists " + PRODUTO_TABLE_NAME + " (" +
             "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "ID_WS TEXT, " +
             "CODIGO TEXT, " +
             "DESCRICAO TEXT," +
             "OBSERVACAO TEXT);";
@@ -63,6 +65,25 @@ public class ProdutoDAO {
         return produto;
     }
 
+    public Produto buscaProdutoIdWs(String produtoIdWs){
+        Produto produto = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tprodutos WHERE id_ws = '"+ produtoIdWs +"'" ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ProdutoAdap produtoAdap = new ProdutoAdap();
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                produto = produtoAdap.sqlToProduto(cursor);
+            }
+            cursor.close();
+        }
+
+        return produto;
+    }
+    
     public List<Produto> buscaProdutos(){
         List<Produto> produtos = new ArrayList<>();
         Produto produto = null;
@@ -101,6 +122,23 @@ public class ProdutoDAO {
         }
         */
         produto.setId(produtoId);
+
+        return produto;
+
+    }
+
+    public Produto atualizaProduto(Produto produto) throws Exceptions {
+
+        ProdutoAdap produtoAdap = new ProdutoAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = produtoAdap.produtoToContentValue(produto);
+        String sqlWhere = "id = "+produto.getId();
+        //Insere o produto no banco
+        Integer executou = (int) dataBase.update(PRODUTO_TABLE_NAME, content, sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar o Produto (ID: "+produto.getId()+")");
+        }
 
         return produto;
 

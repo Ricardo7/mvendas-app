@@ -11,6 +11,7 @@ import java.util.List;
 import lr.maisvendas.adaptadorModelo.ImagemAdap;
 import lr.maisvendas.modelo.Imagem;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class ImagemDAO {
 	
@@ -21,6 +22,7 @@ public class ImagemDAO {
 
     public static final String IMAGEM_TABLE_CREATE = "CREATE TABLE if not exists " + IMAGEM_TABLE_NAME + " (" +
             "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "ID_WS TEXT, " +
             "PRODUTO_ID INTEGER, " +
             "NOME TEXT," +
             "PRINCIPAL INTEGER," +
@@ -46,6 +48,25 @@ public class ImagemDAO {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(context);
         dataBase = databaseHelper.getWritableDatabase();
         //tabelaAdap = new TabelaAdap();
+    }
+
+    public Imagem buscaImagemIdWs(String imagemIdWs){
+        Imagem imagem = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM timagens WHERE id_ws = '"+ imagemIdWs +"'" ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ImagemAdap imagemAdap = new ImagemAdap();
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                imagem = imagemAdap.sqlToImagem(cursor);
+            }
+            cursor.close();
+        }
+
+        return imagem;
     }
 
     public List<Imagem> buscaImagensProduto(Integer produtoId){
@@ -85,6 +106,23 @@ public class ImagemDAO {
         }
         */
         imagem.setId(imagemId);
+
+        return imagem;
+
+    }
+
+    public Imagem atualizaImagem(Imagem imagem, Integer produtoId) throws Exceptions {
+
+        ImagemAdap imagemAdap = new ImagemAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = imagemAdap.imagemToContentValue(imagem,produtoId);
+        String sqlWhere = "id = "+imagem.getId();
+        //Insere o imagem no banco
+        Integer executou = (int) dataBase.update(IMAGEM_TABLE_NAME, content, sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar o Imagem (ID: "+imagem.getId()+")");
+        }
 
         return imagem;
 
