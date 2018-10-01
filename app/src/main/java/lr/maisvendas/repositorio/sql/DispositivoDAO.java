@@ -16,9 +16,12 @@ public class DispositivoDAO {
     //private DispositivoAdap dispositivoAdap;
     private static final String DISPOSITIVO_TABLE_NAME = "tdispositivos";
 
-    public static final String DISPOSITIVO_TABLE_CREATE = "CREATE TABLE if not exists " + DISPOSITIVO_TABLE_NAME + " ("
-            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "DATA_SINCRONIZACAO TEXT);";
+    public static final String DISPOSITIVO_TABLE_CREATE = "CREATE TABLE if not exists " + DISPOSITIVO_TABLE_NAME + " (" +
+             "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+             "DATA_SINC_IMAGENS TEXT, " +
+             "DATA_SINC_PEDIDOS TEXT, " +
+             "DATA_SINC_CLIENTES TEXT, " +
+             "DATA_SINC_PRODUTOS TEXT)";
 
     public static final String SCRIPT_DELECAO_TABELA =  "DROP TABLE IF EXISTS " + DISPOSITIVO_TABLE_NAME;
 

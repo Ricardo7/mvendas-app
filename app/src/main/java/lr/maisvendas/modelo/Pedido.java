@@ -1,20 +1,39 @@
 package lr.maisvendas.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.List;
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Pedido implements Serializable{
 
+    @JsonProperty("IDAP")
     private Integer id;
+    @JsonProperty("IDWS")
+    private String idWS;
+    @JsonProperty("Numero")
     private Integer numero;
+    @JsonProperty("Situacao")
     private Integer situacao;
+    @JsonProperty("Status")
     private Integer status;
+    @JsonProperty("Observacao")
+    private String observacao;
+    @JsonProperty("DtCriacao")
     private String dtCriacao;
+    @JsonProperty("DtAtualizacao")
     private String dtAtualizacao;
+    @JsonProperty("Cliente")
     private Cliente cliente;
+    @JsonProperty("CondicaoPgto")
     private CondicaoPgto condicaoPgto;
+    @JsonProperty("TabelaPreco")
     private TabelaPreco tabelaPreco;
+    @JsonProperty("ItensPedido")
     private List<ItemPedido> itensPedido;
 
     //public Pedido () {}
@@ -25,6 +44,14 @@ public class Pedido implements Serializable{
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getIdWS() {
+        return idWS;
+    }
+
+    public void setIdWS(String idWS) {
+        this.idWS = idWS;
     }
 
     public Integer getNumero() {
@@ -48,7 +75,15 @@ public class Pedido implements Serializable{
     }
 
     public void setStatus(Integer status) {
-        status = status;
+        this.status = status;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
     }
 
     public String getDtCriacao() {

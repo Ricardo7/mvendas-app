@@ -1,5 +1,7 @@
 package lr.maisvendas.tela;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +34,7 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
     private RecyclerView recyclerViewProdutos;
     private ListaProdutosAdapter listaProdutosAdapter;
     private List<Produto> listaProdutos;
+    private Boolean removeItem;
 
 
     @Override
@@ -66,6 +69,11 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Colocado para atualizar a lista ao voltar dos Detalhes, caso tenha mexido em alguma coisa no pedido
+        if(listaProdutosAdapter != null){
+            listaProdutosAdapter.notifyDataSetChanged();
+        }
         loadDataFromActivity();
     }
 
@@ -77,15 +85,15 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
             //Verifica se tem um pedido no carrinho, em construção (Status = 0 )
             PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
             Pedido pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
-        ferramentas.customLog("RRRRR-PDV",pedido.getId().toString());
-        ferramentas.customLog("RRRRR-PRD",produto.getId().toString());
+        //ferramentas.customLog("RRRRR-PDV",pedido.getId().toString());
+        //ferramentas.customLog("RRRRR-PRD",produto.getId().toString());
             //Busca o item da tabela de preço do pedido (Só irá ter valor)
             ItemTabelaPreco itemTabelaPreco = null;
             if (pedido != null) {
                 ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
                 itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(), produto.getId());
 
-                ferramentas.customLog("RRRRR-IT",itemTabelaPreco.getId().toString());
+                //ferramentas.customLog("RRRRR-IT",itemTabelaPreco.getId().toString());
             }
 
             Intent intent = new Intent(this, DetalhesProdutoActivity.class);
@@ -109,12 +117,15 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
             listaProdutosAdapter.setItemTabelaPreco(null);
             */
 
-            ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
-            itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(),produto.getId());
+            if (confirmDialog()){
+                ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
+                itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(),produto.getId());
 
-            // Informa ao adapter que o conteúdo do array list foi modificado, logo o ListView deve ser atualizado
-            if(listaProdutosAdapter != null){
-                listaProdutosAdapter.notifyDataSetChanged();
+
+                // Informa ao adapter que o conteúdo do array list foi modificado, logo o ListView deve ser atualizado
+                if(listaProdutosAdapter != null) {
+                    listaProdutosAdapter.notifyDataSetChanged();
+                }
             }
         } else{
             //Verifica se existe algum pedido em aberto
@@ -150,6 +161,30 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
     private void loadDataFromActivity() {
 
 
+    }
+
+    private Boolean confirmDialog() {
+        removeItem = false;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder
+                .setMessage("O Item será removido do pedido." +
+                        "\n Deseja continuar?")
+                .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                         removeItem = true;
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        removeItem = false;
+                    }
+                })
+                .show();
+
+        return removeItem;
     }
 
     @Override

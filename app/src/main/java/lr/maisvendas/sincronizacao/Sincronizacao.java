@@ -40,9 +40,10 @@ public class Sincronizacao extends BaseActivity{
 
                         ferramentas.customLog(TAG, "Iniciou sincronização");
 
-                        //A classe do móduloSync, por ser a primeira classe, irá tratar se o usuário está autenticado
-                        PaisSinc moduloSync = new PaisSinc(notify);
-                        moduloSync.sincronizaPais();
+                        //Cliente
+                        //A classe do paisSync, por ser a primeira classe, irá tratar se o usuário está autenticado
+                        PaisSinc paisSinc = new PaisSinc(notify);
+                        paisSinc.sincronizaPais();
 
                         EstadoSinc estadoSinc = new EstadoSinc(notify);
                         estadoSinc.sincronizaEstado();
@@ -56,22 +57,39 @@ public class Sincronizacao extends BaseActivity{
                         ClienteSinc clienteSinc = new ClienteSinc(notify);
                         clienteSinc.sincronizaCliente();
 
+                        //Produto
                         ImagemSinc imagemSinc = new ImagemSinc(notify);
                         imagemSinc.sincronizaImagem();
 
                         ProdutoSinc produtoSinc = new ProdutoSinc(notify);
                         produtoSinc.sincronizaProduto();
 
+                        //Pedido
+                        CondicaoPgtoSinc condicaoPgtoSinc = new CondicaoPgtoSinc(notify);
+                        condicaoPgtoSinc.sincronizaCondicaoPgto();
+
+                        TabelaPrecoSinc tabelaPrecoSinc = new TabelaPrecoSinc(notify);
+                        tabelaPrecoSinc.sincronizaTabelaPreco();
+
+                        PedidoSinc pedidoSinc = new PedidoSinc(notify);
+                        pedidoSinc.sincronizaPedido();
+
                         Dispositivo dispositivo = null;
                         DispositivoDAO dispositivoDAO = DispositivoDAO.getInstance(context);
                         dispositivo = dispositivoDAO.buscaDispositivo();
                         if (dispositivo == null || dispositivo.getId() <= 0) {
                             dispositivo = new Dispositivo();
-                            dispositivo.setDataSincronizacao(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincImagens(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincPedidos(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincClientes(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincProdutos(ferramentas.getCurrentDate());
 
                             dispositivoDAO.insereDispositivo(dispositivo);
                         } else {
-                            dispositivo.setDataSincronizacao(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincImagens(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincPedidos(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincClientes(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincProdutos(ferramentas.getCurrentDate());
                             try {
                                 dispositivoDAO.atualizaDispositivo(dispositivo);
                             } catch (Exceptions ex) {
@@ -89,4 +107,5 @@ public class Sincronizacao extends BaseActivity{
 
             }
         }
+
 }

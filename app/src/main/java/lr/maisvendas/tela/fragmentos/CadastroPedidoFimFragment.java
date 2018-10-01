@@ -15,10 +15,13 @@ import java.util.List;
 
 import lr.maisvendas.R;
 import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.ItemPedido;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.repositorio.sql.CondicaoPgtoDAO;
+import lr.maisvendas.repositorio.sql.PedidoDAO;
 import lr.maisvendas.tela.adaptador.ListaCondPgtoSpinnerAdapter;
 import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
+import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 
 public class CadastroPedidoFimFragment extends Fragment implements View.OnClickListener{
@@ -39,6 +42,8 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
     private ComunicadorCadastroPedido comunicadorCadastroPedido;
     private ListaCondPgtoSpinnerAdapter listaCondPgtoSpinnerAdapter;
     private List<CondicaoPgto> listaCondicoesPgto;
+    private Pedido pedido;
+    private Ferramentas ferramentas;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,11 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
         buttonEnviar = (Button) view.findViewById(R.id.fragment_cadastro_pedido_fim_button_enviar);
         buttonAnt = (Button) view.findViewById(R.id.fragment_cadastro_pedido_fim_button_ant);
 
+        ferramentas = new Ferramentas();
+
         buttonAnt.setOnClickListener(this);
+        buttonEnviar.setOnClickListener(this);
+        buttonExcluir.setOnClickListener(this);
 
         return view;
     }
@@ -83,10 +92,23 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+
         if (view == buttonAnt){
             CadastroPedidoItemFragment cadastroPedidoItemFragment = new CadastroPedidoItemFragment();
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment);
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment).commit();
+        }else if(view == buttonEnviar){
+            try {
+                salvaDados();
+            } catch (Exceptions ex) {
+                ferramentas.customToast(getActivity(),ex.getMessage());
+            }
+        }else if (view == buttonExcluir){
+            try {
+                excluiDados();
+            } catch (Exceptions ex) {
+                ferramentas.customToast(getActivity(),ex.getMessage());
+            }
         }
 
     }
@@ -96,7 +118,7 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
         Ferramentas ferramentas = new Ferramentas();
 
-        Pedido pedido = comunicadorCadastroPedido.getPedido();
+        pedido = comunicadorCadastroPedido.getPedido();
 
         CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(getActivity());
         listaCondicoesPgto = condicaoPgtoDAO.buscaCondicaoPgto();
@@ -112,6 +134,75 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
         if (pedido != null) {
 
+            spinnerCondPgto.setSelection(listaCondPgtoSpinnerAdapter.getPosition(pedido.getCondicaoPgto()));
+            textVlrTotal.setText("R$ "+totalTotalPedido(pedido).toString());
+            textVlrDescoto.setText("R$ "+totalDescontoPedido(pedido).toString());
+            textVlrFinal.setText("R$ "+totalLiquidoPedido(pedido).toString());
         }
+    }
+
+    public Double totalTotalPedido(Pedido pedido){
+
+        List<ItemPedido> itensPedido = pedido.getItensPedido();
+        Double total = 0.0;
+
+        for (ItemPedido itemPedido:itensPedido) {
+            total = total + itemPedido.getVlrTotal() + itemPedido.getVlrDesconto();
+        }
+
+        return total;
+    }
+
+    public Double totalDescontoPedido(Pedido pedido){
+
+        List<ItemPedido> itensPedido = pedido.getItensPedido();
+        Double desconto = 0.0;
+
+        for (ItemPedido itemPedido:itensPedido) {
+            desconto = desconto + itemPedido.getVlrDesconto();
+        }
+
+        return desconto;
+    }
+
+    public Double totalLiquidoPedido(Pedido pedido){
+
+        List<ItemPedido> itensPedido = pedido.getItensPedido();
+        Double liquido = 0.0;
+
+        for (ItemPedido itemPedido:itensPedido) {
+            liquido = liquido + itemPedido.getVlrTotal();
+        }
+
+        return liquido;
+    }
+
+    private void salvaDados() throws Exceptions{
+        if (spinnerCondPgto.getSelectedItem() == null) {
+            throw new Exceptions("Condição de pagamento não selecionada.");
+        }
+
+        pedido.setCondicaoPgto((CondicaoPgto) spinnerCondPgto.getSelectedItem());
+        pedido.setDtAtualizacao(ferramentas.getCurrentDate());
+        pedido.setStatus(1);
+
+        PedidoDAO pedidoDAO = PedidoDAO.getInstance(getActivity());
+        pedidoDAO.atualizaPedido(pedido);
+
+        comunicadorCadastroPedido.setPedido(pedido);
+
+        //Enviar pedido
+
+    }
+
+    private void excluiDados() throws Exceptions {
+
+        if (pedido.getStatus() != 0){
+            throw new Exceptions("Pedido Fechado, não pode ser excluído. Para Excluir entre em contato com o Administrador do sistema.");
+        }
+
+        PedidoDAO pedidoDAO = PedidoDAO.getInstance(getActivity());
+        pedidoDAO.deletaPedido(pedido.getId());
+
     }
 }

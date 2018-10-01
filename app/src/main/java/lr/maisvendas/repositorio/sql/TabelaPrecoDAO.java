@@ -11,6 +11,7 @@ import java.util.List;
 import lr.maisvendas.adaptadorModelo.TabelaPrecoAdap;
 import lr.maisvendas.modelo.TabelaPreco;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class TabelaPrecoDAO {
 	
@@ -21,6 +22,7 @@ public class TabelaPrecoDAO {
 
     public static final String TABELA_PRECOS_TABLE_CREATE = "CREATE TABLE if not exists " + TABELA_PRECOS_TABLE_NAME + " (" +
             "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "ID_WS TEXT, "+
             "CODIGO TEXT, " +
             "DESCRICAO TEXT);";
 
@@ -48,6 +50,28 @@ public class TabelaPrecoDAO {
 
         //Busca o grupo
         String sql = "SELECT * FROM ttabela_precos WHERE id = "+ tabelaPrecoId ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            TabelaPrecoAdap tabelaPrecoAdap = new TabelaPrecoAdap();
+            ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(context);
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                tabelaPreco = tabelaPrecoAdap.sqlToTabelaPreco(cursor);
+                tabelaPreco.setItensTabelaPreco(itemTabelaPrecoDAO.buscaItensTabelaPreco(cursor.getInt(cursor.getColumnIndex("ID"))));
+            }
+            cursor.close();
+        }
+
+        return tabelaPreco;
+    }
+
+    public TabelaPreco buscaTabelaPrecoIdWs(String tabelaPrecoIdWs){
+        TabelaPreco tabelaPreco = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM ttabela_precos WHERE id_ws = '"+ tabelaPrecoIdWs +"'";
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){
@@ -103,6 +127,23 @@ public class TabelaPrecoDAO {
         }
         */
         tabelaPreco.setId(tabelaPrecoId);
+
+        return tabelaPreco;
+    }
+
+    public TabelaPreco atualizaTabelaPreco(TabelaPreco tabelaPreco) throws Exceptions{
+
+        TabelaPrecoAdap tabelaPrecoAdap = new TabelaPrecoAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = tabelaPrecoAdap.tabelaPrecoToContentValue(tabelaPreco);
+        String sqlWhere = "id = " + tabelaPreco.getId();
+
+        //Insere o tabelaPreco no banco
+        Integer executou = (int) dataBase.update(TABELA_PRECOS_TABLE_NAME, content,sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar a tabela de preco (ID="+tabelaPreco.getId()+")");
+        }
 
         return tabelaPreco;
 

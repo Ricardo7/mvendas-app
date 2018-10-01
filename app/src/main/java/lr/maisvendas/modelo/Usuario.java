@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Usuario {
 
-    @JsonProperty("ID")
-    private Integer id;
     @JsonIgnore
+    private Integer id;
+    @JsonProperty("IDWS")
     private String idWS;
     @JsonProperty("Nome")
     private String nome;

@@ -52,7 +52,6 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
     public void onBindViewHolder(ProdutoViewHolder viewHolder, int i) {
         Produto produto = itens.get(i);
         viewHolder.textCodigoDesc.setText("("+produto.getCod()+") "+produto.getDescricao());
-        viewHolder.textVlrUnit.setText("0");
 
         //------------------------------------------------------------------
         //Popula as variáveis com informações do pedido e item da tabel de preço, caso exista
@@ -65,8 +64,16 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
             ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(context);
             itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(),produto.getId());
 
+            if (itemTabelaPreco != null) {
+
+                viewHolder.textVlrUnit.setText(itemTabelaPreco.getVlrUnitario().toString());
+            }else {
+                viewHolder.textVlrUnit.setText("-");
+            }
+
             viewHolder.imageAddPedido.setBackgroundResource(R.mipmap.ic_pedido_remov);
         }else{
+
             viewHolder.imageAddPedido.setBackgroundResource(R.mipmap.ic_pedido_add);
         }
         //------------------------------------------------------------------

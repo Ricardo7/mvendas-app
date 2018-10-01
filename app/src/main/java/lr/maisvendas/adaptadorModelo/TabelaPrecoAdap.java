@@ -18,6 +18,7 @@ public class TabelaPrecoAdap {
         TabelaPreco tabelaPreco = new TabelaPreco();
 
         tabelaPreco.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        tabelaPreco.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         tabelaPreco.setCod(cursor.getString(cursor.getColumnIndex("CODIGO")));
         tabelaPreco.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
 
@@ -28,6 +29,7 @@ public class TabelaPrecoAdap {
         ContentValues content = new ContentValues();
 
         content.put("ID",tabelaPreco.getId());
+        content.put("ID_WS",tabelaPreco.getIdWS());
         content.put("CODIGO",tabelaPreco.getCod());
         content.put("DESCRICAO",tabelaPreco.getDescricao());
 

@@ -40,7 +40,7 @@ public class ClienteSinc extends BaseActivity implements CarregarClienteCom.Carr
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
-            dataSincronizacao = dispositivo.getDataSincronizacao();
+            dataSincronizacao = dispositivo.getDataSincClientes();
         }
 
         //Antes de atualizar o banco interno com o retorno do servidor, deve buscar os produtos do banco interno
@@ -142,6 +142,8 @@ public class ClienteSinc extends BaseActivity implements CarregarClienteCom.Carr
 
         notify.setProgress(100,40,false);
         ferramentas.customLog(TAG,"Fim do tratamento de CLIENTES internos");
+
+        atualizaDataSincCliente();
     }
 
     @Override
@@ -169,6 +171,27 @@ public class ClienteSinc extends BaseActivity implements CarregarClienteCom.Carr
     @Override
     public void onCadastrarClienteFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
+    }
+
+    private void atualizaDataSincCliente() {
+
+        Dispositivo dispositivo = null;
+        DispositivoDAO dispositivoDAO = DispositivoDAO.getInstance(this);
+        dispositivo = dispositivoDAO.buscaDispositivo();
+        if (dispositivo == null || dispositivo.getId() <= 0) {
+            dispositivo = new Dispositivo();
+            dispositivo.setDataSincClientes(ferramentas.getCurrentDate());
+
+            dispositivoDAO.insereDispositivo(dispositivo);
+        } else {
+            dispositivo.setDataSincClientes(ferramentas.getCurrentDate());
+
+            try {
+                dispositivoDAO.atualizaDispositivo(dispositivo);
+            } catch (Exceptions ex) {
+                ferramentas.customLog(TAG, ex.getMessage());
+            }
+        }
     }
 
 }

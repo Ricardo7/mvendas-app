@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#f4208103</color>
+    <color name="colorPrimaryDark">#f40f4000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBranca">#ffffff</color>
     <color name="loginBlue">#e9dfff</color>
     <color name="loginButton">#eb423363</color>
-    <color name="cadastrarButton">#eb9064f5</color>
+    <color name="cadastrarButton">#df38d444</color>
     <color name="loginContent">#8f72fa</color>
     <color name="colorField">#4935d477</color>
-    <color name="buttonText">#33236b</color>
+    <color name="buttonText">#183919</color>
     <color name="buttonTextLogin">#b2a7d6</color>
     <color name="colorAlert">#c7e76767</color>
     <color name="colorAlertText">#f7caca</color>

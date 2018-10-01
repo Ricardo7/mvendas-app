@@ -37,7 +37,7 @@ public class ProdutoSinc extends BaseActivity implements CarregarProdutoCom.Carr
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
-            dataSincronizacao = dispositivo.getDataSincronizacao();
+            dataSincronizacao = dispositivo.getDataSincProdutos();
         }
 
         if (getUsuario() != null && getUsuario().getToken() != null) {
@@ -81,5 +81,28 @@ public class ProdutoSinc extends BaseActivity implements CarregarProdutoCom.Carr
         }
         notify.setProgress(100,60,false);
         ferramentas.customLog(TAG,"Fim do tratamento de PRODUTOS externos");
+
+        atualizaDataSincProduto();
+    }
+
+    private void atualizaDataSincProduto() {
+
+        Dispositivo dispositivo = null;
+        DispositivoDAO dispositivoDAO = DispositivoDAO.getInstance(this);
+        dispositivo = dispositivoDAO.buscaDispositivo();
+        if (dispositivo == null || dispositivo.getId() <= 0) {
+            dispositivo = new Dispositivo();
+            dispositivo.setDataSincProdutos(ferramentas.getCurrentDate());
+
+            dispositivoDAO.insereDispositivo(dispositivo);
+        } else {
+            dispositivo.setDataSincProdutos(ferramentas.getCurrentDate());
+
+            try {
+                dispositivoDAO.atualizaDispositivo(dispositivo);
+            } catch (Exceptions ex) {
+                ferramentas.customLog(TAG, ex.getMessage());
+            }
+        }
     }
 }

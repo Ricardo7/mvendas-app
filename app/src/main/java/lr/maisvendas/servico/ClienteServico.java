@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface ClienteServico {
 
-    @GET("Cliente/GetListaClientes") //Busca
+    @GET("Cliente/GetListaClientesAtualizados") //Busca
     public Call<Response<List<Cliente>>> carregarCliente(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("Cliente/AddCliente") //Insere

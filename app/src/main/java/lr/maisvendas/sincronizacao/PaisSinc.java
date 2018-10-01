@@ -42,7 +42,7 @@ public class PaisSinc extends BaseActivity implements CarregarPaisCom.CarregarPa
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
-            dataSincronizacao = dispositivo.getDataSincronizacao();
+            dataSincronizacao = dispositivo.getDataSincClientes();
         }
 
         if (getUsuario() != null && getUsuario().getToken() != null) {

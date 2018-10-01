@@ -19,10 +19,12 @@ import lr.maisvendas.modelo.Cliente;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.TabelaPreco;
 import lr.maisvendas.repositorio.sql.ClienteDAO;
+import lr.maisvendas.repositorio.sql.PedidoDAO;
 import lr.maisvendas.repositorio.sql.TabelaPrecoDAO;
 import lr.maisvendas.tela.adaptador.ListaClientesSpinnerAdapter;
 import lr.maisvendas.tela.adaptador.ListaTabelaPrecosSpinnerAdapter;
 import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
+import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 
 public class CadastroPedidoIniFragment extends Fragment implements View.OnClickListener{
@@ -46,6 +48,8 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
     private ListaClientesSpinnerAdapter listaClientesSpinnerAdapter;
     private List<TabelaPreco> listaTabelasPreco;
     private List<Cliente> listaClientes;
+    private Pedido pedido;
+    private Ferramentas ferramentas;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
         spinnerTabelaPreco = (Spinner) view.findViewById(R.id.activity_cadastro_pedido_ini_spinner_tabela_preco);
         editObservacao = (EditText) view.findViewById(R.id.activity_cadastro_pedido_ini_edit_observacao);
 
+        ferramentas = new Ferramentas();
 
         buttonProx.setOnClickListener(this);
 
@@ -98,6 +103,13 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         if (view == buttonProx){
+
+            try {
+                salvaDados();
+            } catch (Exceptions exceptions) {
+                ferramentas.customToast(getActivity(),exceptions.getMessage());
+            }
+
             CadastroPedidoItemFragment cadastroPedidoItemFragment = new CadastroPedidoItemFragment();
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment);
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment).commit();
@@ -130,7 +142,7 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
         listaClientesSpinnerAdapter = new ListaClientesSpinnerAdapter(getActivity(),listaClientes);
         spinnerCliente.setAdapter(listaClientesSpinnerAdapter);
 
-        Pedido pedido = comunicadorCadastroPedido.getPedido();
+        pedido = comunicadorCadastroPedido.getPedido();
 
         if (pedido != null) {
             textNumPedido.setText(pedido.getNumero().toString());
@@ -153,7 +165,40 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
             } else if (pedido.getStatus() == 2) {
                 textStatus.setText("Enviado");
             }
+
+            spinnerTabelaPreco.setSelection(listaTabelaPrecosSpinnerAdapter.getPosition(pedido.getTabelaPreco()));
+            spinnerCliente.setSelection(listaClientesSpinnerAdapter.getPosition(pedido.getCliente()));
+            if (pedido.getObservacao() != null) {
+                editObservacao.setText(pedido.getObservacao().toString());
+            }
         }
 
+    }
+
+    private void salvaDados() throws Exceptions{
+        if (spinnerTabelaPreco.getSelectedItem() == null) {
+            throw new Exceptions("Tabela de Preços não selecionada.");
+        }else if (spinnerCliente.getSelectedItem() == null) {
+            throw new Exceptions("Cliente não selecionado.");
+        }
+
+        pedido.setTabelaPreco((TabelaPreco) spinnerTabelaPreco.getSelectedItem());
+        pedido.setCliente((Cliente) spinnerCliente.getSelectedItem());
+        pedido.setObservacao(editObservacao.getText().toString());
+
+        pedido.setDtAtualizacao(ferramentas.getCurrentDate());
+
+        PedidoDAO pedidoDAO = PedidoDAO.getInstance(getActivity());
+
+        if (pedido != null){
+            //Se pedido já existe
+            pedidoDAO.atualizaPedido(pedido);
+        }else{
+            pedido.setStatus(0);
+            pedido.setSituacao(0);
+            pedido.setDtCriacao(ferramentas.getCurrentDate());
+            pedidoDAO.inserePedido(pedido);
+        }
+        comunicadorCadastroPedido.setPedido(pedido);
     }
 }

@@ -18,6 +18,7 @@ public class CondicaoPgtoAdap {
         CondicaoPgto condicaoPgto = new CondicaoPgto();
 
         condicaoPgto.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        condicaoPgto.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         condicaoPgto.setCod(cursor.getString(cursor.getColumnIndex("CODIGO")));
         condicaoPgto.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
         condicaoPgto.setDescAcr(cursor.getDouble(cursor.getColumnIndex("DESC_ACR")));
@@ -29,6 +30,7 @@ public class CondicaoPgtoAdap {
         ContentValues content = new ContentValues();
 
         content.put("ID",condicaoPgto.getId());
+        content.put("ID_WS",condicaoPgto.getIdWS());
         content.put("CODIGO",condicaoPgto.getCod());
         content.put("DESCRICAO",condicaoPgto.getDescricao());
         content.put("DESC_ACR",condicaoPgto.getDescAcr());

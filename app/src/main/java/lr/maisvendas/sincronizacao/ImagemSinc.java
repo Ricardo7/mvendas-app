@@ -8,6 +8,7 @@ import lr.maisvendas.modelo.Imagem;
 import lr.maisvendas.repositorio.sql.DispositivoDAO;
 import lr.maisvendas.repositorio.sql.ImagemDAO;
 import lr.maisvendas.tela.BaseActivity;
+import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.Notify;
 
@@ -36,7 +37,7 @@ public class ImagemSinc extends BaseActivity implements CarregarImagemCom.Carreg
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
-            dataSincronizacao = dispositivo.getDataSincronizacao();
+            dataSincronizacao = dispositivo.getDataSincImagens();
         }
 
         if (getUsuario() != null && getUsuario().getToken() != null) {
@@ -82,5 +83,28 @@ public class ImagemSinc extends BaseActivity implements CarregarImagemCom.Carreg
         */
         notify.setProgress(100,50,false);
         ferramentas.customLog(TAG,"Fim do tratamento de IMAGEMS externos");
+
+        atualizaDataSincImagem();
+    }
+
+    private void atualizaDataSincImagem(){
+
+        Dispositivo dispositivo = null;
+        DispositivoDAO dispositivoDAO = DispositivoDAO.getInstance(this);
+        dispositivo = dispositivoDAO.buscaDispositivo();
+        if (dispositivo == null || dispositivo.getId() <= 0) {
+            dispositivo = new Dispositivo();
+            dispositivo.setDataSincImagens(ferramentas.getCurrentDate());
+
+            dispositivoDAO.insereDispositivo(dispositivo);
+        } else {
+            dispositivo.setDataSincImagens(ferramentas.getCurrentDate());
+
+            try {
+                dispositivoDAO.atualizaDispositivo(dispositivo);
+            } catch (Exceptions ex) {
+                ferramentas.customLog(TAG, ex.getMessage());
+            }
+        }
     }
 }

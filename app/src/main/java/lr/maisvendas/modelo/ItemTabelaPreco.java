@@ -1,12 +1,23 @@
 package lr.maisvendas.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ItemTabelaPreco implements Serializable {
 
+    @JsonIgnore
     private Integer id;
+    @JsonProperty("VlrUnitario")
     private Double vlrUnitario;
+    @JsonProperty("MaxDesc")
     private Double maxDesc;
+    @JsonProperty("Produto")
     private Produto produto;
 
     public ItemTabelaPreco() {}

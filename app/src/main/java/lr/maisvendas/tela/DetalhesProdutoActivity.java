@@ -1,5 +1,7 @@
 package lr.maisvendas.tela;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -44,6 +46,7 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     private EditText editTotal;
     private ImageButton buttonPedido;
     private ViewPager viewPagerImagens;
+    private Boolean removeItem;
 
     //Variáveis
     private Produto produto;
@@ -92,11 +95,13 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         if (view == buttonPedido){
 
             if (itemPedido != null){
-                //Se o item estiver no pedido irá remover o item do pedido
-                ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
-                itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(),produto.getId());
+                if(confirmDialog()) {
+                    //Se o item estiver no pedido irá remover o item do pedido
+                    ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
+                    itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(), produto.getId());
 
-                buttonPedido.setBackgroundResource(R.mipmap.ic_carrinho_add);
+                    buttonPedido.setBackgroundResource(R.mipmap.ic_carrinho_add);
+                }
             }else{
 
                 try {
@@ -163,9 +168,9 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     }
 
     private void salvaDados() throws Exceptions{
-        if (editQuantidade.getText().toString().equals("")) {
+        if (editQuantidade.getText().toString().equals("0.0") || editQuantidade.getText().toString().equals("")) {
             throw new Exceptions("Quantidade não informada.");
-        }else if (editTotal.getText().toString().equals("")){
+        }else if (editTotal.getText().toString().equals("0.0") || editTotal.getText().toString().equals("")){
             throw new Exceptions("Valor total não informado.");
         }else if(editPercDesc.getText() != null && Double.valueOf(editPercDesc.getText().toString()) > itemTabelaPreco.getMaxDesc()){
             throw new Exceptions("Desconto informado não permitido, o maior desconto permitido para este item é "+itemTabelaPreco.getMaxDesc()+".");
@@ -214,6 +219,30 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     @Override
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
+    }
+
+    private Boolean confirmDialog() {
+        removeItem = false;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder
+                .setMessage("O Item será removido do pedido." +
+                        "\n Deseja continuar?")
+                .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        removeItem = true;
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        removeItem = false;
+                    }
+                })
+                .show();
+
+        return removeItem;
     }
 
     @Override
@@ -299,7 +328,9 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
 
                     valorDesc = Double.valueOf(editVlrDesc.getText().toString());
                     valorTotal = Double.valueOf(editable.toString()) * (valorUnitario - valorDesc);
-                    editTotal.setText(valorTotal.toString());
+
+                    bd = new BigDecimal(valorTotal).setScale(2, RoundingMode.HALF_EVEN);
+                    editTotal.setText(String.valueOf(bd.doubleValue()));
                 }
                 editandoAutomarico = false;
             }

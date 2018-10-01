@@ -1,16 +1,27 @@
 package lr.maisvendas.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TabelaPreco implements Serializable {
 
+    @JsonIgnore
     private Integer id;
+    @JsonProperty("IDWS")
+    private String idWS;
+    @JsonProperty("Cod")
     private String cod;
+    @JsonProperty("Descricao")
     private String descricao;
+    @JsonProperty("ItensTabelaPreco")
     private List<ItemTabelaPreco> itensTabelaPreco;
-
-    public TabelaPreco() {}
 
     public Integer getId() {
         return id;
@@ -18,6 +29,14 @@ public class TabelaPreco implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getIdWS() {
+        return idWS;
+    }
+
+    public void setIdWS(String idWS) {
+        this.idWS = idWS;
     }
 
     public String getCod() {

@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/linhaViewText"
-            android:layout_weight="2"/>
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/linha_lista_pedidos_data_pedido"
@@ -40,6 +40,26 @@
             android:layout_height="wrap_content"
             android:textColor="@color/linhaViewText"
             android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/linha_lista_pedidos_ic_status"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_pedido_aberto"/>
+
+            <ImageView
+                android:id="@+id/linha_lista_pedidos_ic_situacao"
+                android:layout_width="wrap_content"
+                android:background="@drawable/ic_pedido_pendente"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
     </LinearLayout>
 

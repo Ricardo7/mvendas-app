@@ -11,6 +11,7 @@ import java.util.List;
 import lr.maisvendas.adaptadorModelo.ItemPedidoAdap;
 import lr.maisvendas.modelo.ItemPedido;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class ItemPedidoDAO {
 	
@@ -74,6 +75,33 @@ public class ItemPedidoDAO {
         return itensPedido;
     }
 
+    public ItemPedido buscaItemPedidoProduto(Integer pedidoId, String codProduto){
+        ItemPedido itemPedido = new ItemPedido();
+
+        //Busca o grupo
+        String sql = "SELECT itpd.* " +
+                     "  FROM titens_pedido itpd" +
+                     "       INNER JOIN tprodutos pd ON itpd.produto_id = pd.id" +
+                     " WHERE itpd.pedido_id = "+ pedidoId +
+                     "   AND pd.codigo =  '"+ codProduto +"'";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ProdutoDAO produtoDAO = ProdutoDAO.getInstance(context);
+
+            ItemPedidoAdap itemPedidoAdap = new ItemPedidoAdap();
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                itemPedido = itemPedidoAdap.sqlToItemPedido(cursor);
+                itemPedido.setProduto(produtoDAO.buscaProdutoId(cursor.getInt(cursor.getColumnIndex("PRODUTO_ID"))));
+
+            }
+            cursor.close();
+        }
+
+        return itemPedido;
+    }
+
     public ItemPedido insereItemPedido(ItemPedido itemPedido, Integer pedidoId) {
 
         ItemPedidoAdap itemPedidoAdap = new ItemPedidoAdap();
@@ -87,6 +115,24 @@ public class ItemPedidoDAO {
         }
         */
         itemPedido.setId(itemPedidoId);
+
+        return itemPedido;
+
+    }
+
+    public ItemPedido atualizaItemPedido(ItemPedido itemPedido, Integer pedidoId) throws Exceptions{
+
+        ItemPedidoAdap itemPedidoAdap = new ItemPedidoAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = itemPedidoAdap.itemPedidoToContentValue(itemPedido,pedidoId);
+        String sqlWhere = "id = "+itemPedido.getId();
+
+        //Insere o itemPedido no banco
+        Integer executou = (int) dataBase.update(ITEM_PEDIDO_TABLE_NAME, content, sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar o item do pedido (ID="+itemPedido.getId()+")");
+        }
 
         return itemPedido;
 

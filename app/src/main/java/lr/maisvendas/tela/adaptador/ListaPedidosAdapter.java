@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ public class ListaPedidosAdapter extends ArrayAdapter<Pedido> implements Filtera
         TextView textCnpjRazSocial;
         TextView textNumPedido;
         TextView textDataPedido;
+        ImageView imagePedidoSituacao;
+        ImageView imagePedidoStatus;
 
         //Se a view ainda não foi criada irá criá-la
         if (linhaView == null) {
@@ -49,12 +52,32 @@ public class ListaPedidosAdapter extends ArrayAdapter<Pedido> implements Filtera
         textCnpjRazSocial = (TextView) linhaView.findViewById(R.id.linha_lista_pedidos_cnpj_raz_social);
         textNumPedido = (TextView) linhaView.findViewById(R.id.linha_lista_pedidos_num_pedido);
         textDataPedido = (TextView) linhaView.findViewById(R.id.linha_lista_pedidos_data_pedido);
+        imagePedidoSituacao = (ImageView) linhaView.findViewById(R.id.linha_lista_pedidos_ic_situacao);
+        imagePedidoStatus = (ImageView) linhaView.findViewById(R.id.linha_lista_pedidos_ic_status);
 
         Pedido pedido = getItem(position);
 
         textCnpjRazSocial.setText("("+pedido.getCliente().getCnpj()+") "+pedido.getCliente().getRazaoSocial());
         textNumPedido.setText(pedido.getNumero().toString());
         textDataPedido.setText(ferramentas.formatDateUser(pedido.getDtCriacao()));
+
+        if (pedido.getSituacao() == 0) {
+            imagePedidoSituacao.setBackgroundResource(R.drawable.ic_pedido_pendente);
+        } else if (pedido.getSituacao() == 1) {
+            imagePedidoSituacao.setBackgroundResource(R.drawable.ic_pedido_bloqueado);
+        } else if (pedido.getSituacao() == 2) {
+            imagePedidoSituacao.setBackgroundResource(R.drawable.ic_pedido_aprovado);
+        } else if (pedido.getSituacao() == 3) {
+            imagePedidoSituacao.setBackgroundResource(R.drawable.ic_pedido_cancelado);
+        }
+
+        if (pedido.getStatus() == 0) {
+            imagePedidoStatus.setBackgroundResource(R.drawable.ic_pedido_aberto);
+        } else if (pedido.getStatus() == 1) {
+            imagePedidoStatus.setBackgroundResource(R.drawable.ic_pedido_fechado);
+        } else if (pedido.getStatus() == 2) {
+            imagePedidoStatus.setBackgroundResource(R.drawable.ic_pedido_enviado);
+        }
         return linhaView;
 
     }

@@ -37,7 +37,7 @@ public class EstadoSinc extends BaseActivity implements CarregarEstadoCom.Carreg
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
-            dataSincronizacao = dispositivo.getDataSincronizacao();
+            dataSincronizacao = dispositivo.getDataSincClientes();
         }
 
         if (getUsuario() != null && getUsuario().getToken() != null) {

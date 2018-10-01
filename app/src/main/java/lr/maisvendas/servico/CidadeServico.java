@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface CidadeServico {
 
-    @GET("Locais/GetListaCidades") //Busca
+    @GET("Locais/GetListaCidadesAtualizadas") //Busca
     public Call<Response<List<Cidade>>> carregarCidade(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("Cidade") //Insere (não utilizado no cidade)

@@ -11,6 +11,7 @@ import java.util.List;
 import lr.maisvendas.adaptadorModelo.CondicaoPgtoAdap;
 import lr.maisvendas.modelo.CondicaoPgto;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class CondicaoPgtoDAO {
 	
@@ -64,6 +65,25 @@ public class CondicaoPgtoDAO {
         return condicaoPgto;
     }
 
+    public CondicaoPgto buscaCondicaoPgtoIdWs(String condicaoPgtoIdWs){
+        CondicaoPgto condicaoPgto = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tcondicoes_pgto WHERE id_ws = '"+ condicaoPgtoIdWs +"'";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                condicaoPgto = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
+            }
+            cursor.close();
+        }
+
+        return condicaoPgto;
+    }
+
     public List<CondicaoPgto> buscaCondicaoPgto(){
         List<CondicaoPgto> condicoesPgto = new ArrayList<>();
         CondicaoPgto condicaoPgto = null;
@@ -99,6 +119,23 @@ public class CondicaoPgtoDAO {
         }
         */
         condicaoPgto.setId(condicaoPgtoId);
+
+        return condicaoPgto;
+
+    }
+
+    public CondicaoPgto atualizaCondicaoPgto(CondicaoPgto condicaoPgto) throws Exceptions{
+
+        CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = condicaoPgtoAdap.condicaoPgtoToContentValue(condicaoPgto);
+        String sqlWhere = "id = "+condicaoPgto.getId();
+        //Insere o condicaoPgto no banco
+        Integer executou = (int) dataBase.update(CONDICAO_PGTO_TABLE_NAME,content,sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar a condição de pagamento (ID="+condicaoPgto.getId()+")");
+        }
 
         return condicaoPgto;
 

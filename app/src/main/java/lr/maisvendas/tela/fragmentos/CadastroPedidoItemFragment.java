@@ -2,8 +2,10 @@ package lr.maisvendas.tela.fragmentos;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,9 @@ import android.widget.ListView;
 
 import lr.maisvendas.R;
 import lr.maisvendas.modelo.Pedido;
-import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
+import lr.maisvendas.tela.ListaProdutosActivity;
 import lr.maisvendas.tela.adaptador.ListaItensPedidoAdapter;
+import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
 
 public class CadastroPedidoItemFragment extends Fragment  implements View.OnClickListener{
 
@@ -24,6 +27,7 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
     private ListView listViewItesPedido;
     private Button buttonAnt;
     private Button buttonProx;
+    private FloatingActionButton buttonAdd;
 
     //Variáveis
     private ListaItensPedidoAdapter listaItensPedidoAdapter;
@@ -44,9 +48,11 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
         listViewItesPedido = (ListView) view.findViewById(R.id.fragment_cadastro_pedido_item_list_view);
         buttonAnt = (Button) view.findViewById(R.id.fragment_cadastro_pedido_item_button_ant);
         buttonProx = (Button) view.findViewById(R.id.fragment_cadastro_pedido_item_button_prox);
+        buttonAdd = (FloatingActionButton) view.findViewById(R.id.fragment_cadastro_pedido_item_button_add);
 
         buttonAnt.setOnClickListener(this);
         buttonProx.setOnClickListener(this);
+        buttonAdd.setOnClickListener(this);
 
         return view;
     }
@@ -80,6 +86,9 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
             CadastroPedidoFimFragment cadastroPedidoFimFragment = new CadastroPedidoFimFragment();
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment);
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoFimFragment).commit();
+        }else if(view == buttonAdd){
+            Intent intent = new Intent(getActivity(),ListaProdutosActivity.class);
+            startActivity(intent);
         }
 
     }

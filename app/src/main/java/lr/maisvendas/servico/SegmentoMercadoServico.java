@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface SegmentoMercadoServico {
 
-    @GET("SegmentoMercado/GetListaSegmentoMercados") //Busca
+    @GET("SegmentoMercado/GetListaSegmentosMercadoAtualizados") //Busca
     public Call<Response<List<SegmentoMercado>>> carregarSegmentoMercado(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("SegmentoMercado") //Insere (não utilizado no segmentoMercado)

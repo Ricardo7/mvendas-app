@@ -7,7 +7,11 @@ import android.widget.Button;
 import android.widget.Switch;
 
 import lr.maisvendas.R;
+import lr.maisvendas.sincronizacao.CidadeSinc;
 import lr.maisvendas.sincronizacao.ClienteSinc;
+import lr.maisvendas.sincronizacao.EstadoSinc;
+import lr.maisvendas.sincronizacao.PaisSinc;
+import lr.maisvendas.sincronizacao.SegmentoMercadoSinc;
 import lr.maisvendas.utilitarios.Notify;
 
 public class SincronicacaoManualActivity extends BaseActivity implements View.OnClickListener {
@@ -52,9 +56,25 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
         if (view == buttonSinc){
 
             notify = new Notify(this);
+            notify.iniciaNotificacao("Sincronização", "Sincronização iniciada");
 
             if (switchSincTudo.isChecked() || switchSincImagens.isChecked()){
+                //Cliente
+                //A classe do paisSync, por ser a primeira classe, irá tratar se o usuário está autenticado
+                PaisSinc paisSinc = new PaisSinc(notify);
+                paisSinc.sincronizaPais();
 
+                EstadoSinc estadoSinc = new EstadoSinc(notify);
+                estadoSinc.sincronizaEstado();
+
+                CidadeSinc cidadeSinc = new CidadeSinc(notify);
+                cidadeSinc.sincronizaCidade();
+
+                SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify);
+                segmentoMercadoSinc.sincronizaSegmentoMercado();
+
+                ClienteSinc clienteSinc = new ClienteSinc(notify);
+                clienteSinc.sincronizaCliente();
             }
 
             if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()){
@@ -69,6 +89,9 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
             if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()){
 
             }
+
+            notify.setProgress(100,100,false);
+            notify.finalizaNotificacao("Sincronização concluída");
         }
     }
 

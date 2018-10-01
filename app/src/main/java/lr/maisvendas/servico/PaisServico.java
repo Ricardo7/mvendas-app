@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface PaisServico {
 
-    @GET("Locais/GetListaPaises") //Busca
+    @GET("Locais/GetListaPaisesAtualizados") //Busca
     public Call<Response<List<Pais>>> carregarPais(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("Pais") //Insere (não utilizado no pais)

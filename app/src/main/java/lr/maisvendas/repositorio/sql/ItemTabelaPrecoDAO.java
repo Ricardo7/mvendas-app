@@ -11,6 +11,7 @@ import java.util.List;
 import lr.maisvendas.adaptadorModelo.ItemTabelaPrecoAdap;
 import lr.maisvendas.modelo.ItemTabelaPreco;
 import lr.maisvendas.repositorio.DatabaseHelper;
+import lr.maisvendas.utilitarios.Exceptions;
 
 public class ItemTabelaPrecoDAO {
 	
@@ -49,7 +50,7 @@ public class ItemTabelaPrecoDAO {
 
         ItemTabelaPreco itemTabelaPreco = null;
 
-        String sql = "SELECT ittab.*" +
+        String sql = "SELECT ittab.* " +
                 " FROM titens_tabela_precos ittab" +
                 "      INNER JOIN ttabela_precos tab ON ittab.tabela_preco_id = tab.id" +
                 "      INNER JOIN tpedidos pd        ON tab.id = pd.tabela_preco_id" +
@@ -99,6 +100,33 @@ public class ItemTabelaPrecoDAO {
         return itensTabelaPreco;
     }
 
+    public ItemTabelaPreco buscaItemTabelaPrecoProduto(Integer tabelaPrecoId, String codProduto){
+        ItemTabelaPreco itemTabelaPreco = null;
+
+        //Busca o grupo
+        String sql = "SELECT * " +
+                     "  FROM titens_tabela_precos itpr" +
+                     "       INNER JOIN produto pd ON itpr.produto_id = pd.id" +
+                     " WHERE itpr.tabela_preco_id = "+ tabelaPrecoId +
+                     "   AND pd.codigo =  '"+ codProduto +"'";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ProdutoDAO produtoDAO = ProdutoDAO.getInstance(context);
+
+            ItemTabelaPrecoAdap itemTabelaPrecoAdap = new ItemTabelaPrecoAdap();
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                itemTabelaPreco = itemTabelaPrecoAdap.sqlToItemTabelaPreco(cursor);
+                itemTabelaPreco.setProduto(produtoDAO.buscaProdutoId(cursor.getInt(cursor.getColumnIndex("PRODUTO_ID"))));
+
+            }
+            cursor.close();
+        }
+
+        return itemTabelaPreco;
+    }
+
     public ItemTabelaPreco insereItemTabelaPreco(ItemTabelaPreco itemTabelaPreco, Integer tabelaPrecoId) {
 
         ItemTabelaPrecoAdap itemTabelaPrecoAdap = new ItemTabelaPrecoAdap();
@@ -113,6 +141,24 @@ public class ItemTabelaPrecoDAO {
         }
         */
         itemTabelaPreco.setId(itemTabelaPrecoId);
+
+        return itemTabelaPreco;
+
+    }
+
+    public ItemTabelaPreco atualizaItemTabelaPreco(ItemTabelaPreco itemTabelaPreco, Integer tabelaPrecoId) throws Exceptions {
+
+        ItemTabelaPrecoAdap itemTabelaPrecoAdap = new ItemTabelaPrecoAdap();
+        //Converte o objeto em um contetValue para inserir no banco
+        ContentValues content = itemTabelaPrecoAdap.itemTabelaPrecoToContentValue(itemTabelaPreco,tabelaPrecoId);
+        String sqlWhere = "id = "+itemTabelaPreco.getId();
+
+        //Insere o itemTabelaPreco no banco
+        Integer executou = (int) dataBase.update(ITEM_TABELA_PRECO_TABLE_NAME, content,sqlWhere,null);
+
+        if(executou <= 0){
+            throw new Exceptions("Não foi possível atualizar o item da tabela de preço (ID="+itemTabelaPreco.getId()+")");
+        }
 
         return itemTabelaPreco;
 
