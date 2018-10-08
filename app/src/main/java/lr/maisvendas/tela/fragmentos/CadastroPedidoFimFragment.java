@@ -1,25 +1,23 @@
 package lr.maisvendas.tela.fragmentos;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
 
 import lr.maisvendas.R;
-import lr.maisvendas.modelo.CondicaoPgto;
 import lr.maisvendas.modelo.ItemPedido;
 import lr.maisvendas.modelo.Pedido;
-import lr.maisvendas.repositorio.sql.CondicaoPgtoDAO;
 import lr.maisvendas.repositorio.sql.PedidoDAO;
-import lr.maisvendas.tela.adaptador.ListaCondPgtoSpinnerAdapter;
 import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
@@ -28,22 +26,30 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
     private static final String TAG = "CadastroPedidoFimFragment";
     public static final String PARAM_PEDIDO_INI = "PARAM_PEDIDO_FIM";
+    public static String ARG_POSITION = "arg_position";
 
     //Campos da tela
-    private Spinner spinnerCondPgto;
     private TextView textVlrTotal;
     private TextView textVlrDescoto;
     private TextView textVlrFinal;
     private Button buttonExcluir;
     private Button buttonEnviar;
-    private Button buttonAnt;
+    //private Button buttonAnt;
 
     //Variáveis
     private ComunicadorCadastroPedido comunicadorCadastroPedido;
-    private ListaCondPgtoSpinnerAdapter listaCondPgtoSpinnerAdapter;
-    private List<CondicaoPgto> listaCondicoesPgto;
     private Pedido pedido;
     private Ferramentas ferramentas;
+
+    public CadastroPedidoFimFragment(){};
+
+    public static CadastroPedidoFimFragment newInstance(int postion){
+        Bundle parameters = new Bundle();
+        parameters.putInt(ARG_POSITION, postion);
+        CadastroPedidoFimFragment frag = new CadastroPedidoFimFragment();
+        frag.setArguments(parameters);
+        return frag;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,19 +63,22 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
         View view = inflater.inflate(R.layout.fragment_cadastro_pedido_fim,container,false);
 
         //Tratar campos da tela aqui
-        spinnerCondPgto = (Spinner) view.findViewById(R.id.fragment_cadastro_pedido_fim_spinner_condicao_pgto);
         textVlrTotal = (TextView) view.findViewById(R.id.fragment_cadastro_pedido_fim_text_vlr_total);
         textVlrDescoto = (TextView) view.findViewById(R.id.fragment_cadastro_pedido_fim_text_vlr_desconto);
         textVlrFinal = (TextView) view.findViewById(R.id.fragment_cadastro_pedido_fim_text_vlr_final);
         buttonExcluir = (Button) view.findViewById(R.id.fragment_cadastro_pedido_fim_button_excluir);
         buttonEnviar = (Button) view.findViewById(R.id.fragment_cadastro_pedido_fim_button_enviar);
+        /*
         buttonAnt = (Button) view.findViewById(R.id.fragment_cadastro_pedido_fim_button_ant);
+        */
 
         ferramentas = new Ferramentas();
-
+        /*
         buttonAnt.setOnClickListener(this);
+        */
         buttonEnviar.setOnClickListener(this);
         buttonExcluir.setOnClickListener(this);
+
 
         return view;
     }
@@ -93,22 +102,37 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
     @Override
     public void onClick(View view) {
 
-        if (view == buttonAnt){
+        /*if (view == buttonAnt){
             CadastroPedidoItemFragment cadastroPedidoItemFragment = new CadastroPedidoItemFragment();
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment);
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment).commit();
-        }else if(view == buttonEnviar){
-            try {
-                salvaDados();
-            } catch (Exceptions ex) {
-                ferramentas.customToast(getActivity(),ex.getMessage());
-            }
+        }else */
+        if(view == buttonEnviar){
+
         }else if (view == buttonExcluir){
-            try {
-                excluiDados();
-            } catch (Exceptions ex) {
-                ferramentas.customToast(getActivity(),ex.getMessage());
-            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder
+                .setMessage("O Pedido será excluído definitivamente." +
+                        "\n Deseja continuar?")
+                .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            excluiDados();
+                        } catch (Exceptions ex) {
+                            ferramentas.customToast(getActivity(),ex.getMessage());
+                        }
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        return;
+                    }
+                })
+                .show();
         }
 
     }
@@ -120,21 +144,8 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
         pedido = comunicadorCadastroPedido.getPedido();
 
-        CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(getActivity());
-        listaCondicoesPgto = condicaoPgtoDAO.buscaCondicaoPgto();
-
-        CondicaoPgto condicaoPgto = new CondicaoPgto();
-        condicaoPgto.setCod("");
-        condicaoPgto.setDescricao("Selecione");
-        listaCondicoesPgto.add(0,condicaoPgto);
-        if (listaCondicoesPgto != null) {
-            listaCondPgtoSpinnerAdapter = new ListaCondPgtoSpinnerAdapter(getActivity(), listaCondicoesPgto);
-            spinnerCondPgto.setAdapter(listaCondPgtoSpinnerAdapter);
-        }
-
         if (pedido != null) {
 
-            spinnerCondPgto.setSelection(listaCondPgtoSpinnerAdapter.getPosition(pedido.getCondicaoPgto()));
             textVlrTotal.setText("R$ "+totalTotalPedido(pedido).toString());
             textVlrDescoto.setText("R$ "+totalDescontoPedido(pedido).toString());
             textVlrFinal.setText("R$ "+totalLiquidoPedido(pedido).toString());
@@ -177,12 +188,8 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
         return liquido;
     }
 
-    private void salvaDados() throws Exceptions{
-        if (spinnerCondPgto.getSelectedItem() == null) {
-            throw new Exceptions("Condição de pagamento não selecionada.");
-        }
+    public void salvaDados() throws Exceptions{
 
-        pedido.setCondicaoPgto((CondicaoPgto) spinnerCondPgto.getSelectedItem());
         pedido.setDtAtualizacao(ferramentas.getCurrentDate());
         pedido.setStatus(1);
 
@@ -203,6 +210,7 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
         PedidoDAO pedidoDAO = PedidoDAO.getInstance(getActivity());
         pedidoDAO.deletaPedido(pedido.getId());
+
 
     }
 }

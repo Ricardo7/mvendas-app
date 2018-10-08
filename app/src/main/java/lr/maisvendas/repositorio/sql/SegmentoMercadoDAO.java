@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lr.maisvendas.adaptadorModelo.SegmentoMercadoAdap;
 import lr.maisvendas.modelo.SegmentoMercado;
 import lr.maisvendas.repositorio.DatabaseHelper;
@@ -39,6 +42,30 @@ public class SegmentoMercadoDAO {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(context);
         dataBase = databaseHelper.getWritableDatabase();
         //segmentoMercadoAdap = new SegmentoMercadoAdap();
+    }
+
+    public List<SegmentoMercado> buscaSegmentosMercado(){
+        List<SegmentoMercado> segmentosMercados= new ArrayList<>();
+        SegmentoMercado segmentoMercado = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tsegmentos_mercado ";
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            SegmentoMercadoAdap segmentoMercadoAdap = new SegmentoMercadoAdap();
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                segmentoMercado = segmentoMercadoAdap.sqlToSegmentoMercado(cursor);
+
+                segmentosMercados.add(segmentoMercado);
+            }
+            cursor.close();
+        }
+
+        return segmentosMercados;
+
     }
 
     public SegmentoMercado buscaSegmentoMercadoId(Integer segmentoMercadoId){

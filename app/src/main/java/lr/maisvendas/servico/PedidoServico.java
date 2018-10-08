@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface PedidoServico {
 
-    @GET("Pedido/GetListaPedidos") //Busca
+    @GET("Pedido/GetListaPedidosAtualizados") //Busca
     public Call<Response<List<Pedido>>> carregarPedido(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("Pedido/AddPedido") //Insere

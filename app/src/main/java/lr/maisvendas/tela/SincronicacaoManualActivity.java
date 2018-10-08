@@ -7,11 +7,16 @@ import android.widget.Button;
 import android.widget.Switch;
 
 import lr.maisvendas.R;
+import lr.maisvendas.config.EnderecoHost;
+import lr.maisvendas.servico.VerificaConexao;
+import lr.maisvendas.servico.VerificaServico;
 import lr.maisvendas.sincronizacao.CidadeSinc;
 import lr.maisvendas.sincronizacao.ClienteSinc;
 import lr.maisvendas.sincronizacao.EstadoSinc;
 import lr.maisvendas.sincronizacao.PaisSinc;
 import lr.maisvendas.sincronizacao.SegmentoMercadoSinc;
+import lr.maisvendas.utilitarios.Exceptions;
+import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.Notify;
 
 public class SincronicacaoManualActivity extends BaseActivity implements View.OnClickListener {
@@ -27,6 +32,7 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
 
     //Variáveis
     public Notify notify;
+    private Ferramentas ferramentas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,8 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
         switchSincProdutos = (Switch) findViewById(R.id.activity_sincronicacao_manual_switch_produtos);
         buttonSinc = (Button) findViewById(R.id.activity_sincronicacao_manual_button_sincronizar);
 
+        ferramentas = new Ferramentas();
+
         buttonSinc.setOnClickListener(this);
 
     }
@@ -55,43 +63,52 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
     public void onClick(View view) {
         if (view == buttonSinc){
 
-            notify = new Notify(this);
-            notify.iniciaNotificacao("Sincronização", "Sincronização iniciada");
+            VerificaConexao verificaConexao = new VerificaConexao();
+            VerificaServico verificaServico = new VerificaServico();
+            EnderecoHost enderecoHost = new EnderecoHost();
+            try {
 
-            if (switchSincTudo.isChecked() || switchSincImagens.isChecked()){
-                //Cliente
-                //A classe do paisSync, por ser a primeira classe, irá tratar se o usuário está autenticado
-                PaisSinc paisSinc = new PaisSinc(notify);
-                paisSinc.sincronizaPais();
+                if (verificaConexao.isNetworkAvailable(this) && verificaServico.execute(enderecoHost.getHostHTTPRaiz()).get()) {
+                    notify = new Notify(this);
+                    notify.iniciaNotificacao("Sincronização", "Sincronização iniciada");
 
-                EstadoSinc estadoSinc = new EstadoSinc(notify);
-                estadoSinc.sincronizaEstado();
+                    if (switchSincTudo.isChecked() || switchSincImagens.isChecked()) {
 
-                CidadeSinc cidadeSinc = new CidadeSinc(notify);
-                cidadeSinc.sincronizaCidade();
+                    }
 
-                SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify);
-                segmentoMercadoSinc.sincronizaSegmentoMercado();
+                    if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()) {
 
-                ClienteSinc clienteSinc = new ClienteSinc(notify);
-                clienteSinc.sincronizaCliente();
+                    }
+
+                    if (switchSincTudo.isChecked() || switchSincClientes.isChecked()) {
+                        //Cliente
+                        //A classe do paisSync, por ser a primeira classe, irá tratar se o usuário está autenticado
+                        PaisSinc paisSinc = new PaisSinc(notify);
+                        paisSinc.sincronizaPais();
+
+                        EstadoSinc estadoSinc = new EstadoSinc(notify);
+                        estadoSinc.sincronizaEstado();
+
+                        CidadeSinc cidadeSinc = new CidadeSinc(notify);
+                        cidadeSinc.sincronizaCidade();
+
+                        SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify);
+                        segmentoMercadoSinc.sincronizaSegmentoMercado();
+
+                        ClienteSinc clienteSinc = new ClienteSinc(notify);
+                        clienteSinc.sincronizaCliente();
+                    }
+
+                    if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()) {
+
+                    }
+
+                    notify.setProgress(100, 100, false);
+                    notify.finalizaNotificacao("Sincronização concluída");
+                }
+            }catch (Exception ex){
+                ferramentas.customLog(TAG,ex.getMessage());
             }
-
-            if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()){
-
-            }
-
-            if (switchSincTudo.isChecked() || switchSincClientes.isChecked()){
-                ClienteSinc clienteSinc = new ClienteSinc(notify);
-                clienteSinc.sincronizaCliente();
-            }
-
-            if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()){
-
-            }
-
-            notify.setProgress(100,100,false);
-            notify.finalizaNotificacao("Sincronização concluída");
         }
     }
 

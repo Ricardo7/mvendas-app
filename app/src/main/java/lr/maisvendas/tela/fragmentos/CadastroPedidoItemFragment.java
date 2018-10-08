@@ -1,7 +1,7 @@
 package lr.maisvendas.tela.fragmentos;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +22,7 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
 
     private static final String TAG = "CadastroPedidoItemFragment";
     public static final String PARAM_PEDIDO_ITEM = "PARAM_PEDIDO_ITEM";
+    public static String ARG_POSITION = "arg_position";
 
     //Campos da tela
     private ListView listViewItesPedido;
@@ -33,6 +34,16 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
     private ListaItensPedidoAdapter listaItensPedidoAdapter;
     private ComunicadorCadastroPedido comunicadorCadastroPedido;
     private Pedido pedido;
+
+    public CadastroPedidoItemFragment(){};
+
+    public static CadastroPedidoItemFragment newInstance(int postion){
+        Bundle parameters = new Bundle();
+        parameters.putInt(ARG_POSITION, postion);
+        CadastroPedidoItemFragment frag = new CadastroPedidoItemFragment();
+        frag.setArguments(parameters);
+        return frag;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,13 +57,16 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
 
         //Tratar campos da tela aqui
         listViewItesPedido = (ListView) view.findViewById(R.id.fragment_cadastro_pedido_item_list_view);
-        buttonAnt = (Button) view.findViewById(R.id.fragment_cadastro_pedido_item_button_ant);
-        buttonProx = (Button) view.findViewById(R.id.fragment_cadastro_pedido_item_button_prox);
+        //buttonAnt = (Button) view.findViewById(R.id.fragment_cadastro_pedido_item_button_ant);
+        //buttonProx = (Button) view.findViewById(R.id.fragment_cadastro_pedido_item_button_prox);
         buttonAdd = (FloatingActionButton) view.findViewById(R.id.fragment_cadastro_pedido_item_button_add);
 
+        /*
         buttonAnt.setOnClickListener(this);
         buttonProx.setOnClickListener(this);
+        */
         buttonAdd.setOnClickListener(this);
+
 
         return view;
     }
@@ -78,7 +92,7 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        if (view == buttonAnt){
+        /*if (view == buttonAnt){
             CadastroPedidoIniFragment cadastroPedidoIniFragment = new CadastroPedidoIniFragment();
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment);
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoIniFragment).commit();
@@ -86,7 +100,8 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
             CadastroPedidoFimFragment cadastroPedidoFimFragment = new CadastroPedidoFimFragment();
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment);
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoFimFragment).commit();
-        }else if(view == buttonAdd){
+        }else */
+        if(view == buttonAdd){
             Intent intent = new Intent(getActivity(),ListaProdutosActivity.class);
             startActivity(intent);
         }

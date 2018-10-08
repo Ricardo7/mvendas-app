@@ -34,8 +34,7 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
     private RecyclerView recyclerViewProdutos;
     private ListaProdutosAdapter listaProdutosAdapter;
     private List<Produto> listaProdutos;
-    private Boolean removeItem;
-
+    private Ferramentas ferramentas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +46,8 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
         super.onCreate(savedInstanceState);
 
         setTitle("Produtos");
+
+        ferramentas = new Ferramentas();
 
         recyclerViewProdutos = (RecyclerView) findViewById(R.id.activity_lista_produtos_list_view);
         imagePedidoAdd = (ImageButton) findViewById(R.id.linha_lista_produto_button_pedido);
@@ -79,37 +80,35 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
 
     @Override
     public void onItemProdutoClick(View view, int position) {
-        Ferramentas ferramentas = new Ferramentas();
 
-            Produto produto = listaProdutosAdapter.getItem(position);
-            //Verifica se tem um pedido no carrinho, em construção (Status = 0 )
-            PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
-            Pedido pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
-        //ferramentas.customLog("RRRRR-PDV",pedido.getId().toString());
-        //ferramentas.customLog("RRRRR-PRD",produto.getId().toString());
-            //Busca o item da tabela de preço do pedido (Só irá ter valor)
-            ItemTabelaPreco itemTabelaPreco = null;
-            if (pedido != null) {
-                ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
-                itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(), produto.getId());
+        Produto produto = listaProdutosAdapter.getItem(position);
+        //Verifica se tem um pedido no carrinho, em construção (Status = 0 )
+        PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
+        Pedido pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
 
-                //ferramentas.customLog("RRRRR-IT",itemTabelaPreco.getId().toString());
-            }
+        //Busca o item da tabela de preço do pedido (Só irá ter valor)
+        ItemTabelaPreco itemTabelaPreco = null;
+        if (pedido != null) {
+            ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
+            itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(), produto.getId());
 
-            Intent intent = new Intent(this, DetalhesProdutoActivity.class);
-            intent.putExtra(DetalhesProdutoActivity.PARAM_PRODUTO, produto);
-            intent.putExtra(DetalhesProdutoActivity.PARAM_PEDIDO, pedido);
-            intent.putExtra(DetalhesProdutoActivity.PARAM_ITEM_TABELA_PRECO, itemTabelaPreco);
-            startActivity(intent);
+        }
+
+        Intent intent = new Intent(this, DetalhesProdutoActivity.class);
+        intent.putExtra(DetalhesProdutoActivity.PARAM_PRODUTO, produto);
+        intent.putExtra(DetalhesProdutoActivity.PARAM_PEDIDO, pedido);
+        intent.putExtra(DetalhesProdutoActivity.PARAM_ITEM_TABELA_PRECO, itemTabelaPreco);
+        startActivity(intent);
 
 
     }
 
     @Override
-    public void onAddPedidoClick(View view, int position) {
+    public void onAddPedidoClick(View view, final int position) {
 
-        Produto produto = (Produto) listaProdutosAdapter.getItem(position);
-        Pedido pedido = listaProdutosAdapter.getPedido();
+        final Produto produto = (Produto) listaProdutosAdapter.getItem(position);
+        final Pedido pedido = listaProdutosAdapter.getPedido(position);
+
         //Se item estiver no pedido (pedido existe) irá remover. Senão, será tratado para direcionar a tela de inclusão de pedido ou produto.
         if (pedido != null){
             /*VERIFICAR  A NECESSINDADE DE LIMPAR O PEDIDO DO PRODUTO, HOJE NÃO SERÁ LIMPADO
@@ -117,30 +116,47 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
             listaProdutosAdapter.setItemTabelaPreco(null);
             */
 
-            if (confirmDialog()){
-                ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
-                itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(),produto.getId());
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+            builder
+                .setMessage("O Item será removido do pedido." +
+                        "\n Deseja continuar?")
+                .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(ListaProdutosActivity.this);
+                        itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(),produto.getId());
 
-                // Informa ao adapter que o conteúdo do array list foi modificado, logo o ListView deve ser atualizado
-                if(listaProdutosAdapter != null) {
-                    listaProdutosAdapter.notifyDataSetChanged();
-                }
-            }
+                        listaProdutosAdapter.setPedido(position,null);
+
+                        // Informa ao adapter que o conteúdo do array list foi modificado, logo o ListView deve ser atualizado
+                        if(listaProdutosAdapter != null) {
+                            listaProdutosAdapter.notifyDataSetChanged();
+                        }
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        return;
+                    }
+                })
+                .show();
+
         } else{
             //Verifica se existe algum pedido em aberto
             PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
-            pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
+            Pedido pedidoAberto = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
 
             Intent intent = null;
             //Se existir pedido aberto, direciona para detalhes de itens para que o mesmo seja adicionado
-            if (pedido != null) {
+            if (pedidoAberto != null) {
                 ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
-                ItemTabelaPreco itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(), produto.getId());
+                ItemTabelaPreco itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedidoAberto.getId(), produto.getId());
 
                 intent = new Intent(this, DetalhesProdutoActivity.class);
                 intent.putExtra(DetalhesProdutoActivity.PARAM_PRODUTO, produto);
-                intent.putExtra(DetalhesProdutoActivity.PARAM_PEDIDO, pedido);
+                intent.putExtra(DetalhesProdutoActivity.PARAM_PEDIDO, pedidoAberto);
                 intent.putExtra(DetalhesProdutoActivity.PARAM_ITEM_TABELA_PRECO, itemTabelaPreco);
                 startActivity(intent);
 
@@ -161,30 +177,6 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
     private void loadDataFromActivity() {
 
 
-    }
-
-    private Boolean confirmDialog() {
-        removeItem = false;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder
-                .setMessage("O Item será removido do pedido." +
-                        "\n Deseja continuar?")
-                .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                         removeItem = true;
-                    }
-                })
-                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,int id) {
-                        removeItem = false;
-                    }
-                })
-                .show();
-
-        return removeItem;
     }
 
     @Override

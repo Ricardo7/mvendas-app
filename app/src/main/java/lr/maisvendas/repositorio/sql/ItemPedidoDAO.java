@@ -144,6 +144,12 @@ public class ItemPedidoDAO {
 
         dataBase.delete(ITEM_PEDIDO_TABLE_NAME,sqlWhere,null);
     }
+
+    public void deletaItemPedido(Integer pedidoId){
+        String sqlWhere = "PEDIDO_ID = " + pedidoId;
+
+        dataBase.delete(ITEM_PEDIDO_TABLE_NAME,sqlWhere,null);
+    }
     
     public void truncateItems(){
         dataBase.delete(ITEM_PEDIDO_TABLE_NAME,null,null);

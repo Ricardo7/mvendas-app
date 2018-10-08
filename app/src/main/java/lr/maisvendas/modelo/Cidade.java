@@ -15,7 +15,7 @@ public class Cidade implements Serializable {
     private Integer id;
     @JsonProperty("IDWS")
     private String idWS;
-    @JsonProperty("Discricao")
+    @JsonProperty("Descricao")
     private String descricao;
     @JsonProperty("Sigla")
     private String sigla;

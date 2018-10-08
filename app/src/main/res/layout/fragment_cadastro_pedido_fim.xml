@@ -10,31 +10,18 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="vertical"
-        android:layout_weight="8"
+        android:layout_weight="12"
         android:textColor="@color/linhaViewText"
         android:textSize="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:text="Condição de Pagamento" />
-
-        <Spinner
-            android:id="@+id/fragment_cadastro_pedido_fim_spinner_condicao_pgto"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_edit_text_filder"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/border_field" />
-
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:textSize="@dimen/cadastro_pedido_fim_text"
-        android:textColor="@color/cadastro_pedido_text_total_label"
-        android:textAlignment="center"
-        android:text="Valor Total"/>
+            android:layout_marginTop="80dp"
+            android:textSize="@dimen/cadastro_pedido_fim_text"
+            android:textColor="@color/cadastro_pedido_text_total_label"
+            android:textAlignment="center"
+            android:text="Valor Total"/>
 
         <TextView
             android:id="@+id/fragment_cadastro_pedido_fim_text_vlr_total"
@@ -83,31 +70,33 @@
 
 
     </LinearLayout>
+
     <Button
         android:id="@+id/fragment_cadastro_pedido_fim_button_excluir"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="2"
         android:background="@drawable/customborderbutton"
         android:text="@string/button_excluir_pedido"
         android:textColor="@color/buttonText"
         android:textSize="@dimen/sizeTextButtonSave" />
+
     <Button
         android:id="@+id/fragment_cadastro_pedido_fim_button_enviar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="2"
         android:background="@drawable/customborderbutton"
         android:text="@string/button_enviar_pedido"
         android:textColor="@color/buttonText"
         android:textSize="@dimen/sizeTextButtonSave" />
-
+    <!--
     <Button
         android:id="@+id/fragment_cadastro_pedido_fim_button_ant"
         android:layout_width="match_parent"
@@ -120,6 +109,6 @@
         android:text="@string/button_itens_pedido"
         android:textColor="@color/buttonText"
         android:textSize="@dimen/sizeTextButtonSave" />
-
+    -->
 </LinearLayout>
 

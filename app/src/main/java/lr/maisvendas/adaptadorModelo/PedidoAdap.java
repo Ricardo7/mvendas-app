@@ -39,7 +39,9 @@ public class PedidoAdap {
         content.put("STATUS", pedido.getStatus());
         content.put("OBSERVACAO", pedido.getObservacao());
         content.put("CLIENTE_ID",pedido.getCliente().getId());
-        content.put("CONDICAO_PGTO_ID",pedido.getCondicaoPgto().getId());
+        if (pedido.getCondicaoPgto() != null) {
+            content.put("CONDICAO_PGTO_ID", pedido.getCondicaoPgto().getId());
+        }
         content.put("TABELA_PRECO_ID",pedido.getTabelaPreco().getId());
         content.put("DT_CRIACAO",pedido.getDtCriacao());
         content.put("DT_ATUALIZACAO",pedido.getDtAtualizacao());

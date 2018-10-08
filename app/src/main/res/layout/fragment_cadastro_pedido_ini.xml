@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -32,7 +34,7 @@
                     android:text="Número" />
 
                 <TextView
-                    android:id="@+id/activity_cadastro_pedido_ini_text_num_pedido"
+                    android:id="@+id/fragment_cadastro_pedido_ini_text_num_pedido"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/text_size_edit_text_filder"/>
@@ -51,7 +53,7 @@
                     android:text="Data Emissão" />
 
                 <TextView
-                    android:id="@+id/activity_cadastro_pedido_ini_text_data_pedido"
+                    android:id="@+id/fragment_cadastro_pedido_ini_text_data_pedido"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/text_size_edit_text_filder"/>
@@ -78,7 +80,7 @@
                     android:text="Situação" />
 
                 <TextView
-                    android:id="@+id/activity_cadastro_pedido_ini_text_situacao"
+                    android:id="@+id/fragment_cadastro_pedido_ini_text_situacao"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/text_size_edit_text_filder"/>
@@ -97,7 +99,7 @@
                     android:text="Status" />
 
                 <TextView
-                    android:id="@+id/activity_cadastro_pedido_ini_text_status"
+                    android:id="@+id/fragment_cadastro_pedido_ini_text_status"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/text_size_edit_text_filder"/>
@@ -109,39 +111,50 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="Tabela de Preços" />
-
-        <Spinner
-            android:id="@+id/activity_cadastro_pedido_ini_spinner_tabela_preco"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_edit_text_filder"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/border_field"
-            android:inputType="text" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:text="Cliente" />
 
         <Spinner
-            android:id="@+id/activity_cadastro_pedido_ini_spinner_cliente"
+            android:id="@+id/fragment_cadastro_pedido_ini_spinner_cliente"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_edit_text_filder"
             android:layout_marginTop="5dp"
-            android:background="@drawable/border_field"
-            android:inputType="text" />
+            android:background="@drawable/border_field"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
+            android:text="Tabela de Preços" />
+
+        <Spinner
+            android:id="@+id/fragment_cadastro_pedido_ini_spinner_tabela_preco"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_edit_text_filder"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/border_field" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Condição de Pagamento" />
+
+        <Spinner
+            android:id="@+id/fragment_cadastro_pedido_fim_spinner_condicao_pgto"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_edit_text_filder"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/border_field" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:text="Observação" />
 
         <EditText
-            android:id="@+id/activity_cadastro_pedido_ini_edit_observacao"
+            android:id="@+id/fragment_cadastro_pedido_ini_edit_observacao"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_edit_text_filder"
             android:layout_marginTop="5dp"
@@ -150,6 +163,7 @@
 
     </LinearLayout>
 
+    <!--
     <Button
         android:id="@+id/fragment_cadastro_pedido_ini_button_prox"
         android:layout_width="match_parent"
@@ -162,6 +176,6 @@
         android:text="@string/button_itens_pedido"
         android:textColor="@color/buttonText"
         android:textSize="@dimen/sizeTextButtonSave" />
-
+    -->
 </LinearLayout>
 

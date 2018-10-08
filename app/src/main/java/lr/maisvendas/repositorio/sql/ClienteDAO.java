@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lr.maisvendas.adaptadorModelo.ClienteAdap;
+import lr.maisvendas.modelo.Cidade;
 import lr.maisvendas.modelo.Cliente;
+import lr.maisvendas.modelo.SegmentoMercado;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
@@ -172,7 +174,7 @@ public class ClienteDAO {
 
         //Busca o cliente
         String sql = "SELECT * " +
-                "  FROM clientes " +
+                "  FROM tclientes " +
                 " WHERE dt_atualizacao >= ifnull('" + dataAt +"','1990-01-01 00:00:00')";
         Cursor cursor = dataBase.rawQuery(sql, null);
 
@@ -200,8 +202,11 @@ public class ClienteDAO {
     public Cliente insereCliente(Cliente cliente) {
 
         ClienteAdap clienteAdap = new ClienteAdap();
+
+        cliente = trataDependentes(cliente);
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = clienteAdap.clienteToContentValue(cliente);
+
         //Insere o cliente no banco
         Integer clienteId = (int) dataBase.insert(CLIENTE_TABLE_NAME, null, content);
         /*
@@ -218,6 +223,8 @@ public class ClienteDAO {
     public Cliente atualizaCliente(Cliente cliente) throws Exceptions {
 
         ClienteAdap clienteAdap = new ClienteAdap();
+
+        cliente = trataDependentes(cliente);
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = clienteAdap.clienteToContentValue(cliente);
         String sqlWhere = "id = "+cliente.getId();
@@ -231,6 +238,25 @@ public class ClienteDAO {
 
         return cliente;
 
+    }
+
+    private Cliente trataDependentes(Cliente cliente){
+
+        if (cliente.getCidade() == null || cliente.getCidade().getId() == null || cliente.getCidade().getId() <= 0) {
+            CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
+            Cidade cidade;
+            cidade = cidadeDAO.buscaCidadeIdWs(cliente.getCidade().getIdWS());
+            cliente.setCidade(cidade);
+        }
+
+        if (cliente.getSegmentoMercado() == null || cliente.getSegmentoMercado().getId() == null || cliente.getSegmentoMercado().getId() <= 0) {
+            SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
+            SegmentoMercado segmentoMercado;
+            segmentoMercado = segmentoMercadoDAO.buscaSegmentoMercadoIdWs(cliente.getSegmentoMercado().getIdWS());
+            cliente.setSegmentoMercado(segmentoMercado);
+        }
+
+        return cliente;
     }
 
     public void truncateClientes(){

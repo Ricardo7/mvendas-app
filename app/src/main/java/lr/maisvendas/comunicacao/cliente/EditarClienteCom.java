@@ -47,7 +47,7 @@ public class EditarClienteCom extends AsyncTask<Cliente,Void,Response<Cliente>> 
         }
 
         // Cria a chamada para o método
-        Call<Response<Cliente>> editarClienteCall = service.editarCliente(token,cliente[0].getIdWS(),cliente[0]);
+        Call<Response<Cliente>> editarClienteCall = service.editarCliente(token,cliente[0]);
 
         try {
             // Executa a chamada e pega o retorno para devolver para a task no método "onPostExecute"

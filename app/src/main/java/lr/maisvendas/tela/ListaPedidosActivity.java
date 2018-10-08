@@ -1,5 +1,7 @@
 package lr.maisvendas.tela;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,8 @@ import lr.maisvendas.R;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.repositorio.sql.PedidoDAO;
 import lr.maisvendas.tela.adaptador.ListaPedidosAdapter;
+import lr.maisvendas.utilitarios.Ferramentas;
+import lr.maisvendas.utilitarios.StatusPedido;
 
 public class ListaPedidosActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
@@ -21,6 +25,8 @@ public class ListaPedidosActivity extends BaseActivity implements View.OnClickLi
     private ListView listViewPedidos;
     private ListaPedidosAdapter listaPedidosAdapter;
     private List<Pedido> listaPedidos;
+    private Ferramentas ferramentas;
+    private static Boolean abreCarrinho;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,8 @@ public class ListaPedidosActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
 
         setTitle("Pedidos");
+
+        ferramentas = new Ferramentas();
 
         buttonAdd = (FloatingActionButton) findViewById(R.id.activity_lista_pedidos_button_add);
         listViewPedidos = (ListView) findViewById(R.id.activity_lista_pedidos_list_view);
@@ -49,8 +57,42 @@ public class ListaPedidosActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
 
-        Intent intent = new Intent(this,CadastroPedidoActivity.class);
-        startActivity(intent);
+        if (view == buttonAdd) {
+            PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
+            final Pedido pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
+
+            if (pedido != null){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder
+                    .setMessage("Não é possível gerar um novo pedido pois já existe um pedido no Carrinho." +
+                            "\nDeseja abrir o pedido do Carrinho para editá-lo?")
+                    .setTitle("Alerta")
+                    .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(ListaPedidosActivity.this,CadastroPedidoActivity.class);
+                            intent.putExtra(CadastroPedidoActivity.PARAM_PEDIDO,pedido);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog,int id) {
+                            return;
+                        }
+                    });
+                //.show();
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }else {
+                Intent intent  = new Intent(this, CadastroPedidoActivity.class);
+                startActivity(intent);
+            }
+        }
 
     }
 
@@ -98,4 +140,5 @@ public class ListaPedidosActivity extends BaseActivity implements View.OnClickLi
         return super.onQueryTextChange(newText);
 
     }
+
 }

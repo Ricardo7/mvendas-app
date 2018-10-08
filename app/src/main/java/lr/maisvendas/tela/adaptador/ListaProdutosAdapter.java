@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import lr.maisvendas.R;
@@ -29,16 +30,20 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
 
     private Context context;
     private List<Produto> itens;
+    private List<Pedido> pedidos;
+    private List<ItemTabelaPreco> itensTabelaPreco;
     private Object lock = new Object();
     //private ProdutoFilter filter = new ProdutoFilter();
     private Ferramentas ferramentas;
     private static ItemProdutoClickListener itemProdutoClickListener;
-    private Pedido pedido;
-    private ItemTabelaPreco itemTabelaPreco;
+    //private Pedido pedido;
+    //private ItemTabelaPreco itemTabelaPreco;
 
     public ListaProdutosAdapter(Context context, List<Produto> Produtos) {
         this.context = context;
         this.itens = Produtos;
+        pedidos = new ArrayList<>();
+        itensTabelaPreco = new ArrayList<>();
         ferramentas = new Ferramentas();
     }
 
@@ -51,31 +56,43 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
     @Override
     public void onBindViewHolder(ProdutoViewHolder viewHolder, int i) {
         Produto produto = itens.get(i);
+        Pedido pedido;
+        ItemTabelaPreco itemTabelaPreco=null;
         viewHolder.textCodigoDesc.setText("("+produto.getCod()+") "+produto.getDescricao());
 
         //------------------------------------------------------------------
-        //Popula as variáveis com informações do pedido e item da tabel de preço, caso exista
-        //Verifica se tem um pedido no carrinho, em construção (Status = 0 )
+        //Popula as variáveis com informações do pedido.
+        //Verifica se tem um pedido no carrinho e se o produto já está no carrinho, em construção (Status = 0 )
         PedidoDAO pedidoDAO = PedidoDAO.getInstance(context);
         pedido = pedidoDAO.buscaPedidoStatusProduto(StatusPedido.emConstrucao,produto.getId());
+        ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(context);
 
-        //Busca o item da tabela de preço do pedido (Só irá ter valor)
         if (pedido != null){
-            ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(context);
+
+            //Busca o item da tabela de preço do pedido
             itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedido.getId(),produto.getId());
-
-            if (itemTabelaPreco != null) {
-
-                viewHolder.textVlrUnit.setText(itemTabelaPreco.getVlrUnitario().toString());
-            }else {
-                viewHolder.textVlrUnit.setText("-");
-            }
 
             viewHolder.imageAddPedido.setBackgroundResource(R.mipmap.ic_pedido_remov);
         }else{
+            //Como o produto em questão ainda não está no carrinho busca o pedido do carrinho
+            Pedido pedidoCarrinho = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
 
+            if(pedidoCarrinho != null){
+                //Busca o item da tabela de preço do pedido
+                itemTabelaPreco = itemTabelaPrecoDAO.buscaItemTabelaPrecoPedidoProduto(pedidoCarrinho.getId(),produto.getId());
+            }
             viewHolder.imageAddPedido.setBackgroundResource(R.mipmap.ic_pedido_add);
         }
+
+        if (itemTabelaPreco != null) {
+
+            viewHolder.textVlrUnit.setText(itemTabelaPreco.getVlrUnitario().toString());
+        }else {
+            viewHolder.textVlrUnit.setText("-");
+        }
+        //Popula na lista mesmo sendo null, pois será utilizado nos testes posteriormente se é null ou não
+        itensTabelaPreco.add(i,itemTabelaPreco);
+        pedidos.add(i,pedido);
         //------------------------------------------------------------------
 
         String caminhoImagem = null;
@@ -144,20 +161,20 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
         return itens.get(position);
     }
 
-    public Pedido getPedido(){
-        return pedido;
-    };
-
-    public ItemTabelaPreco getItemTabelaPreco(){
-        return itemTabelaPreco;
+    public Pedido getPedido(int position){
+        return pedidos.get(position);
     }
 
-    public void setPedido(Pedido pedido){
-        this.pedido = pedido;
+    public void setPedido(int position, Pedido pedido){
+        this.pedidos.add(position,pedido);
     }
 
-    public void setItemTabelaPreco(ItemTabelaPreco itemTabelaPreco){
-        this.itemTabelaPreco = itemTabelaPreco;
+    public ItemTabelaPreco getItemTabelaPreco(int position){
+        return itensTabelaPreco.get(position);
+    }
+
+    public void setItemTabelaPreco(int position,ItemTabelaPreco itemTabelaPreco){
+        this.itensTabelaPreco.add(position,itemTabelaPreco);
     }
     /*
     @Override

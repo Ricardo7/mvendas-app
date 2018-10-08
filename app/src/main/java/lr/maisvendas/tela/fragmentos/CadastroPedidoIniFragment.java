@@ -1,7 +1,7 @@
 package lr.maisvendas.tela.fragmentos;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -16,12 +16,15 @@ import java.util.List;
 
 import lr.maisvendas.R;
 import lr.maisvendas.modelo.Cliente;
+import lr.maisvendas.modelo.CondicaoPgto;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.TabelaPreco;
 import lr.maisvendas.repositorio.sql.ClienteDAO;
+import lr.maisvendas.repositorio.sql.CondicaoPgtoDAO;
 import lr.maisvendas.repositorio.sql.PedidoDAO;
 import lr.maisvendas.repositorio.sql.TabelaPrecoDAO;
 import lr.maisvendas.tela.adaptador.ListaClientesSpinnerAdapter;
+import lr.maisvendas.tela.adaptador.ListaCondPgtoSpinnerAdapter;
 import lr.maisvendas.tela.adaptador.ListaTabelaPrecosSpinnerAdapter;
 import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
 import lr.maisvendas.utilitarios.Exceptions;
@@ -31,6 +34,7 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
 
     private static final String TAG = "CadastroPedidoIniFragment";
     public static final String PARAM_PEDIDO_INI = "PARAM_PEDIDO_INI";
+    public static String ARG_POSITION = "arg_position";
 
     //Campos da tela
     private Button buttonProx;
@@ -40,16 +44,29 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
     private TextView textStatus;
     private Spinner spinnerCliente;
     private Spinner spinnerTabelaPreco;
+    private Spinner spinnerCondPgto;
     private EditText editObservacao;
 
     //Variáveis
     private ComunicadorCadastroPedido comunicadorCadastroPedido;
     private ListaTabelaPrecosSpinnerAdapter listaTabelaPrecosSpinnerAdapter;
     private ListaClientesSpinnerAdapter listaClientesSpinnerAdapter;
+    private ListaCondPgtoSpinnerAdapter listaCondPgtoSpinnerAdapter;
+    private List<CondicaoPgto> listaCondicoesPgto;
     private List<TabelaPreco> listaTabelasPreco;
     private List<Cliente> listaClientes;
     private Pedido pedido;
     private Ferramentas ferramentas;
+
+    public CadastroPedidoIniFragment(){};
+
+    public static CadastroPedidoIniFragment newInstance(int postion){
+        Bundle parameters = new Bundle();
+        parameters.putInt(ARG_POSITION, postion);
+        CadastroPedidoIniFragment frag = new CadastroPedidoIniFragment();
+        frag.setArguments(parameters);
+        return frag;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,18 +80,19 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
         View view = inflater.inflate(R.layout.fragment_cadastro_pedido_ini,container,false);
 
         //Tratar campos da tela aqui
-        buttonProx = (Button) view.findViewById(R.id.fragment_cadastro_pedido_ini_button_prox);
-        textNumPedido = (TextView) view.findViewById(R.id.activity_cadastro_pedido_ini_text_num_pedido);
-        textDataPedido = (TextView) view.findViewById(R.id.activity_cadastro_pedido_ini_text_data_pedido);
-        textSituacao = (TextView) view.findViewById(R.id.activity_cadastro_pedido_ini_text_situacao);
-        textStatus = (TextView) view.findViewById(R.id.activity_cadastro_pedido_ini_text_status);
-        spinnerCliente = (Spinner) view.findViewById(R.id.activity_cadastro_pedido_ini_spinner_cliente);
-        spinnerTabelaPreco = (Spinner) view.findViewById(R.id.activity_cadastro_pedido_ini_spinner_tabela_preco);
-        editObservacao = (EditText) view.findViewById(R.id.activity_cadastro_pedido_ini_edit_observacao);
+       // buttonProx = (Button) view.findViewById(R.id.fragment_cadastro_pedido_ini_button_prox);
+        textNumPedido = (TextView) view.findViewById(R.id.fragment_cadastro_pedido_ini_text_num_pedido);
+        textDataPedido = (TextView) view.findViewById(R.id.fragment_cadastro_pedido_ini_text_data_pedido);
+        textSituacao = (TextView) view.findViewById(R.id.fragment_cadastro_pedido_ini_text_situacao);
+        textStatus = (TextView) view.findViewById(R.id.fragment_cadastro_pedido_ini_text_status);
+        spinnerCliente = (Spinner) view.findViewById(R.id.fragment_cadastro_pedido_ini_spinner_cliente);
+        spinnerTabelaPreco = (Spinner) view.findViewById(R.id.fragment_cadastro_pedido_ini_spinner_tabela_preco);
+        spinnerCondPgto = (Spinner) view.findViewById(R.id.fragment_cadastro_pedido_fim_spinner_condicao_pgto);
+        editObservacao = (EditText) view.findViewById(R.id.fragment_cadastro_pedido_ini_edit_observacao);
 
         ferramentas = new Ferramentas();
 
-        buttonProx.setOnClickListener(this);
+        //buttonProx.setOnClickListener(this);
 
         return view;
     }
@@ -109,10 +127,11 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
             } catch (Exceptions exceptions) {
                 ferramentas.customToast(getActivity(),exceptions.getMessage());
             }
-
+            /*
             CadastroPedidoItemFragment cadastroPedidoItemFragment = new CadastroPedidoItemFragment();
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment);
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment).commit();
+            */
         }
     }
 
@@ -142,6 +161,17 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
         listaClientesSpinnerAdapter = new ListaClientesSpinnerAdapter(getActivity(),listaClientes);
         spinnerCliente.setAdapter(listaClientesSpinnerAdapter);
 
+        CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(getActivity());
+        listaCondicoesPgto = condicaoPgtoDAO.buscaCondicaoPgto();
+        CondicaoPgto condicaoPgto = new CondicaoPgto();
+        condicaoPgto.setCod("");
+        condicaoPgto.setDescricao("Selecione");
+        listaCondicoesPgto.add(0,condicaoPgto);
+        if (listaCondicoesPgto != null) {
+            listaCondPgtoSpinnerAdapter = new ListaCondPgtoSpinnerAdapter(getActivity(), listaCondicoesPgto);
+            spinnerCondPgto.setAdapter(listaCondPgtoSpinnerAdapter);
+        }
+
         pedido = comunicadorCadastroPedido.getPedido();
 
         if (pedido != null) {
@@ -168,9 +198,15 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
 
             spinnerTabelaPreco.setSelection(listaTabelaPrecosSpinnerAdapter.getPosition(pedido.getTabelaPreco()));
             spinnerCliente.setSelection(listaClientesSpinnerAdapter.getPosition(pedido.getCliente()));
+            spinnerCondPgto.setSelection(listaCondPgtoSpinnerAdapter.getPosition(pedido.getCondicaoPgto()));
             if (pedido.getObservacao() != null) {
                 editObservacao.setText(pedido.getObservacao().toString());
             }
+        }else{
+            //Se o pedido não existe é porque é novo, neste caso popula os campos de cabeçalho com as informações iniciais
+            textSituacao.setText("Pendente");
+            textStatus.setText("Em Construção");
+
         }
 
     }
@@ -178,10 +214,16 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
     private void salvaDados() throws Exceptions{
         if (spinnerTabelaPreco.getSelectedItem() == null) {
             throw new Exceptions("Tabela de Preços não selecionada.");
+        }else if (spinnerCondPgto.getSelectedItem() == null) {
+            throw new Exceptions("Condição de pagamento não selecionada.");
         }else if (spinnerCliente.getSelectedItem() == null) {
             throw new Exceptions("Cliente não selecionado.");
         }
+        if (pedido == null){
+            pedido = new Pedido();
+        }
 
+        pedido.setCondicaoPgto((CondicaoPgto) spinnerCondPgto.getSelectedItem());
         pedido.setTabelaPreco((TabelaPreco) spinnerTabelaPreco.getSelectedItem());
         pedido.setCliente((Cliente) spinnerCliente.getSelectedItem());
         pedido.setObservacao(editObservacao.getText().toString());

@@ -10,6 +10,7 @@ import java.util.List;
 
 import lr.maisvendas.adaptadorModelo.CidadeAdap;
 import lr.maisvendas.modelo.Cidade;
+import lr.maisvendas.modelo.Estado;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 
@@ -121,6 +122,8 @@ public class CidadeDAO {
     public Cidade insereCidade(Cidade cidade) {
 
         CidadeAdap cidadeAdap = new CidadeAdap();
+
+        trataDependencias(cidade);
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = cidadeAdap.cidadeToContentValue(cidade);
         //Insere o cidade no banco
@@ -139,6 +142,8 @@ public class CidadeDAO {
     public Cidade atualizaCidade(Cidade cidade) throws Exceptions{
 
         CidadeAdap cidadeAdap = new CidadeAdap();
+
+        trataDependencias(cidade);
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = cidadeAdap.cidadeToContentValue(cidade);
         String sqlWhere = "id = "+cidade.getId();
@@ -151,6 +156,18 @@ public class CidadeDAO {
 
         return cidade;
 
+    }
+
+    private Cidade trataDependencias(Cidade cidade){
+
+        if (cidade.getEstado() == null || cidade.getEstado().getId() == null || cidade.getEstado().getId() <= 0) {
+            EstadoDAO estadoDAO = EstadoDAO.getInstance(context);
+            Estado estado;
+            estado = estadoDAO.buscaEstadoIdWs(cidade.getEstado().getIdWS());
+            cidade.setEstado(estado);
+        }
+
+        return cidade;
     }
 
     public void truncateCidades(){

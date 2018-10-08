@@ -14,7 +14,6 @@ import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.repositorio.sql.UsuarioDAO;
 import lr.maisvendas.servico.VerificaConexao;
 import lr.maisvendas.servico.VerificaServico;
-import lr.maisvendas.tmp.PopulaDadosTeste;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 
@@ -37,8 +36,8 @@ public class MainActivity extends AppCompatActivity implements ValidaLoginCom.Ve
         criarBanco();
 
         //<USADO SOMENTE PARA TESTES>
-        PopulaDadosTeste populaDadosTeste = new PopulaDadosTeste();
-        populaDadosTeste.populaPedido(this);
+        //PopulaDadosTeste populaDadosTeste = new PopulaDadosTeste();
+        //populaDadosTeste.populaPedido(this);
         //</USADO SOMENTE PARA TESTES>
 
         verificaLogin();
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ValidaLoginCom.Ve
 
         try {
             DatabaseHelper banco = new DatabaseHelper(null);
-            //banco.onUpgrade(sqlLite,12,13);
+            //banco.onUpgrade(sqlLite,15,16);
             // Cria o banco de dados caso não exista
             banco.onCreate(sqlLite);
 

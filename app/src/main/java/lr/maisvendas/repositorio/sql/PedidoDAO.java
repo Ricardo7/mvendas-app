@@ -249,6 +249,10 @@ public class PedidoDAO {
 
     public void deletaPedido(Integer pedidoId) throws Exceptions{
 
+        //Deleta os itens do pedido
+        ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(context);
+        itemPedidoDAO.deletaItemPedido(pedidoId);
+
         String sqlWhere = "id = "+pedidoId;
 
         Integer executou = (int) dataBase.delete(PEDIDO_TABLE_NAME,sqlWhere,null);

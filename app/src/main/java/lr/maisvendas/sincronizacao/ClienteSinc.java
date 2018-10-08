@@ -134,6 +134,7 @@ public class ClienteSinc extends BaseActivity implements CarregarClienteCom.Carr
                 //Se tiver IDs já existe no servidor, deverá ser atualizado
                 new EditarClienteCom(this).execute(clienteOld);
             } else{
+                ferramentas.customLog(TAG,"inserindo: "+clienteOld.getId());
                 //Se não tiver IDs não existe no servidor, deverá ser inserido no WS e atualizado internamente com o novo IDs
                 new CadastrarClienteCom(this).execute(clienteOld);
 

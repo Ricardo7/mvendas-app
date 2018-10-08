@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lr.maisvendas.R;
@@ -16,12 +17,15 @@ import lr.maisvendas.modelo.Cidade;
 import lr.maisvendas.modelo.Cliente;
 import lr.maisvendas.modelo.Estado;
 import lr.maisvendas.modelo.Pais;
+import lr.maisvendas.modelo.SegmentoMercado;
 import lr.maisvendas.repositorio.sql.CidadeDAO;
 import lr.maisvendas.repositorio.sql.ClienteDAO;
 import lr.maisvendas.repositorio.sql.EstadoDAO;
 import lr.maisvendas.repositorio.sql.PaisDAO;
+import lr.maisvendas.repositorio.sql.SegmentoMercadoDAO;
 import lr.maisvendas.tela.adaptador.ListaCidadesSpinnerAdapter;
 import lr.maisvendas.tela.adaptador.ListaEstadosSpinnerAdapter;
+import lr.maisvendas.tela.adaptador.ListaSegmentoMercadoSpinnerAdapter;
 import lr.maisvendas.utilitarios.EditTextMask;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
@@ -35,6 +39,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
     public static final String PARAM_CLIENTE = "PARAM_CLIENTE";
 
     //Campos da tela
+    private Spinner spinnerSegmentoMercado;
     private CheckBox checkAtivo;
     private EditText editRazSocial;
     private EditText editNomeFant;
@@ -51,10 +56,12 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
     private Button buttonCadastrar;
 
     //Variáveis
+    private List<SegmentoMercado> segmentosMercado;
     private List<Estado> listaEstados;
     private List<Cidade> listaCidades;
     private Cliente cliente;
     private Ferramentas ferramentas;
+    private ListaSegmentoMercadoSpinnerAdapter listaSegmentoMercadoSpinnerAdapter;
     private ListaEstadosSpinnerAdapter listaEstadosSpinnerAdapter;
     private ListaCidadesSpinnerAdapter listaCidadesSpinnerAdapter;
 
@@ -69,6 +76,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_retornar);
 
+        spinnerSegmentoMercado = (Spinner) findViewById(R.id.activity_cadastro_cliente_spinner_segmento_mercado);
         checkAtivo = (CheckBox) findViewById(R.id.activity_cadastro_cliente_check_ativo);
         editRazSocial = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_raz_social);
         editNomeFant = (EditText) findViewById(R.id.activity_cadastro_cliente_edit_nome_fant);
@@ -90,6 +98,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         editCep.addTextChangedListener(EditTextMask.insert(editCep, TipoMask.CEP));
 
         ferramentas = new Ferramentas();
+        listaEstados = new ArrayList<>();
 
         loadDataFromActivity();
 
@@ -111,6 +120,18 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
     //Metodo para carregar informação ao abriar a Activity.
     public void loadDataFromActivity() {
         cliente = (Cliente) getIntent().getSerializableExtra(PARAM_CLIENTE);
+        //Objeto para setar o primeiro item do spinner com default
+        SegmentoMercado segmentoMercado = new SegmentoMercado();
+        segmentoMercado.setId(0);
+        segmentoMercado.setDescricao("Selecione");
+
+        SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(this);
+        segmentosMercado = segmentoMercadoDAO.buscaSegmentosMercado();
+        segmentosMercado.add(0,segmentoMercado);
+        if (segmentosMercado != null){
+            listaSegmentoMercadoSpinnerAdapter = new ListaSegmentoMercadoSpinnerAdapter(this,segmentosMercado);
+            spinnerSegmentoMercado.setAdapter(listaSegmentoMercadoSpinnerAdapter);
+        }
 
         //Objeto para setar o primeiro item do spinner com default
         Estado estado = new Estado();
@@ -122,9 +143,14 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         //Inicialmente o pais será setado como Default Brasil
         PaisDAO paisDAO = PaisDAO.getInstance(this);
         Pais pais = paisDAO.buscaPaisSigla("BR");
-        //Popula o spinner de estados
-        EstadoDAO estadoDAO = EstadoDAO.getInstance(this);
-        listaEstados = estadoDAO.buscaEstadoPais(pais.getId());
+
+        if (pais != null) {
+            //Popula o spinner de estados
+            EstadoDAO estadoDAO = EstadoDAO.getInstance(this);
+            listaEstados = estadoDAO.buscaEstadoPais(pais.getId());
+
+        }
+
         listaEstados.add(0,estado);
         if (listaEstados.isEmpty() == false) {
             listaEstadosSpinnerAdapter = new ListaEstadosSpinnerAdapter(this, listaEstados);
@@ -177,7 +203,9 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
     }
 
     public void salvaDados() throws Exceptions {
-        if (editRazSocial.getText().toString().equals("")) {
+        if (spinnerSegmentoMercado.getSelectedItem() == null) {
+            throw new Exceptions("Segmento de mercado não selecionado.");
+        } else if (editRazSocial.getText().toString().equals("")) {
             throw new Exceptions("Razão Social não informada.");
         } else if (editCnpj.getText().toString().equals("")){
             throw new Exceptions("CNPJ não informada.");
@@ -226,6 +254,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         } else {
             cliente.setStatus(0);
         }
+        cliente.setSegmentoMercado((SegmentoMercado) spinnerSegmentoMercado.getSelectedItem());
         cliente.setRazaoSocial(editRazSocial.getText().toString());
         cliente.setNomeFantasia(editNomeFant.getText().toString());
         cliente.setCnpj(editCnpj.getText().toString().replaceAll("[^0-9]*",""));

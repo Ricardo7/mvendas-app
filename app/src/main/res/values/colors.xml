@@ -11,8 +11,8 @@
     <color name="colorField">#4935d477</color>
     <color name="buttonText">#183919</color>
     <color name="buttonTextLogin">#b2a7d6</color>
-    <color name="colorAlert">#c7e76767</color>
-    <color name="colorAlertText">#f7caca</color>
+    <color name="colorAlert">#c77350ff</color>
+    <color name="colorAlertText">#0a2102</color>
     <color name="linhaViewDefault">#c9b0f4</color>
     <color name="linhaViewText">#0e0c2e</color>
     <color name="linhaViewTitle">#bab0cc</color>

@@ -46,7 +46,7 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     private EditText editTotal;
     private ImageButton buttonPedido;
     private ViewPager viewPagerImagens;
-    private Boolean removeItem;
+
 
     //Variáveis
     private Produto produto;
@@ -95,13 +95,30 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         if (view == buttonPedido){
 
             if (itemPedido != null){
-                if(confirmDialog()) {
-                    //Se o item estiver no pedido irá remover o item do pedido
-                    ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(this);
-                    itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(), produto.getId());
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                    buttonPedido.setBackgroundResource(R.mipmap.ic_carrinho_add);
-                }
+                builder
+                    .setMessage("O Item será removido do pedido." +
+                            "\nDeseja continuar?")
+                    .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                        //Se o item estiver no pedido irá remover o item do pedido
+                        ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstance(DetalhesProdutoActivity.this);
+                        itemPedidoDAO.deletaItemPedidoProduto(pedido.getId(), produto.getId());
+
+                        buttonPedido.setBackgroundResource(R.mipmap.ic_carrinho_add);
+                        }
+                    })
+                    .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog,int id) {
+                            return;
+                        }
+                    })
+                    .show();
+
+
             }else{
 
                 try {
@@ -179,7 +196,7 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setVlrUnitario(itemTabelaPreco.getVlrUnitario());
         itemPedido.setQuantidade(Double.valueOf(editQuantidade.getText().toString()));
-        itemPedido.setVlrDesconto(Double.valueOf(editVlrDesc.getText().toString()));
+        itemPedido.setVlrDesconto(Double.valueOf(editVlrDesc.getText().toString())*Double.valueOf(editQuantidade.getText().toString()));
         itemPedido.setVlrTotal(Double.valueOf(editTotal.getText().toString()));
         itemPedido.setProduto(produto);
         itemPedido.setDtCriacao(ferramentas.getCurrentDate());
@@ -219,30 +236,6 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     @Override
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
-    }
-
-    private Boolean confirmDialog() {
-        removeItem = false;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder
-                .setMessage("O Item será removido do pedido." +
-                        "\n Deseja continuar?")
-                .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        removeItem = true;
-                    }
-                })
-                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,int id) {
-                        removeItem = false;
-                    }
-                })
-                .show();
-
-        return removeItem;
     }
 
     @Override

@@ -18,11 +18,11 @@ public interface ClienteServico {
     @GET("Cliente/GetListaClientesAtualizados") //Busca
     public Call<Response<List<Cliente>>> carregarCliente(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
-    @PUT("Cliente/AddCliente") //Insere
+    @POST("Cliente/AddCliente") //Insere
     public Call<Response<Cliente>>criarCliente(@Header("X-Auth-Token") String token, @Body Cliente cliente);
 
-    @POST("Cliente/EditCliente") //Atualiza
-    public Call<Response<Cliente>>editarCliente(@Header("X-Auth-Token") String token, @Query("IDWS") String idWS, @Body Cliente cliente);
+    @PUT("Cliente/EditaCliente") //Atualiza
+    public Call<Response<Cliente>>editarCliente(@Header("X-Auth-Token") String token, @Body Cliente cliente);
 
     @DELETE("Cliente/DeleteCliente") //Deleta
     public Call<Response<Boolean>>excluirCliente(@Header("X-Auth-Token") String token, @Query("IDWS") Integer id);

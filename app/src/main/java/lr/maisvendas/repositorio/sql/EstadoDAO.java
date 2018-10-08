@@ -10,6 +10,7 @@ import java.util.List;
 
 import lr.maisvendas.adaptadorModelo.EstadoAdap;
 import lr.maisvendas.modelo.Estado;
+import lr.maisvendas.modelo.Pais;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 
@@ -116,6 +117,8 @@ public class EstadoDAO {
 
     public Estado insereEstado(Estado estado) {
 
+        trataDependencias(estado);
+
         EstadoAdap estadoAdap = new EstadoAdap();
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = estadoAdap.estadoToContentValue(estado);
@@ -134,6 +137,7 @@ public class EstadoDAO {
 
     public Estado atualizaEstado(Estado estado) throws Exceptions{
 
+        trataDependencias(estado);
         EstadoAdap estadoAdap = new EstadoAdap();
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = estadoAdap.estadoToContentValue(estado);
@@ -147,6 +151,18 @@ public class EstadoDAO {
 
         return estado;
 
+    }
+
+    private Estado trataDependencias(Estado estado){
+
+        if (estado.getPais() == null || estado.getPais().getId() == null || estado.getPais().getId() <= 0) {
+            PaisDAO paisDAO = PaisDAO.getInstance(context);
+            Pais pais;
+            pais = paisDAO.buscaPaisIdWs(estado.getPais().getIdWS());
+            estado.setPais(pais);
+        }
+
+        return estado;
     }
 
     public void truncateEstados(){
