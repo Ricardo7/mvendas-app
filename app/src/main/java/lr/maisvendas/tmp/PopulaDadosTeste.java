@@ -8,7 +8,7 @@ import java.util.List;
 
 import lr.maisvendas.modelo.Cidade;
 import lr.maisvendas.modelo.Cliente;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.modelo.Estado;
 import lr.maisvendas.modelo.Imagem;
 import lr.maisvendas.modelo.ItemPedido;
@@ -58,7 +58,7 @@ public class PopulaDadosTeste {
 
             pedido = new Pedido();
             pedido.setNumero(1);
-            pedido.setCondicaoPgto(populaCondicaoPgto(context));
+            pedido.setCondicaoPagamento(populaCondicaoPgto(context));
             pedido.setTabelaPreco(populaTabelaPreco(context));
             pedido.setCliente(populaClientes(context));
             pedido.setSituacao(0);
@@ -211,17 +211,17 @@ public class PopulaDadosTeste {
         return imagens;
     }
 
-    public CondicaoPgto populaCondicaoPgto(Context context) {
+    public CondicaoPagamento populaCondicaoPgto(Context context) {
         CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(context);
 
-        CondicaoPgto condicaoPgto = new CondicaoPgto();
-        condicaoPgto.setCod("1");
-        condicaoPgto.setDescricao("A Vista");
-        condicaoPgto.setDescAcr(15.0);
+        CondicaoPagamento condicaoPagamento = new CondicaoPagamento();
+        condicaoPagamento.setCod("1");
+        condicaoPagamento.setDescricao("A Vista");
+        condicaoPagamento.setDescAcr(15.0);
 
-        condicaoPgto = condicaoPgtoDAO.insereCondicaoPgto(condicaoPgto);
+        condicaoPagamento = condicaoPgtoDAO.insereCondicaoPgto(condicaoPagamento);
 
-        return condicaoPgto;
+        return condicaoPagamento;
     }
 
     //< CLIENTE>

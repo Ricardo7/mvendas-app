@@ -10,6 +10,7 @@ import java.util.List;
 
 import lr.maisvendas.adaptadorModelo.ItemPedidoAdap;
 import lr.maisvendas.modelo.ItemPedido;
+import lr.maisvendas.modelo.Produto;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 
@@ -104,6 +105,8 @@ public class ItemPedidoDAO {
 
     public ItemPedido insereItemPedido(ItemPedido itemPedido, Integer pedidoId) {
 
+        itemPedido = trataDependencias(itemPedido);
+
         ItemPedidoAdap itemPedidoAdap = new ItemPedidoAdap();
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = itemPedidoAdap.itemPedidoToContentValue(itemPedido,pedidoId);
@@ -121,6 +124,8 @@ public class ItemPedidoDAO {
     }
 
     public ItemPedido atualizaItemPedido(ItemPedido itemPedido, Integer pedidoId) throws Exceptions{
+
+        itemPedido = trataDependencias(itemPedido);
 
         ItemPedidoAdap itemPedidoAdap = new ItemPedidoAdap();
         //Converte o objeto em um contetValue para inserir no banco
@@ -150,7 +155,19 @@ public class ItemPedidoDAO {
 
         dataBase.delete(ITEM_PEDIDO_TABLE_NAME,sqlWhere,null);
     }
-    
+
+    private ItemPedido trataDependencias(ItemPedido itemPedido){
+
+        if (itemPedido.getProduto() == null || itemPedido.getProduto().getId() == null || itemPedido.getProduto().getId() <= 0) {
+            ProdutoDAO produtoDAO = ProdutoDAO.getInstance(context);
+            Produto produto;
+            produto = produtoDAO.buscaProdutoIdWs(itemPedido.getProduto().getIdWS());
+            itemPedido.setProduto(produto);
+        }
+
+        return itemPedido;
+    }
+
     public void truncateItems(){
         dataBase.delete(ITEM_PEDIDO_TABLE_NAME,null,null);
     }

@@ -15,7 +15,7 @@ public class ItemTabelaPreco implements Serializable {
     private Integer id;
     @JsonProperty("VlrUnitario")
     private Double vlrUnitario;
-    @JsonProperty("MaxDesc")
+    @JsonProperty("MaxDesconto")
     private Double maxDesc;
     @JsonProperty("Produto")
     private Produto produto;

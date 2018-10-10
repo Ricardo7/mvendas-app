@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface TabelaPrecoServico {
 
-    @GET("TabelaPreco/GetListaTabelaPrecoAtualizados") //Busca
+    @GET("TabelaPrecos/GetListaTabelaPrecosAtualizados") //Busca
     public Call<Response<List<TabelaPreco>>> carregarTabelaPreco(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
 }

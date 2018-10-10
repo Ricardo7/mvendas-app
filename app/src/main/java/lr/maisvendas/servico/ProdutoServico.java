@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface ProdutoServico {
 
-    @GET("Produto/GetListaProdutos") //Busca
+    @GET("Produto/GetListaProdutosAtualizados") //Busca
     public Call<Response<List<Produto>>> carregarProduto(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("Produto") //Insere (não utilizado no produto)

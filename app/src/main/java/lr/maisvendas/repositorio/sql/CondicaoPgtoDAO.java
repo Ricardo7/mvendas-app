@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lr.maisvendas.adaptadorModelo.CondicaoPgtoAdap;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 
@@ -46,8 +46,8 @@ public class CondicaoPgtoDAO {
         //tabelaAdap = new TabelaAdap();
     }
 
-    public CondicaoPgto buscaCondicaoPgtoId(Integer condicaoPgtoId){
-        CondicaoPgto condicaoPgto = null;
+    public CondicaoPagamento buscaCondicaoPgtoId(Integer condicaoPgtoId){
+        CondicaoPagamento condicaoPagamento = null;
 
         //Busca o grupo
         String sql = "SELECT * FROM tcondicoes_pgto WHERE id = "+ condicaoPgtoId ;
@@ -57,16 +57,16 @@ public class CondicaoPgtoDAO {
             CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
-                condicaoPgto = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
+                condicaoPagamento = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
             }
             cursor.close();
         }
 
-        return condicaoPgto;
+        return condicaoPagamento;
     }
 
-    public CondicaoPgto buscaCondicaoPgtoIdWs(String condicaoPgtoIdWs){
-        CondicaoPgto condicaoPgto = null;
+    public CondicaoPagamento buscaCondicaoPgtoIdWs(String condicaoPgtoIdWs){
+        CondicaoPagamento condicaoPagamento = null;
 
         //Busca o grupo
         String sql = "SELECT * FROM tcondicoes_pgto WHERE id_ws = '"+ condicaoPgtoIdWs +"'";
@@ -76,17 +76,17 @@ public class CondicaoPgtoDAO {
             CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
-                condicaoPgto = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
+                condicaoPagamento = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
             }
             cursor.close();
         }
 
-        return condicaoPgto;
+        return condicaoPagamento;
     }
 
-    public List<CondicaoPgto> buscaCondicaoPgto(){
-        List<CondicaoPgto> condicoesPgto = new ArrayList<>();
-        CondicaoPgto condicaoPgto = null;
+    public List<CondicaoPagamento> buscaCondicaoPgto(){
+        List<CondicaoPagamento> condicoesPgto = new ArrayList<>();
+        CondicaoPagamento condicaoPagamento = null;
 
         //Busca o grupo
         String sql = "SELECT * FROM tcondicoes_pgto";
@@ -96,9 +96,9 @@ public class CondicaoPgtoDAO {
             CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
             while (cursor.moveToNext()) {
                 //Converte o cursor em um objeto
-                condicaoPgto = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
+                condicaoPagamento = condicaoPgtoAdap.sqlToCondicaoPgto(cursor);
 
-                condicoesPgto.add(condicaoPgto);
+                condicoesPgto.add(condicaoPagamento);
             }
             cursor.close();
 
@@ -106,38 +106,38 @@ public class CondicaoPgtoDAO {
         return condicoesPgto;
     }
 
-    public CondicaoPgto insereCondicaoPgto(CondicaoPgto condicaoPgto) {
+    public CondicaoPagamento insereCondicaoPgto(CondicaoPagamento condicaoPagamento) {
 
         CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
         //Converte o objeto em um contetValue para inserir no banco
-        ContentValues content = condicaoPgtoAdap.condicaoPgtoToContentValue(condicaoPgto);
-        //Insere o condicaoPgto no banco
+        ContentValues content = condicaoPgtoAdap.condicaoPgtoToContentValue(condicaoPagamento);
+        //Insere o condicaoPagamento no banco
         Integer condicaoPgtoId = (int) dataBase.insert(CONDICAO_PGTO_TABLE_NAME, null, content);
         /*
         if(loginId <= 0){
             throw new Exceptions("Não foi possível inserir o usuário");
         }
         */
-        condicaoPgto.setId(condicaoPgtoId);
+        condicaoPagamento.setId(condicaoPgtoId);
 
-        return condicaoPgto;
+        return condicaoPagamento;
 
     }
 
-    public CondicaoPgto atualizaCondicaoPgto(CondicaoPgto condicaoPgto) throws Exceptions{
+    public CondicaoPagamento atualizaCondicaoPgto(CondicaoPagamento condicaoPagamento) throws Exceptions{
 
         CondicaoPgtoAdap condicaoPgtoAdap = new CondicaoPgtoAdap();
         //Converte o objeto em um contetValue para inserir no banco
-        ContentValues content = condicaoPgtoAdap.condicaoPgtoToContentValue(condicaoPgto);
-        String sqlWhere = "id = "+condicaoPgto.getId();
-        //Insere o condicaoPgto no banco
+        ContentValues content = condicaoPgtoAdap.condicaoPgtoToContentValue(condicaoPagamento);
+        String sqlWhere = "id = "+ condicaoPagamento.getId();
+        //Insere o condicaoPagamento no banco
         Integer executou = (int) dataBase.update(CONDICAO_PGTO_TABLE_NAME,content,sqlWhere,null);
 
         if(executou <= 0){
-            throw new Exceptions("Não foi possível atualizar a condição de pagamento (ID="+condicaoPgto.getId()+")");
+            throw new Exceptions("Não foi possível atualizar a condição de pagamento (ID="+ condicaoPagamento.getId()+")");
         }
 
-        return condicaoPgto;
+        return condicaoPagamento;
 
     }
     

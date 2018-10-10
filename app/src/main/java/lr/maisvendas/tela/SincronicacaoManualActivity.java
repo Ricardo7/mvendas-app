@@ -12,10 +12,14 @@ import lr.maisvendas.servico.VerificaConexao;
 import lr.maisvendas.servico.VerificaServico;
 import lr.maisvendas.sincronizacao.CidadeSinc;
 import lr.maisvendas.sincronizacao.ClienteSinc;
+import lr.maisvendas.sincronizacao.CondicaoPgtoSinc;
 import lr.maisvendas.sincronizacao.EstadoSinc;
+import lr.maisvendas.sincronizacao.ImagemSinc;
 import lr.maisvendas.sincronizacao.PaisSinc;
+import lr.maisvendas.sincronizacao.PedidoSinc;
+import lr.maisvendas.sincronizacao.ProdutoSinc;
 import lr.maisvendas.sincronizacao.SegmentoMercadoSinc;
-import lr.maisvendas.utilitarios.Exceptions;
+import lr.maisvendas.sincronizacao.TabelaPrecoSinc;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.Notify;
 
@@ -73,11 +77,13 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
                     notify.iniciaNotificacao("Sincronização", "Sincronização iniciada");
 
                     if (switchSincTudo.isChecked() || switchSincImagens.isChecked()) {
-
+                        ImagemSinc imagemSinc = new ImagemSinc(notify);
+                        imagemSinc.sincronizaImagem();
                     }
 
-                    if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()) {
-
+                    if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()) {
+                        ProdutoSinc produtoSinc = new ProdutoSinc(notify);
+                        produtoSinc.sincronizaProduto();
                     }
 
                     if (switchSincTudo.isChecked() || switchSincClientes.isChecked()) {
@@ -99,8 +105,15 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
                         clienteSinc.sincronizaCliente();
                     }
 
-                    if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()) {
+                    if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()) {
+                        CondicaoPgtoSinc condicaoPgtoSinc = new CondicaoPgtoSinc(notify);
+                        condicaoPgtoSinc.sincronizaCondicaoPgto();
 
+                        TabelaPrecoSinc tabelaPrecoSinc = new TabelaPrecoSinc(notify);
+                        tabelaPrecoSinc.sincronizaTabelaPreco();
+
+                        PedidoSinc pedidoSinc = new PedidoSinc(notify);
+                        pedidoSinc.sincronizaPedido();
                     }
 
                     notify.setProgress(100, 100, false);

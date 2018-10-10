@@ -16,7 +16,7 @@ import java.util.List;
 
 import lr.maisvendas.R;
 import lr.maisvendas.modelo.Cliente;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.TabelaPreco;
 import lr.maisvendas.repositorio.sql.ClienteDAO;
@@ -52,7 +52,7 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
     private ListaTabelaPrecosSpinnerAdapter listaTabelaPrecosSpinnerAdapter;
     private ListaClientesSpinnerAdapter listaClientesSpinnerAdapter;
     private ListaCondPgtoSpinnerAdapter listaCondPgtoSpinnerAdapter;
-    private List<CondicaoPgto> listaCondicoesPgto;
+    private List<CondicaoPagamento> listaCondicoesPgto;
     private List<TabelaPreco> listaTabelasPreco;
     private List<Cliente> listaClientes;
     private Pedido pedido;
@@ -163,10 +163,10 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
 
         CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(getActivity());
         listaCondicoesPgto = condicaoPgtoDAO.buscaCondicaoPgto();
-        CondicaoPgto condicaoPgto = new CondicaoPgto();
-        condicaoPgto.setCod("");
-        condicaoPgto.setDescricao("Selecione");
-        listaCondicoesPgto.add(0,condicaoPgto);
+        CondicaoPagamento condicaoPagamento = new CondicaoPagamento();
+        condicaoPagamento.setCod("");
+        condicaoPagamento.setDescricao("Selecione");
+        listaCondicoesPgto.add(0, condicaoPagamento);
         if (listaCondicoesPgto != null) {
             listaCondPgtoSpinnerAdapter = new ListaCondPgtoSpinnerAdapter(getActivity(), listaCondicoesPgto);
             spinnerCondPgto.setAdapter(listaCondPgtoSpinnerAdapter);
@@ -198,7 +198,7 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
 
             spinnerTabelaPreco.setSelection(listaTabelaPrecosSpinnerAdapter.getPosition(pedido.getTabelaPreco()));
             spinnerCliente.setSelection(listaClientesSpinnerAdapter.getPosition(pedido.getCliente()));
-            spinnerCondPgto.setSelection(listaCondPgtoSpinnerAdapter.getPosition(pedido.getCondicaoPgto()));
+            spinnerCondPgto.setSelection(listaCondPgtoSpinnerAdapter.getPosition(pedido.getCondicaoPagamento()));
             if (pedido.getObservacao() != null) {
                 editObservacao.setText(pedido.getObservacao().toString());
             }
@@ -223,7 +223,7 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
             pedido = new Pedido();
         }
 
-        pedido.setCondicaoPgto((CondicaoPgto) spinnerCondPgto.getSelectedItem());
+        pedido.setCondicaoPagamento((CondicaoPagamento) spinnerCondPgto.getSelectedItem());
         pedido.setTabelaPreco((TabelaPreco) spinnerTabelaPreco.getSelectedItem());
         pedido.setCliente((Cliente) spinnerCliente.getSelectedItem());
         pedido.setObservacao(editObservacao.getText().toString());

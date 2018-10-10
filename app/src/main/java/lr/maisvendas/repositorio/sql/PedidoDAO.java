@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lr.maisvendas.adaptadorModelo.PedidoAdap;
+import lr.maisvendas.modelo.Cliente;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.modelo.Pedido;
+import lr.maisvendas.modelo.TabelaPreco;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 
@@ -72,7 +75,7 @@ public class PedidoDAO {
                 pedido = pedidoAdap.sqlToPedido(cursor);
                 pedido.setItensPedido(itemPedidoDAO.buscaItemPedido(cursor.getInt(cursor.getColumnIndex("ID"))));
                 pedido.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                pedido.setCondicaoPgto(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
+                pedido.setCondicaoPagamento(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
                 pedido.setTabelaPreco(tabelaPrecoDAO.buscaTabelaPrecoId(cursor.getInt(cursor.getColumnIndex("TABELA_PRECO_ID"))));
             }
             cursor.close();
@@ -87,7 +90,7 @@ public class PedidoDAO {
 
         //Busca o pedido
         String sql = "SELECT * " +
-                "  FROM pedidos " +
+                "  FROM tpedidos " +
                 " WHERE dt_atualizacao >= ifnull('" + dataAt +"','1990-01-01 00:00:00')";
         Cursor cursor = dataBase.rawQuery(sql, null);
 
@@ -104,7 +107,7 @@ public class PedidoDAO {
                 pedido = pedidoAdap.sqlToPedido(cursor);
                 pedido.setItensPedido(itemPedidoDAO.buscaItemPedido(cursor.getInt(cursor.getColumnIndex("ID"))));
                 pedido.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                pedido.setCondicaoPgto(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
+                pedido.setCondicaoPagamento(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
                 pedido.setTabelaPreco(tabelaPrecoDAO.buscaTabelaPrecoId(cursor.getInt(cursor.getColumnIndex("TABELA_PRECO_ID"))));
             }
             cursor.close();
@@ -136,7 +139,7 @@ public class PedidoDAO {
                 pedido = pedidoAdap.sqlToPedido(cursor);
                 pedido.setItensPedido(itemPedidoDAO.buscaItemPedido(cursor.getInt(cursor.getColumnIndex("ID"))));
                 pedido.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                pedido.setCondicaoPgto(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
+                pedido.setCondicaoPagamento(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
                 pedido.setTabelaPreco(tabelaPrecoDAO.buscaTabelaPrecoId(cursor.getInt(cursor.getColumnIndex("TABELA_PRECO_ID"))));
 
             }
@@ -166,7 +169,7 @@ public class PedidoDAO {
                 pedido = pedidoAdap.sqlToPedido(cursor);
                 pedido.setItensPedido(itemPedidoDAO.buscaItemPedido(cursor.getInt(cursor.getColumnIndex("ID"))));
                 pedido.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                pedido.setCondicaoPgto(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
+                pedido.setCondicaoPagamento(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
                 pedido.setTabelaPreco(tabelaPrecoDAO.buscaTabelaPrecoId(cursor.getInt(cursor.getColumnIndex("TABELA_PRECO_ID"))));
 
             }
@@ -197,7 +200,7 @@ public class PedidoDAO {
                 pedido = pedidoAdap.sqlToPedido(cursor);
                 pedido.setItensPedido(itemPedidoDAO.buscaItemPedido(cursor.getInt(cursor.getColumnIndex("ID"))));
                 pedido.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                pedido.setCondicaoPgto(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
+                pedido.setCondicaoPagamento(condicaoPgtoDAO.buscaCondicaoPgtoId(cursor.getInt(cursor.getColumnIndex("CONDICAO_PGTO_ID"))));
                 pedido.setTabelaPreco(tabelaPrecoDAO.buscaTabelaPrecoId(cursor.getInt(cursor.getColumnIndex("TABELA_PRECO_ID"))));
 
                 pedidos.add(pedido);
@@ -210,6 +213,8 @@ public class PedidoDAO {
     }
 
     public Pedido inserePedido(Pedido pedido) {
+
+        pedido = trataDependentes(pedido);
 
         PedidoAdap pedidoAdap = new PedidoAdap();
         //Converte o objeto em um contetValue para inserir no banco
@@ -230,6 +235,8 @@ public class PedidoDAO {
     }
 
     public Pedido atualizaPedido(Pedido pedido) throws Exceptions {
+
+        pedido = trataDependentes(pedido);
 
         PedidoAdap pedidoAdap = new PedidoAdap();
         //Converte o objeto em um contetValue para inserir no banco
@@ -260,6 +267,32 @@ public class PedidoDAO {
         if(executou <= 0){
             throw new Exceptions("Não foi possível deletar o pedido");
         }
+    }
+
+    private Pedido trataDependentes(Pedido pedido) {
+
+        if (pedido.getCliente() == null || pedido.getCliente().getId() == null || pedido.getCliente().getId() <= 0) {
+            ClienteDAO clienteDAO = ClienteDAO.getInstance(context);
+            Cliente cliente;
+            cliente = clienteDAO.buscaClienteIdWs(pedido.getCliente().getIdWS());
+            pedido.setCliente(cliente);
+        }
+
+        if (pedido.getCondicaoPagamento() == null || pedido.getCondicaoPagamento().getId() == null || pedido.getCondicaoPagamento().getId() <= 0) {
+            CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(context);
+            CondicaoPagamento condicaoPagamento;
+            condicaoPagamento = condicaoPgtoDAO.buscaCondicaoPgtoIdWs(pedido.getCondicaoPagamento().getIdWS());
+            pedido.setCondicaoPagamento(condicaoPagamento);
+        }
+
+        if (pedido.getTabelaPreco() == null || pedido.getTabelaPreco().getId() == null || pedido.getTabelaPreco().getId() <= 0) {
+            TabelaPrecoDAO tabelaPrecoDAO = TabelaPrecoDAO.getInstance(context);
+            TabelaPreco tabelaPreco;
+            tabelaPreco = tabelaPrecoDAO.buscaTabelaPrecoIdWs(pedido.getTabelaPreco().getIdWS());
+            pedido.setTabelaPreco(tabelaPreco);
+        }
+
+        return pedido;
     }
 
     public void truncatePedidos(){

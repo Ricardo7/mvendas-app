@@ -60,7 +60,7 @@ public class ClienteAdap {
         content.put("ATIVO", cliente.getAtivo());
         content.put("DT_CADASTRO", cliente.getDtCadastro());
         content.put("DT_ATUALIZACAO", cliente.getDtAtualizacao());
-        //content.put("SEGMER_ID", cliente.getSegmentoMercado().getId());
+        content.put("SEGMER_ID", cliente.getSegmentoMercado().getId());
 
         return content;
     }

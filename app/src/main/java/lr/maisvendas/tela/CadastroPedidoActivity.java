@@ -13,7 +13,7 @@ import android.widget.Spinner;
 
 import lr.maisvendas.R;
 import lr.maisvendas.modelo.Cliente;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.TabelaPreco;
 import lr.maisvendas.repositorio.sql.PedidoDAO;
@@ -159,7 +159,7 @@ public class CadastroPedidoActivity extends BaseActivity implements ComunicadorC
             throw new Exceptions("Cliente não selecionado.");
         }
 
-        pedido.setCondicaoPgto((CondicaoPgto) spinnerCondPgto.getSelectedItem());
+        pedido.setCondicaoPagamento((CondicaoPagamento) spinnerCondPgto.getSelectedItem());
         pedido.setTabelaPreco((TabelaPreco) spinnerTabelaPreco.getSelectedItem());
         pedido.setCliente((Cliente) spinnerCliente.getSelectedItem());
         pedido.setObservacao(editObservacao.getText().toString());

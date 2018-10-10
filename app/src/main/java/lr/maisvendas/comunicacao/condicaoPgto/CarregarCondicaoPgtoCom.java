@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import lr.maisvendas.config.EnderecoHost;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.modelo.Response;
 import lr.maisvendas.modelo.ResponseStatus;
 import lr.maisvendas.servico.CondicaoPgtoServico;
@@ -14,7 +14,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class CarregarCondicaoPgtoCom extends AsyncTask<String,Void,Response<List<CondicaoPgto>>> {
+public class CarregarCondicaoPgtoCom extends AsyncTask<String,Void,Response<List<CondicaoPagamento>>> {
 
         private CondicaoPgtoServico service;
         private CarregarCondicaoPgtoTaskCallBack delegate;
@@ -39,15 +39,15 @@ public class CarregarCondicaoPgtoCom extends AsyncTask<String,Void,Response<List
         }
 
         @Override
-        protected Response<List<CondicaoPgto>> doInBackground(String... params) {
+        protected Response<List<CondicaoPagamento>> doInBackground(String... params) {
             if (params.length == 0) {
                 return null;
             }
 
-            // Cria a chamada para o método
-            Call<Response<List<CondicaoPgto>>> carregarCondicaoPgtoCall = service.carregarCondicaoPgto(params[0],params[1]);
-
             try {
+                // Cria a chamada para o método
+                Call<Response<List<CondicaoPagamento>>> carregarCondicaoPgtoCall = service.carregarCondicaoPgto(params[0],params[1]);
+
                 // Executa a chamada e pega o retorno para devolver para a task no método "onPostExecute"
                 return carregarCondicaoPgtoCall.execute().body();
             } catch (Exception e) {
@@ -61,7 +61,7 @@ public class CarregarCondicaoPgtoCom extends AsyncTask<String,Void,Response<List
         }
 
         @Override
-        protected void onPostExecute(Response<List<CondicaoPgto>> condicoesPgto) {
+        protected void onPostExecute(Response<List<CondicaoPagamento>> condicoesPgto) {
 
             if (condicoesPgto.getStatus().toString().equals("SUCCESS")) {
                 delegate.onCarregarCondicaoPgtoSuccess(condicoesPgto.getData());
@@ -72,7 +72,7 @@ public class CarregarCondicaoPgtoCom extends AsyncTask<String,Void,Response<List
 
         public interface CarregarCondicaoPgtoTaskCallBack {
 
-            public void onCarregarCondicaoPgtoSuccess(List<CondicaoPgto> condicoesPgto);
+            public void onCarregarCondicaoPgtoSuccess(List<CondicaoPagamento> condicoesPgto);
             public void onCarregarCondicaoPgtoFailure(String mensagem);
         }
 }

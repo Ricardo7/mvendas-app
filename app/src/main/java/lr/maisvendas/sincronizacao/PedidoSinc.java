@@ -37,7 +37,7 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincPedidos() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -138,7 +138,7 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
 
     @Override
     public void onCadastrarPedidoSuccess(Pedido pedido) {
-        //Atualiza o módulo principalmente para setar o IDs, caso ainda não tenha ocorrido
+        //Atualiza o módulo principalmente para setar o IDWS, caso ainda não tenha ocorrido
         PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
         try {
             pedidoDAO.atualizaPedido(pedido);

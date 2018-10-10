@@ -29,8 +29,8 @@ public class Pedido implements Serializable{
     private String dtAtualizacao;
     @JsonProperty("Cliente")
     private Cliente cliente;
-    @JsonProperty("CondicaoPgto")
-    private CondicaoPgto condicaoPgto;
+    @JsonProperty("CondicaoPagamento")
+    private CondicaoPagamento condicaoPagamento;
     @JsonProperty("TabelaPreco")
     private TabelaPreco tabelaPreco;
     @JsonProperty("ItensPedido")
@@ -110,12 +110,12 @@ public class Pedido implements Serializable{
         this.cliente = cliente;
     }
 
-    public CondicaoPgto getCondicaoPgto() {
-        return condicaoPgto;
+    public CondicaoPagamento getCondicaoPagamento() {
+        return condicaoPagamento;
     }
 
-    public void setCondicaoPgto(CondicaoPgto condicaoPgto) {
-        this.condicaoPgto = condicaoPgto;
+    public void setCondicaoPagamento(CondicaoPagamento condicaoPagamento) {
+        this.condicaoPagamento = condicaoPagamento;
     }
 
     public TabelaPreco getTabelaPreco() {

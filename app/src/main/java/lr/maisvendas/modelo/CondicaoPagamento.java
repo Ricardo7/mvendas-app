@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CondicaoPgto implements Serializable {
+public class CondicaoPagamento implements Serializable {
 
     @JsonIgnore
     private Integer id;
@@ -21,8 +21,6 @@ public class CondicaoPgto implements Serializable {
     private String descricao;
     @JsonProperty("DescAcr")
     private Double descAcr;
-
-    public CondicaoPgto() {}
 
     public Integer getId() {
         return id;

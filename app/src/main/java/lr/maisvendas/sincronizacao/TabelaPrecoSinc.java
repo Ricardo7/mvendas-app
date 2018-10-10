@@ -35,7 +35,7 @@ public class TabelaPrecoSinc extends BaseActivity implements CarregarTabelaPreco
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincPedidos() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -97,7 +97,7 @@ public class TabelaPrecoSinc extends BaseActivity implements CarregarTabelaPreco
     private void trataItemTabelaPreco(List<ItemTabelaPreco> itensTabelaPreco, Integer tabelaPrecoId){
 
         ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
-        ItemTabelaPreco itemTabelaPrecoTst = null;
+        ItemTabelaPreco itemTabelaPrecoTst;
         for (ItemTabelaPreco itemTabelaPreco:itensTabelaPreco) {
 
             itemTabelaPrecoTst = itemTabelaPrecoDAO.buscaItemTabelaPrecoProduto(tabelaPrecoId,itemTabelaPreco.getProduto().getCod());
