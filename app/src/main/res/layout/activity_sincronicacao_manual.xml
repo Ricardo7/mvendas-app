@@ -80,10 +80,10 @@
                     android:layout_weight="3"
                     android:layout_marginLeft="10dp"
                     android:textSize="@dimen/configuracao_text"
-                    android:text="Pedidos"/>
+                    android:text="Produtos"/>
 
                 <Switch
-                    android:id="@+id/activity_sincronicacao_manual_switch_pedidos"
+                    android:id="@+id/activity_sincronicacao_manual_switch_produtos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -126,10 +126,10 @@
                     android:layout_weight="3"
                     android:layout_marginLeft="10dp"
                     android:textSize="@dimen/configuracao_text"
-                    android:text="Produtos"/>
+                    android:text="Pedidos"/>
 
                 <Switch
-                    android:id="@+id/activity_sincronicacao_manual_switch_produtos"
+                    android:id="@+id/activity_sincronicacao_manual_switch_pedidos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

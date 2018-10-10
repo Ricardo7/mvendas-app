@@ -102,6 +102,7 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
             }
         }
 
+
         if (caminhoImagem != null) {
             File imgFile = new  File(caminhoImagem);
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/border_line_view"
+    android:layout_marginBottom="5dp">
+
+    <TextView
+        android:id="@+id/linha_lista_atividades_hora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="2dp"
+        android:textSize="@dimen/textTextLinhaCabecalho"
+        android:textColor="@color/linhaViewText" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="4dp"
+        android:textSize="@dimen/textTextLinhaCorpo">
+
+        <TextView
+            android:id="@+id/linha_lista_atividades_atividade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/linhaViewText"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

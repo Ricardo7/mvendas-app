@@ -6,9 +6,9 @@ package lr.maisvendas.config;
 
 public class EnderecoHost {
 
-    private final String hostHTTP = "https://webservice.conveyor.cloud/api/";
+    private final String hostHTTP = "http://192.168.15.11:8080/api/";
    // private final String hostHTTPRaiz= "https://webservice.conveyor.cloud";
-    private final String hostHTTPRaiz= "https://webservice.conveyor.cloud";
+    private final String hostHTTPRaiz= "http://192.168.15.11:8080";
 
     public String getHostHTTP() {
         return hostHTTP;

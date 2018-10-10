@@ -29,9 +29,9 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
 
     //Campos da tela
     private ImageButton imagePedidoAdd;
+    private RecyclerView recyclerViewProdutos;
 
     //Variáveis
-    private RecyclerView recyclerViewProdutos;
     private ListaProdutosAdapter listaProdutosAdapter;
     private List<Produto> listaProdutos;
     private Ferramentas ferramentas;
@@ -56,14 +56,6 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewProdutos.setLayoutManager(layoutManager);
-
-
-        ProdutoDAO produtoDAO = ProdutoDAO.getInstance(this);
-        listaProdutos = produtoDAO.buscaProdutos();
-        listaProdutosAdapter = new ListaProdutosAdapter(this,listaProdutos);
-        recyclerViewProdutos.setAdapter(listaProdutosAdapter);
-
-        listaProdutosAdapter.setClickListener(this);
 
     }
 
@@ -175,8 +167,11 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
 
     //Metodo para carregar informação ao abriar a Activity.
     private void loadDataFromActivity() {
-
-
+        ProdutoDAO produtoDAO = ProdutoDAO.getInstance(this);
+        listaProdutos = produtoDAO.buscaProdutos();
+        listaProdutosAdapter = new ListaProdutosAdapter(this,listaProdutos);
+        recyclerViewProdutos.setAdapter(listaProdutosAdapter);
+        listaProdutosAdapter.setClickListener(this);
     }
 
     @Override

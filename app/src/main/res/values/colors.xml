@@ -5,12 +5,12 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBranca">#ffffff</color>
     <color name="loginBlue">#e9dfff</color>
-    <color name="loginButton">#eb423363</color>
+    <color name="loginButton">#183919</color>
     <color name="cadastrarButton">#df38d444</color>
-    <color name="loginContent">#8f72fa</color>
+    <color name="loginContent">#81e180</color>
     <color name="colorField">#4935d477</color>
     <color name="buttonText">#183919</color>
-    <color name="buttonTextLogin">#b2a7d6</color>
+    <color name="buttonTextLogin">#df38d444</color>
     <color name="colorAlert">#c77350ff</color>
     <color name="colorAlertText">#0a2102</color>
     <color name="linhaViewDefault">#c9b0f4</color>
@@ -24,4 +24,8 @@
     <color name="cadastro_pedido_text_final_label">#1a4618</color>
     <color name="cadastro_pedido_text_final_vlr">#178611</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorLabelFab">#000000</color>
+
+    <color name="negro_semitransparente">#B2000000</color>
+    <color name="blanco">#fafafa</color>
 </resources>

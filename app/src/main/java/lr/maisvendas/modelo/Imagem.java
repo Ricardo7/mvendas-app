@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Imagem implements Serializable {
+public class    Imagem implements Serializable {
 
     @JsonIgnore
     private Integer id;
@@ -19,10 +19,12 @@ public class Imagem implements Serializable {
     private String nome;
     @JsonProperty("Principal")
     private Integer principal;
-    @JsonProperty("Caminho")
+    @JsonIgnore
     private String caminho;
-    @JsonProperty("Tamanho")
-    private Integer tamanho;
+    @JsonProperty("Base64")
+    private String imagem;
+    @JsonProperty("ProdutoID")
+    private String produtoIdWS;
     @JsonProperty("DtCriacao")
     private String dtCriacao;
     @JsonProperty("DtAtualizacao")
@@ -70,12 +72,20 @@ public class Imagem implements Serializable {
         this.caminho = caminho;
     }
 
-    public Integer getTamanho() {
-        return tamanho;
+    public String getImagem() {
+        return imagem;
     }
 
-    public void setTamanho(Integer tamanho) {
-        this.tamanho = tamanho;
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
+
+    public String getProdutoIdWS() {
+        return produtoIdWS;
+    }
+
+    public void setProdutoIdWS(String produtoIdWS) {
+        this.produtoIdWS = produtoIdWS;
     }
 
     public String getDtCriacao() {

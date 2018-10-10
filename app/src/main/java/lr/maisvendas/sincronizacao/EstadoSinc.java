@@ -20,10 +20,12 @@ public class EstadoSinc extends BaseActivity implements CarregarEstadoCom.Carreg
     private static final String TAG = "EstadoSinc";
     private List<Estado> estadoOld;
     private Notify notify;
+    private Integer peso;
 
-    public EstadoSinc(Notify notify) {
+    public EstadoSinc(Notify notify,Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        this.peso = peso;
     }
 
     public void sincronizaEstado(){
@@ -33,7 +35,7 @@ public class EstadoSinc extends BaseActivity implements CarregarEstadoCom.Carreg
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincClientes() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -55,7 +57,7 @@ public class EstadoSinc extends BaseActivity implements CarregarEstadoCom.Carreg
     public void onCarregarEstadoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
 
-        notify.setProgress(100,20,false);
+        notify.setProgress(100,peso,false);
     }
 
     private void trataRegistrosInternos(List<Estado> estadoes){
@@ -79,7 +81,7 @@ public class EstadoSinc extends BaseActivity implements CarregarEstadoCom.Carreg
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
-        notify.setProgress(100,20,false);
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de ESTADOS externos");
     }
 }

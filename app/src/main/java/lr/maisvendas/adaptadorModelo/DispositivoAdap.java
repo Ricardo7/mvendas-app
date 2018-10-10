@@ -22,6 +22,7 @@ public class DispositivoAdap {
         dispositivo.setDataSincPedidos(cursor.getString(cursor.getColumnIndex("DATA_SINC_PEDIDOS")));
         dispositivo.setDataSincClientes(cursor.getString(cursor.getColumnIndex("DATA_SINC_CLIENTES")));
         dispositivo.setDataSincProdutos(cursor.getString(cursor.getColumnIndex("DATA_SINC_PRODUTOS")));
+        dispositivo.setDataSincAtividades(cursor.getString(cursor.getColumnIndex("DATA_SINC_ATIVIDADES")));
 
         return dispositivo;
     }
@@ -34,6 +35,7 @@ public class DispositivoAdap {
         content.put("DATA_SINC_PEDIDOS",dispositivo.getDataSincPedidos());
         content.put("DATA_SINC_CLIENTES",dispositivo.getDataSincClientes());
         content.put("DATA_SINC_PRODUTOS",dispositivo.getDataSincProdutos());
+        content.put("DATA_SINC_ATIVIDADES",dispositivo.getDataSincAtividades());
 
         return content;
     }

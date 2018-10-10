@@ -21,15 +21,15 @@ public class ImagemAdap {
         imagem.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         imagem.setNome(cursor.getString(cursor.getColumnIndex("NOME")));
         imagem.setPrincipal(cursor.getInt(cursor.getColumnIndex("PRINCIPAL")));
-        imagem.setTamanho(cursor.getInt(cursor.getColumnIndex("TAMANHO")));
         imagem.setCaminho(cursor.getString(cursor.getColumnIndex("CAMINHO")));
+        imagem.setProdutoIdWS(cursor.getString(cursor.getColumnIndex("PRODUTO_ID_WS")));
         imagem.setDtCriacao(cursor.getString(cursor.getColumnIndex("DT_CRIACAO")));
         imagem.setDtAtualizacao(cursor.getString(cursor.getColumnIndex("DT_ATUALIZACAO")));
 
         return imagem;
     }
 
-    public ContentValues imagemToContentValue(Imagem imagem, Integer produtoId){
+    public ContentValues imagemToContentValue(Imagem imagem){
         ContentValues content = new ContentValues();
 
         content.put("ID",imagem.getId());
@@ -37,10 +37,10 @@ public class ImagemAdap {
         content.put("NOME",imagem.getNome());
         content.put("PRINCIPAL",imagem.getPrincipal());
         content.put("CAMINHO",imagem.getCaminho());
-        content.put("TAMANHO",imagem.getTamanho());
+        content.put("PRODUTO_ID_WS",imagem.getProdutoIdWS());
         content.put("DT_CRIACAO",imagem.getDtCriacao());
         content.put("DT_ATUALIZACAO",imagem.getDtAtualizacao());
-        content.put("PRODUTO_ID",produtoId);
+
 
         return content;
     }

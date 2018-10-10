@@ -22,7 +22,7 @@ public class Produto implements Serializable {
     private String descricao;
     @JsonProperty("Observacao")
     private String observacao;
-    @JsonProperty("Imagens")
+    @JsonIgnore
     private List<Imagem> imagens;
 
     public Produto () {}
@@ -74,4 +74,5 @@ public class Produto implements Serializable {
     public void setImagens(List<Imagem> imagens) {
         this.imagens = imagens;
     }
+
 }

@@ -18,10 +18,10 @@ public interface PedidoServico {
     @GET("Pedido/GetListaPedidosAtualizados") //Busca
     public Call<Response<List<Pedido>>> carregarPedido(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
-    @PUT("Pedido/AddPedido") //Insere
+    @POST("Pedido/AddPedido") //Insere
     public Call<Response<Pedido>>criarPedido(@Header("X-Auth-Token") String token, @Body Pedido pedido);
 
-    @POST("Pedido/EditPedido") //Atualiza
+    @PUT("Pedido/EditaPedido") //Atualiza
     public Call<Response<Pedido>>editarPedido(@Header("X-Auth-Token") String token, @Query("IDWS") String idWS, @Body Pedido pedido);
 
     @DELETE("Pedido/DeletePedido") //Deleta

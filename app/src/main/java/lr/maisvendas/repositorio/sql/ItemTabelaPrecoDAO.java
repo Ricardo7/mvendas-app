@@ -10,6 +10,7 @@ import java.util.List;
 
 import lr.maisvendas.adaptadorModelo.ItemTabelaPrecoAdap;
 import lr.maisvendas.modelo.ItemTabelaPreco;
+import lr.maisvendas.modelo.Produto;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 
@@ -106,7 +107,7 @@ public class ItemTabelaPrecoDAO {
         //Busca o grupo
         String sql = "SELECT * " +
                      "  FROM titens_tabela_precos itpr" +
-                     "       INNER JOIN produto pd ON itpr.produto_id = pd.id" +
+                     "       INNER JOIN tprodutos pd ON itpr.produto_id = pd.id" +
                      " WHERE itpr.tabela_preco_id = "+ tabelaPrecoId +
                      "   AND pd.codigo =  '"+ codProduto +"'";
         Cursor cursor = dataBase.rawQuery(sql, null);
@@ -129,6 +130,8 @@ public class ItemTabelaPrecoDAO {
 
     public ItemTabelaPreco insereItemTabelaPreco(ItemTabelaPreco itemTabelaPreco, Integer tabelaPrecoId) {
 
+        itemTabelaPreco = trataDependencias(itemTabelaPreco);
+
         ItemTabelaPrecoAdap itemTabelaPrecoAdap = new ItemTabelaPrecoAdap();
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = itemTabelaPrecoAdap.itemTabelaPrecoToContentValue(itemTabelaPreco,tabelaPrecoId);
@@ -148,6 +151,8 @@ public class ItemTabelaPrecoDAO {
 
     public ItemTabelaPreco atualizaItemTabelaPreco(ItemTabelaPreco itemTabelaPreco, Integer tabelaPrecoId) throws Exceptions {
 
+        itemTabelaPreco = trataDependencias(itemTabelaPreco);
+
         ItemTabelaPrecoAdap itemTabelaPrecoAdap = new ItemTabelaPrecoAdap();
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = itemTabelaPrecoAdap.itemTabelaPrecoToContentValue(itemTabelaPreco,tabelaPrecoId);
@@ -162,6 +167,18 @@ public class ItemTabelaPrecoDAO {
 
         return itemTabelaPreco;
 
+    }
+
+    private ItemTabelaPreco trataDependencias(ItemTabelaPreco itemTabelaPreco){
+
+        if (itemTabelaPreco.getProduto() == null || itemTabelaPreco.getProduto().getId() == null || itemTabelaPreco.getProduto().getId() <= 0) {
+            ProdutoDAO produtoDAO = ProdutoDAO.getInstance(context);
+            Produto produto;
+            produto = produtoDAO.buscaProdutoIdWs(itemTabelaPreco.getProduto().getIdWS());
+            itemTabelaPreco.setProduto(produto);
+        }
+
+        return itemTabelaPreco;
     }
 
     public void truncateItems(){

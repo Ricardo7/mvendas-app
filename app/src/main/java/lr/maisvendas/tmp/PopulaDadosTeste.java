@@ -8,7 +8,7 @@ import java.util.List;
 
 import lr.maisvendas.modelo.Cidade;
 import lr.maisvendas.modelo.Cliente;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.modelo.Estado;
 import lr.maisvendas.modelo.Imagem;
 import lr.maisvendas.modelo.ItemPedido;
@@ -58,7 +58,7 @@ public class PopulaDadosTeste {
 
             pedido = new Pedido();
             pedido.setNumero(1);
-            pedido.setCondicaoPgto(populaCondicaoPgto(context));
+            pedido.setCondicaoPagamento(populaCondicaoPgto(context));
             pedido.setTabelaPreco(populaTabelaPreco(context));
             pedido.setCliente(populaClientes(context));
             pedido.setSituacao(0);
@@ -143,7 +143,7 @@ public class PopulaDadosTeste {
         //Insere no banco
         produto = produtoDAO.insereProduto(produto);
 
-        produto.setImagens(populaImagens(context,produto.getId()));
+        //produto.setImagens(populaImagens(context,produto.getId()));
 
         return produto;
 
@@ -160,12 +160,13 @@ public class PopulaDadosTeste {
         Imagem imagem = new Imagem();
         imagem.setNome("Produto2");
         imagem.setPrincipal(1);
+        //imagem.setProdutoId(produtoId);
         imagem.setCaminho(caminho.getPath()+"/Produto2.jpg");
-        imagem.setTamanho(1000);
+        //imagem.setTamanho(1000);
         imagem.setDtCriacao(ferramentas.getCurrentDate());
         imagem.setDtAtualizacao(ferramentas.getCurrentDate());
 
-        imagem = imagemDAO.insereImagem(imagem,produtoId);
+        imagem = imagemDAO.insereImagem(imagem);
 
         imagens.add(imagem);
 
@@ -173,12 +174,12 @@ public class PopulaDadosTeste {
         imagem = new Imagem();
         imagem.setNome("produto02_02");
         imagem.setPrincipal(1);
+        //imagem.setProdutoId(produtoId);
         imagem.setCaminho(caminho.getPath()+"/produto02_02.jpg");
-        imagem.setTamanho(1000);
         imagem.setDtCriacao(ferramentas.getCurrentDate());
         imagem.setDtAtualizacao(ferramentas.getCurrentDate());
 
-        imagem = imagemDAO.insereImagem(imagem,produtoId);
+        imagem = imagemDAO.insereImagem(imagem);
 
         imagens.add(imagem);
 
@@ -187,11 +188,11 @@ public class PopulaDadosTeste {
         imagem.setNome("Produto02_03");
         imagem.setPrincipal(1);
         imagem.setCaminho(caminho.getPath()+"/Produto02_03.png");
-        imagem.setTamanho(1000);
+        //imagem.setProdutoId(produtoId);
         imagem.setDtCriacao(ferramentas.getCurrentDate());
         imagem.setDtAtualizacao(ferramentas.getCurrentDate());
 
-        imagem = imagemDAO.insereImagem(imagem,produtoId);
+        imagem = imagemDAO.insereImagem(imagem);
 
         imagens.add(imagem);
 
@@ -200,28 +201,28 @@ public class PopulaDadosTeste {
         imagem.setNome("Produto02_04");
         imagem.setPrincipal(1);
         imagem.setCaminho(caminho.getPath()+"/Produto02_04.png");
-        imagem.setTamanho(1000);
+        //imagem.setProdutoId(produtoId);
         imagem.setDtCriacao(ferramentas.getCurrentDate());
         imagem.setDtAtualizacao(ferramentas.getCurrentDate());
 
-        imagem = imagemDAO.insereImagem(imagem,produtoId);
+        imagem = imagemDAO.insereImagem(imagem);
 
         imagens.add(imagem);
 
         return imagens;
     }
 
-    public CondicaoPgto populaCondicaoPgto(Context context) {
+    public CondicaoPagamento populaCondicaoPgto(Context context) {
         CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(context);
 
-        CondicaoPgto condicaoPgto = new CondicaoPgto();
-        condicaoPgto.setCod("1");
-        condicaoPgto.setDescricao("A Vista");
-        condicaoPgto.setDescAcr(15.0);
+        CondicaoPagamento condicaoPagamento = new CondicaoPagamento();
+        condicaoPagamento.setCod("1");
+        condicaoPagamento.setDescricao("A Vista");
+        condicaoPagamento.setDescAcr(15.0);
 
-        condicaoPgto = condicaoPgtoDAO.insereCondicaoPgto(condicaoPgto);
+        condicaoPagamento = condicaoPgtoDAO.insereCondicaoPgto(condicaoPagamento);
 
-        return condicaoPgto;
+        return condicaoPagamento;
     }
 
     //< CLIENTE>

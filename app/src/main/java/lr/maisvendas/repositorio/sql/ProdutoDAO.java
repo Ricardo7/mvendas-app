@@ -99,7 +99,40 @@ public class ProdutoDAO {
                 //Converte o cursor em um objeto
                 produto = produtoAdap.sqlToProduto(cursor);
 
-                produto.setImagens(imagemDAO.buscaImagensProduto(cursor.getInt(cursor.getColumnIndex("ID"))));
+                produto.setImagens(imagemDAO.buscaImagensProduto(cursor.getString(cursor.getColumnIndex("ID_WS"))));
+
+                produtos.add(produto);
+            }
+            cursor.close();
+        }
+
+        return produtos;
+    }
+
+    public List<Produto> buscaProdutosSugeridos(Integer produtoId){
+        List<Produto> produtos = new ArrayList<>();
+        Produto produto = null;
+
+        //Busca o grupo
+        String sql = " SELECT * " +
+                     "   FROM tprodutos pd" +
+                     "  WHERE NOT EXISTS (SELECT 1" +
+                     "                      FROM tpedidos ped" +
+                     "                         , titens_pedido itpd" +
+                     "                     WHERE ped.id          = itpd.pedido_id" +
+                     "                       AND ped.status      = 0"+
+                     "                       AND itpd.produto_id = pd.id)" +
+                     "    AND pd.id            != " + produtoId;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            ProdutoAdap produtoAdap = new ProdutoAdap();
+            ImagemDAO imagemDAO = ImagemDAO.getInstance(context);
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                produto = produtoAdap.sqlToProduto(cursor);
+
+                produto.setImagens(imagemDAO.buscaImagensProduto(cursor.getString(cursor.getColumnIndex("ID_WS"))));
 
                 produtos.add(produto);
             }

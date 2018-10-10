@@ -196,8 +196,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.2"
-                android:orientation="vertical">
+                android:background="@color/colorField"
+                android:orientation="horizontal">
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_detalhes_produto_sugestao_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp">
+
+                </android.support.v7.widget.RecyclerView>
 
             </LinearLayout>
         </LinearLayout>

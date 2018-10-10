@@ -1,17 +1,39 @@
 package lr.maisvendas.modelo;
 
-public class Atividade {
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Atividade implements Serializable{
+
+    @JsonProperty("IDAP")
     private Integer id;
+    @JsonProperty("IDWS")
+    private String idWS;
+    @JsonProperty("Assunto")
     private String assunto;
+    @JsonProperty("Observacao")
     private String observacao;
+    @JsonProperty("DataAtividade")
     private String dataAtividade;
+    @JsonProperty("HoraAtividade")
     private String horaAtividade;
+    @JsonProperty("Cliente")
     private Cliente cliente;
-    private String dtCriacao;
+    @JsonProperty("Usuario")
+    private Usuario usuario;
+    @JsonIgnore
+    private String tipo;
+    @JsonProperty("DtCadastro")
+    private String dtCadastro;
+    @JsonProperty("DtAtualizacao")
     private String dtAtualizacao;
-
-    public Atividade () {}
 
     public Integer getId() {
         return id;
@@ -19,6 +41,14 @@ public class Atividade {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getIdWS() {
+        return idWS;
+    }
+
+    public void setIdWS(String idWS) {
+        this.idWS = idWS;
     }
 
     public String getAssunto() {
@@ -61,12 +91,28 @@ public class Atividade {
         this.cliente = cliente;
     }
 
-    public String getDtCriacao() {
-        return dtCriacao;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setDtCriacao(String dtCriacao) {
-        this.dtCriacao = dtCriacao;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getDtCadastro() {
+        return dtCadastro;
+    }
+
+    public void setDtCadastro(String dtCadastro) {
+        this.dtCadastro = dtCadastro;
     }
 
     public String getDtAtualizacao() {

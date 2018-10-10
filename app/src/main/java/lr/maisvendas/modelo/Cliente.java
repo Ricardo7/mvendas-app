@@ -200,4 +200,74 @@ public class Cliente implements Serializable {
     public void setDtAtualizacao(String dtAtualizacao) {
         this.dtAtualizacao = dtAtualizacao;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cliente)) return false;
+        Cliente cliente = (Cliente) o;
+        if( getId() 				!= null ? !getId().equals(cliente.getId()) : cliente.getId() != null)
+            return false;
+        if( getIdWS()				!= null ? !getIdWS().equals(cliente.getIdWS()) : cliente.getIdWS() != null)
+            if( getCod()				!= null ? !getCod().equals(cliente.getCod()) : cliente.getCod() != null)
+                return false;
+        if( getCnpj()				!= null ? !getCnpj().equals(cliente.getCnpj()) : cliente.getCnpj() != null)
+            return false;
+        if( getRazaoSocial()		!= null ? !getRazaoSocial().equals(cliente.getRazaoSocial()) : cliente.getRazaoSocial() != null)
+            return false;
+        if( getNomeFantasia()		!= null ? !getNomeFantasia().equals(cliente.getNomeFantasia()) : cliente.getNomeFantasia() != null)
+            return false;
+        if( getInscricaoEstadual()	!= null ? !getInscricaoEstadual().equals(cliente.getInscricaoEstadual()) : cliente.getInscricaoEstadual() != null)
+            return false;
+        if( getEmail()				!= null ? !getEmail().equals(cliente.getEmail()) : cliente.getEmail() != null)
+            return false;
+        if( getFone()				!= null ? !getFone().equals(cliente.getFone()) : cliente.getFone() != null)
+            return false;
+        if( getCep()				!= null ? !getCep().equals(cliente.getCep()) : cliente.getCep() != null)
+            return false;
+        if( getBairro()				!= null ? !getBairro().equals(cliente.getBairro()) : cliente.getBairro() != null)
+            return false;
+        if( getLogradouro()			!= null ? !getLogradouro().equals(cliente.getLogradouro()) : cliente.getLogradouro() != null)
+            return false;
+        if( getNumero()				!= null ? !getNumero().equals(cliente.getNumero()) : cliente.getNumero() != null)
+            return false;
+        if( getStatus()				!= null ? !getStatus().equals(cliente.getStatus()) : cliente.getStatus() != null)
+            return false;
+        if( getAtivo()				!= null ? !getAtivo().equals(cliente.getAtivo()) : cliente.getAtivo() != null)
+            return false;
+        if( getDtCadastro()			!= null ? !getDtCadastro().equals(cliente.getDtCadastro()) : cliente.getDtCadastro() != null)
+            return false;
+        if( getDtAtualizacao()		!= null ? !getDtAtualizacao().equals(cliente.getDtAtualizacao()) : cliente.getDtAtualizacao() != null)
+            return false;
+        if( getCidade()				!= null ? !getCidade().equals(cliente.getCidade()) : cliente.getCidade() != null)
+            return false;
+        return getSegmentoMercado()	!= null ? getSegmentoMercado().equals(cliente.getSegmentoMercado()) : cliente.getSegmentoMercado() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = getId()                            != null ? getId().hashCode() : 0;
+        result = 31 * result + (getIdWS()				!= null ? getIdWS().hashCode() : 0);
+        result = 31 * result + (getCod()                != null ? getCod().hashCode() : 0);
+        result = 31 * result + (getCnpj()               != null ? getCnpj().hashCode() : 0);
+        result = 31 * result + (getRazaoSocial()        != null ? getRazaoSocial().hashCode() : 0);
+        result = 31 * result + (getNomeFantasia()       != null ? getNomeFantasia().hashCode() : 0);
+        result = 31 * result + (getInscricaoEstadual()  != null ? getInscricaoEstadual().hashCode() : 0);
+        result = 31 * result + (getEmail()              != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (getFone()               != null ? getFone().hashCode() : 0);
+        result = 31 * result + (getCep()                != null ? getCep().hashCode() : 0);
+        result = 31 * result + (getBairro()             != null ? getBairro().hashCode() : 0);
+        result = 31 * result + (getLogradouro()         != null ? getLogradouro().hashCode() : 0);
+        result = 31 * result + (getNumero()             != null ? getNumero().hashCode() : 0);
+        result = 31 * result + (getStatus()             != null ? getStatus().hashCode() : 0);
+        result = 31 * result + (getAtivo()              != null ? getAtivo().hashCode() : 0);
+        result = 31 * result + (getDtCadastro()         != null ? getDtCadastro().hashCode() : 0);
+        result = 31 * result + (getDtAtualizacao()      != null ? getDtAtualizacao().hashCode() : 0);
+        result = 31 * result + (getCidade()             != null ? getCidade().hashCode() : 0);
+        result = 31 * result + (getSegmentoMercado()    != null ? getSegmentoMercado().hashCode() : 0);
+
+        return result;
+    }
 }

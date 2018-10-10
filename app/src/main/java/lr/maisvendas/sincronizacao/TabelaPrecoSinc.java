@@ -22,10 +22,12 @@ public class TabelaPrecoSinc extends BaseActivity implements CarregarTabelaPreco
     private static final String TAG = "TabelaPrecoSinc";
     private List<TabelaPreco> tabelaPrecosOld;
     private Notify notify;
+    private Integer peso;
 
-    public TabelaPrecoSinc(Notify notify) {
+    public TabelaPrecoSinc(Notify notify,Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        this.peso = peso;
     }
 
     public void sincronizaTabelaPreco(){
@@ -35,7 +37,7 @@ public class TabelaPrecoSinc extends BaseActivity implements CarregarTabelaPreco
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincPedidos() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -57,6 +59,7 @@ public class TabelaPrecoSinc extends BaseActivity implements CarregarTabelaPreco
     @Override
     public void onCarregarTabelaPrecoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
+        notify.setProgress(100,peso,false);
     }
 
     /**
@@ -90,6 +93,7 @@ public class TabelaPrecoSinc extends BaseActivity implements CarregarTabelaPreco
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de TabelaPrecoS externos");
     }
 
@@ -97,7 +101,7 @@ public class TabelaPrecoSinc extends BaseActivity implements CarregarTabelaPreco
     private void trataItemTabelaPreco(List<ItemTabelaPreco> itensTabelaPreco, Integer tabelaPrecoId){
 
         ItemTabelaPrecoDAO itemTabelaPrecoDAO = ItemTabelaPrecoDAO.getInstance(this);
-        ItemTabelaPreco itemTabelaPrecoTst = null;
+        ItemTabelaPreco itemTabelaPrecoTst;
         for (ItemTabelaPreco itemTabelaPreco:itensTabelaPreco) {
 
             itemTabelaPrecoTst = itemTabelaPrecoDAO.buscaItemTabelaPrecoProduto(tabelaPrecoId,itemTabelaPreco.getProduto().getCod());

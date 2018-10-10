@@ -18,7 +18,7 @@ import lr.maisvendas.tela.adaptador.ListaClientesAdapter;
 public class ListaClientesActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private FloatingActionButton buttonAdd;
-    private ListView listViewUsuarios;
+    private ListView listViewClientes;
     private ListaClientesAdapter listaClientesAdapter;
     private List<Cliente> listaClientes;
 
@@ -34,10 +34,10 @@ public class ListaClientesActivity extends BaseActivity implements View.OnClickL
         setTitle("Clientes");
 
         buttonAdd = (FloatingActionButton) findViewById(R.id.activity_lista_clientes_button_add);
-        listViewUsuarios = (ListView) findViewById(R.id.activity_lista_clientes_list_view);
+        listViewClientes = (ListView) findViewById(R.id.activity_lista_clientes_list_view);
 
         buttonAdd.setOnClickListener(this);
-        listViewUsuarios.setOnItemClickListener(this);
+        listViewClientes.setOnItemClickListener(this);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ListaClientesActivity extends BaseActivity implements View.OnClickL
         ClienteDAO clienteDAO = ClienteDAO.getInstance(this);
         listaClientes = clienteDAO.buscaClientes();
         listaClientesAdapter = new ListaClientesAdapter(this,listaClientes);
-        listViewUsuarios.setAdapter(listaClientesAdapter);
+        listViewClientes.setAdapter(listaClientesAdapter);
 
     }
 

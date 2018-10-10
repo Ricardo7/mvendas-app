@@ -7,6 +7,7 @@ public class Dispositivo {
     private String dataSincPedidos;
     private String dataSincClientes;
     private String dataSincProdutos;
+    private String dataSincAtividades;
 
     public Integer getId() {
         return id;
@@ -46,5 +47,13 @@ public class Dispositivo {
 
     public void setDataSincProdutos(String dataSincProdutos) {
         this.dataSincProdutos = dataSincProdutos;
+    }
+
+    public String getDataSincAtividades() {
+        return dataSincAtividades;
+    }
+
+    public void setDataSincAtividades(String dataSincAtividades) {
+        this.dataSincAtividades = dataSincAtividades;
     }
 }

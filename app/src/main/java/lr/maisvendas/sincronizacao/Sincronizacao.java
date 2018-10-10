@@ -34,6 +34,7 @@ public class Sincronizacao extends BaseActivity{
             if (getUsuario() != null && getUsuario().getToken() != null) {
                 try {
                     if (verificaConexao.isNetworkAvailable(context) && verificaServico.execute(enderecoHost.getHostHTTPRaiz()).get()) {
+                        Integer peso = 10;
 
                         notify = new Notify(context);
                         notify.iniciaNotificacao("Sincronização", "Sincronização iniciada");
@@ -42,36 +43,36 @@ public class Sincronizacao extends BaseActivity{
 
                         //Cliente
                         //A classe do paisSync, por ser a primeira classe, irá tratar se o usuário está autenticado
-                        PaisSinc paisSinc = new PaisSinc(notify);
+                        PaisSinc paisSinc = new PaisSinc(notify,peso);
                         paisSinc.sincronizaPais();
 
-                        EstadoSinc estadoSinc = new EstadoSinc(notify);
+                        EstadoSinc estadoSinc = new EstadoSinc(notify,peso);
                         estadoSinc.sincronizaEstado();
 
-                        CidadeSinc cidadeSinc = new CidadeSinc(notify);
+                        CidadeSinc cidadeSinc = new CidadeSinc(notify,peso);
                         cidadeSinc.sincronizaCidade();
 
-                        SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify);
+                        SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify,peso);
                         segmentoMercadoSinc.sincronizaSegmentoMercado();
 
-                        ClienteSinc clienteSinc = new ClienteSinc(notify);
+                        ClienteSinc clienteSinc = new ClienteSinc(notify,peso);
                         clienteSinc.sincronizaCliente();
 
                         //Produto
-                        ImagemSinc imagemSinc = new ImagemSinc(notify);
+                        ImagemSinc imagemSinc = new ImagemSinc(notify,peso);
                         imagemSinc.sincronizaImagem();
 
-                        ProdutoSinc produtoSinc = new ProdutoSinc(notify);
+                        ProdutoSinc produtoSinc = new ProdutoSinc(notify,peso);
                         produtoSinc.sincronizaProduto();
 
                         //Pedido
-                        CondicaoPgtoSinc condicaoPgtoSinc = new CondicaoPgtoSinc(notify);
+                        CondicaoPgtoSinc condicaoPgtoSinc = new CondicaoPgtoSinc(notify,peso);
                         condicaoPgtoSinc.sincronizaCondicaoPgto();
 
-                        TabelaPrecoSinc tabelaPrecoSinc = new TabelaPrecoSinc(notify);
+                        TabelaPrecoSinc tabelaPrecoSinc = new TabelaPrecoSinc(notify,peso);
                         tabelaPrecoSinc.sincronizaTabelaPreco();
 
-                        PedidoSinc pedidoSinc = new PedidoSinc(notify);
+                        PedidoSinc pedidoSinc = new PedidoSinc(notify,peso);
                         pedidoSinc.sincronizaPedido();
 
                         Dispositivo dispositivo = null;

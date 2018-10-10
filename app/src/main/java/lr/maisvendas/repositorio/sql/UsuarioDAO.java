@@ -21,7 +21,7 @@ public class UsuarioDAO {
             "ID_WS TEXT, " +
             "NOME TEXT NOT NULL, " +
             "EMAIL TEXT NOT NULL, " +
-            "SENHA TEXT NOT NULL, " +
+            "SENHA TEXT, " +
             "ATIVO INTEGER NOT NULL," +
             "TOKEN TEXT);";
 
@@ -43,7 +43,47 @@ public class UsuarioDAO {
         dataBase = databaseHelper.getWritableDatabase();
         usuarioAdap = new UsuarioAdap();
     }
+    
+    public Usuario buscaUsuarioId(Integer usuarioId){
+        Usuario usuario = null;
 
+        //Busca o grupo
+        String sql = "SELECT * FROM tusuarios WHERE id = "+ usuarioId ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            UsuarioAdap usuarioAdap = new UsuarioAdap();
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                usuario = usuarioAdap.sqlToUsuario(cursor);
+            }
+            cursor.close();
+        }
+
+        return usuario;
+    }
+
+    public Usuario buscaUsuarioIdWs(String usuarioIdWs){
+        Usuario usuario = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tusuarios WHERE id_ws = '"+ usuarioIdWs +"'" ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            UsuarioAdap usuarioAdap = new UsuarioAdap();
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                usuario = usuarioAdap.sqlToUsuario(cursor);
+            }
+            cursor.close();
+        }
+
+        return usuario;
+    }
+    
     public Usuario buscaUsuarioLoginToken() {
         Usuario usuario = null;
 

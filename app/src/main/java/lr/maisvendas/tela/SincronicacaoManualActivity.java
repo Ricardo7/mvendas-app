@@ -12,10 +12,14 @@ import lr.maisvendas.servico.VerificaConexao;
 import lr.maisvendas.servico.VerificaServico;
 import lr.maisvendas.sincronizacao.CidadeSinc;
 import lr.maisvendas.sincronizacao.ClienteSinc;
+import lr.maisvendas.sincronizacao.CondicaoPgtoSinc;
 import lr.maisvendas.sincronizacao.EstadoSinc;
+import lr.maisvendas.sincronizacao.ImagemSinc;
 import lr.maisvendas.sincronizacao.PaisSinc;
+import lr.maisvendas.sincronizacao.PedidoSinc;
+import lr.maisvendas.sincronizacao.ProdutoSinc;
 import lr.maisvendas.sincronizacao.SegmentoMercadoSinc;
-import lr.maisvendas.utilitarios.Exceptions;
+import lr.maisvendas.sincronizacao.TabelaPrecoSinc;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.Notify;
 
@@ -61,6 +65,7 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
 
     @Override
     public void onClick(View view) {
+
         if (view == buttonSinc){
 
             VerificaConexao verificaConexao = new VerificaConexao();
@@ -69,42 +74,77 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
             try {
 
                 if (verificaConexao.isNetworkAvailable(this) && verificaServico.execute(enderecoHost.getHostHTTPRaiz()).get()) {
+                    Integer peso = 100;
+                    Integer modulos = 0;
                     notify = new Notify(this);
                     notify.iniciaNotificacao("Sincronização", "Sincronização iniciada");
 
+                    /*Verifica quantos módulos serão atualizados para gerar o percentual de avanço da barra de progresso*/
                     if (switchSincTudo.isChecked() || switchSincImagens.isChecked()) {
-
+                        modulos = modulos + 1;
                     }
 
-                    if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()) {
-
+                    if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()) {
+                        modulos = modulos + 1;
                     }
 
                     if (switchSincTudo.isChecked() || switchSincClientes.isChecked()) {
-                        //Cliente
-                        //A classe do paisSync, por ser a primeira classe, irá tratar se o usuário está autenticado
-                        PaisSinc paisSinc = new PaisSinc(notify);
-                        paisSinc.sincronizaPais();
+                        modulos = modulos + 5;
+                    }
 
-                        EstadoSinc estadoSinc = new EstadoSinc(notify);
-                        estadoSinc.sincronizaEstado();
+                    if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()) {
+                        modulos = modulos + 3;
+                    }
+                    peso = peso / modulos;
 
-                        CidadeSinc cidadeSinc = new CidadeSinc(notify);
-                        cidadeSinc.sincronizaCidade();
+                    /*Executa a sincronização de acordo com os módulos a serem atualizados*/
+                    if (switchSincTudo.isChecked() || switchSincImagens.isChecked()) {
 
-                        SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify);
-                        segmentoMercadoSinc.sincronizaSegmentoMercado();
+                        ImagemSinc imagemSinc = new ImagemSinc(notify,peso);
+                        imagemSinc.sincronizaImagem();
 
-                        ClienteSinc clienteSinc = new ClienteSinc(notify);
-                        clienteSinc.sincronizaCliente();
                     }
 
                     if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()) {
 
+                        ProdutoSinc produtoSinc = new ProdutoSinc(notify,peso);
+                        produtoSinc.sincronizaProduto();
                     }
 
-                    notify.setProgress(100, 100, false);
-                    notify.finalizaNotificacao("Sincronização concluída");
+                    if (switchSincTudo.isChecked() || switchSincClientes.isChecked()) {
+                        peso = 100 / 5;
+                        //Cliente
+                        //A classe do paisSync, por ser a primeira classe, irá tratar se o usuário está autenticado
+                        PaisSinc paisSinc = new PaisSinc(notify,peso);
+                        paisSinc.sincronizaPais();
+
+                        EstadoSinc estadoSinc = new EstadoSinc(notify,peso);
+                        estadoSinc.sincronizaEstado();
+
+                        CidadeSinc cidadeSinc = new CidadeSinc(notify,peso);
+                        cidadeSinc.sincronizaCidade();
+
+                        SegmentoMercadoSinc segmentoMercadoSinc = new SegmentoMercadoSinc(notify,peso);
+                        segmentoMercadoSinc.sincronizaSegmentoMercado();
+
+                        ClienteSinc clienteSinc = new ClienteSinc(notify,peso);
+                        clienteSinc.sincronizaCliente();
+                    }
+
+                    if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()) {
+
+                        CondicaoPgtoSinc condicaoPgtoSinc = new CondicaoPgtoSinc(notify,peso);
+                        condicaoPgtoSinc.sincronizaCondicaoPgto();
+
+                        TabelaPrecoSinc tabelaPrecoSinc = new TabelaPrecoSinc(notify,peso);
+                        tabelaPrecoSinc.sincronizaTabelaPreco();
+
+                        PedidoSinc pedidoSinc = new PedidoSinc(notify,peso);
+                        pedidoSinc.sincronizaPedido();
+                    }
+
+                    //notify.setProgress(100, 100, false);
+                    //notify.finalizaNotificacao("Sincronização concluída");
                 }
             }catch (Exception ex){
                 ferramentas.customLog(TAG,ex.getMessage());

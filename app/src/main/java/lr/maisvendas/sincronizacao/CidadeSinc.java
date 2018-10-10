@@ -20,10 +20,12 @@ public class CidadeSinc extends BaseActivity implements CarregarCidadeCom.Carreg
     private static final String TAG = "CidadeSinc";
     private List<Cidade> cidadeOld;
     private Notify notify;
+    private Integer peso;
 
-    public CidadeSinc(Notify notify) {
+    public CidadeSinc(Notify notify,Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        this.peso = peso;
     }
 
     public void sincronizaCidade(){
@@ -33,7 +35,7 @@ public class CidadeSinc extends BaseActivity implements CarregarCidadeCom.Carreg
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincClientes() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -55,7 +57,7 @@ public class CidadeSinc extends BaseActivity implements CarregarCidadeCom.Carreg
     public void onCarregarCidadeFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
 
-        notify.setProgress(100,30,false);
+        notify.setProgress(100,peso,false);
     }
 
     private void trataRegistrosInternos(List<Cidade> cidadees){
@@ -79,7 +81,7 @@ public class CidadeSinc extends BaseActivity implements CarregarCidadeCom.Carreg
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
-        notify.setProgress(100,30,false);
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de CIDADES externos");
     }
 }

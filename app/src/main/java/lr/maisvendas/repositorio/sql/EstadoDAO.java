@@ -72,7 +72,7 @@ public class EstadoDAO {
         Estado estado = null;
 
         //Busca o grupo
-        String sql = "SELECT * FROM testados WHERE id_ws = "+ estadoIdWs ;
+        String sql = "SELECT * FROM testados WHERE id_ws = '"+ estadoIdWs +"'" ;
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){

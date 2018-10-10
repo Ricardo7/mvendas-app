@@ -203,6 +203,9 @@ public class ClienteDAO {
 
         ClienteAdap clienteAdap = new ClienteAdap();
 
+        //Na inserção o ID(IDAP) do aplicativo deve ser limpo, para que o ID seja gerado e controlado somente pelo dispositivo
+        cliente.setId(null);
+
         cliente = trataDependentes(cliente);
         //Converte o objeto em um contetValue para inserir no banco
         ContentValues content = clienteAdap.clienteToContentValue(cliente);

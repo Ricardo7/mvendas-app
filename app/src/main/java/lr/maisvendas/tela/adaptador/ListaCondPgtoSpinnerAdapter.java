@@ -12,13 +12,13 @@ import android.widget.TextView;
 import java.util.List;
 
 import lr.maisvendas.R;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 
-public class ListaCondPgtoSpinnerAdapter extends ArrayAdapter<CondicaoPgto> {
+public class ListaCondPgtoSpinnerAdapter extends ArrayAdapter<CondicaoPagamento> {
 
     private Context context;
 
-    public ListaCondPgtoSpinnerAdapter(Context context, List<CondicaoPgto> lojas) {
+    public ListaCondPgtoSpinnerAdapter(Context context, List<CondicaoPagamento> lojas) {
         super(context, 0, lojas);
         this.context = context;
 
@@ -40,10 +40,10 @@ public class ListaCondPgtoSpinnerAdapter extends ArrayAdapter<CondicaoPgto> {
         textCod = (TextView) linhaView.findViewById(R.id.linha_lista_cond_pgto_spinner_cod);
         textDescricao = (TextView) linhaView.findViewById(R.id.linha_lista_cond_pgto_spinner_descricao);
 
-        CondicaoPgto CondicaoPgto = getItem(position);
+        CondicaoPagamento CondicaoPagamento = getItem(position);
 
-        textCod.setText(CondicaoPgto.getCod());
-        textDescricao.setText(CondicaoPgto.getDescricao());
+        textCod.setText(CondicaoPagamento.getCod());
+        textDescricao.setText(CondicaoPagamento.getDescricao());
 
         return linhaView;
     }

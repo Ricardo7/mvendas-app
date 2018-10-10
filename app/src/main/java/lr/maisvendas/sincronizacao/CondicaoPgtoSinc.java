@@ -3,7 +3,7 @@ package lr.maisvendas.sincronizacao;
 import java.util.List;
 
 import lr.maisvendas.comunicacao.condicaoPgto.CarregarCondicaoPgtoCom;
-import lr.maisvendas.modelo.CondicaoPgto;
+import lr.maisvendas.modelo.CondicaoPagamento;
 import lr.maisvendas.modelo.Dispositivo;
 import lr.maisvendas.repositorio.sql.CondicaoPgtoDAO;
 import lr.maisvendas.repositorio.sql.DispositivoDAO;
@@ -18,12 +18,14 @@ public class CondicaoPgtoSinc extends BaseActivity implements CarregarCondicaoPg
     private Dispositivo dispositivo = null;
     private String dataSincronizacao;
     private static final String TAG = "CondicaoPgtoSinc";
-    private List<CondicaoPgto> condicaoPgtoOld;
+    private List<CondicaoPagamento> condicaoPagamentoOld;
     private Notify notify;
+    private Integer peso;
 
-    public CondicaoPgtoSinc(Notify notify) {
+    public CondicaoPgtoSinc(Notify notify,Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        this.peso = peso;
     }
 
     public void sincronizaCondicaoPgto(){
@@ -33,7 +35,7 @@ public class CondicaoPgtoSinc extends BaseActivity implements CarregarCondicaoPg
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincPedidos() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -47,7 +49,7 @@ public class CondicaoPgtoSinc extends BaseActivity implements CarregarCondicaoPg
     }
 
     @Override
-    public void onCarregarCondicaoPgtoSuccess(List<CondicaoPgto> condicaoPgtoes) {
+    public void onCarregarCondicaoPgtoSuccess(List<CondicaoPagamento> condicaoPgtoes) {
         trataRegistrosInternos(condicaoPgtoes);
     }
 
@@ -55,31 +57,31 @@ public class CondicaoPgtoSinc extends BaseActivity implements CarregarCondicaoPg
     public void onCarregarCondicaoPgtoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
 
-        notify.setProgress(100,30,false);
+        notify.setProgress(100,peso,false);
     }
 
-    private void trataRegistrosInternos(List<CondicaoPgto> condicaoPgtoes){
-        ferramentas.customLog(TAG,"Inicio do tratamento de CondicaoPgto externos");
+    private void trataRegistrosInternos(List<CondicaoPagamento> condicaoPgtoes){
+        ferramentas.customLog(TAG,"Inicio do tratamento de CondicaoPagamento externos");
         //Recebe os registros atualizados no servidor e atualiza internamente
         CondicaoPgtoDAO condicaoPgtoDAO = CondicaoPgtoDAO.getInstance(this);
-        CondicaoPgto condicaoPgtoTstIdWs;
+        CondicaoPagamento condicaoPagamentoTstIdWs;
         try {
-            for (CondicaoPgto condicaoPgtoNew:condicaoPgtoes) {
+            for (CondicaoPagamento condicaoPagamentoNew :condicaoPgtoes) {
 
                 //Verifica se já existe internamente
-                condicaoPgtoTstIdWs = condicaoPgtoDAO.buscaCondicaoPgtoIdWs(condicaoPgtoNew.getIdWS());
+                condicaoPagamentoTstIdWs = condicaoPgtoDAO.buscaCondicaoPgtoIdWs(condicaoPagamentoNew.getIdWS());
 
-                if (condicaoPgtoTstIdWs == null){
-                    condicaoPgtoDAO.insereCondicaoPgto(condicaoPgtoNew);
+                if (condicaoPagamentoTstIdWs == null){
+                    condicaoPgtoDAO.insereCondicaoPgto(condicaoPagamentoNew);
                 }else{
-                    condicaoPgtoNew.setId(condicaoPgtoTstIdWs.getId());
-                    condicaoPgtoDAO.atualizaCondicaoPgto(condicaoPgtoNew);
+                    condicaoPagamentoNew.setId(condicaoPagamentoTstIdWs.getId());
+                    condicaoPgtoDAO.atualizaCondicaoPgto(condicaoPagamentoNew);
                 }
             }
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
-        notify.setProgress(100,30,false);
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de CondicaoPgtoS externos");
     }
 }

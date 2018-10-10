@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_agenda_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".tela.AgendaActivity">
+
+
+        <LinearLayout
+            android:id="@+id/activity_agenda_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <include layout="@layout/base_layout" />
+
+            <CalendarView
+                android:id="@+id/activity_agenda_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </CalendarView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:text="Atividades neste dia"
+                android:textSize="@dimen/text_size_edit_text_filder" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <ListView
+                    android:id="@+id/activity_agenda_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </ListView>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/activity_agenda_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_add"
+                    app:elevation="4dp" />
+<!--
+                <com.getbase.floatingactionbutton.FloatingActionsMenu
+                    android:id="@+id/menu_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    app:fab_labelStyle="@style/Etiquetas"
+                    fab:fab_addButtonColorNormal="?attr/colorPrimary"
+                    fab:fab_addButtonSize="normal"
+                    fab:fab_labelsPosition="left">
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/activity_agenda_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_colorNormal="?attr/colorAccent"
+                        fab:fab_icon="@drawable/ic_date_add"
+                        fab:fab_size="mini"
+                        fab:fab_title="Adicionar" />
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/activity_agenda_sugestoes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_colorNormal="?attr/colorAccent"
+                        fab:fab_icon="@mipmap/ic_sugestao_agenda"
+                        fab:fab_size="mini"
+                        fab:fab_title="Sugestões" />
+
+
+                </com.getbase.floatingactionbutton.FloatingActionsMenu>
+                -->
+            </RelativeLayout>
+        </LinearLayout>
+
+        <include layout="@layout/base_navigation_view" />
+
+</android.support.v4.widget.DrawerLayout>

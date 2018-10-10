@@ -24,10 +24,12 @@ public class PaisSinc extends BaseActivity implements CarregarPaisCom.CarregarPa
     private static final String TAG = "PaisSinc";
     private List<Pais> paisOld;
     private Notify notify;
+    private Integer peso;
 
-    public PaisSinc(Notify notify) {
+    public PaisSinc(Notify notify,Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        this.peso = peso;
     }
 
     public void sincronizaPais(){
@@ -38,7 +40,7 @@ public class PaisSinc extends BaseActivity implements CarregarPaisCom.CarregarPa
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincClientes() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -74,7 +76,7 @@ public class PaisSinc extends BaseActivity implements CarregarPaisCom.CarregarPa
             ferramentas.customLog(TAG,ex.getMessage());
         }
 
-        notify.setProgress(100,15,false);
+        notify.setProgress(100,peso,false);
     }
 
     private void trataRegistrosInternos(List<Pais> paises){
@@ -98,7 +100,7 @@ public class PaisSinc extends BaseActivity implements CarregarPaisCom.CarregarPa
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
-        notify.setProgress(100,15,false);
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de PAÍSES externos");
     }
 }

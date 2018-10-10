@@ -20,10 +20,12 @@ public class ProdutoSinc extends BaseActivity implements CarregarProdutoCom.Carr
     private static final String TAG = "ProdutoSinc";
     private List<Produto> produtoOld;
     private Notify notify;
+    private Integer peso;
 
-    public ProdutoSinc(Notify notify) {
+    public ProdutoSinc(Notify notify,Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        this.peso = peso;
     }
 
     public void sincronizaProduto(){
@@ -33,7 +35,7 @@ public class ProdutoSinc extends BaseActivity implements CarregarProdutoCom.Carr
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincProdutos() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -43,6 +45,7 @@ public class ProdutoSinc extends BaseActivity implements CarregarProdutoCom.Carr
         if (getUsuario() != null && getUsuario().getToken() != null) {
             new CarregarProdutoCom(this).execute(getUsuario().getToken(), dataSincronizacao);
         }
+
 
     }
 
@@ -55,7 +58,7 @@ public class ProdutoSinc extends BaseActivity implements CarregarProdutoCom.Carr
     public void onCarregarProdutoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
 
-        notify.setProgress(100,30,false);
+        notify.setProgress(100,peso,false);
     }
 
     private void trataRegistrosInternos(List<Produto> produtos){
@@ -79,7 +82,7 @@ public class ProdutoSinc extends BaseActivity implements CarregarProdutoCom.Carr
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
-        notify.setProgress(100,60,false);
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de PRODUTOS externos");
 
         atualizaDataSincProduto();

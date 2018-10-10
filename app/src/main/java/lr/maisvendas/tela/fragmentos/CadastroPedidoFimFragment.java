@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import lr.maisvendas.R;
@@ -161,7 +163,8 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
             total = total + itemPedido.getVlrTotal() + itemPedido.getVlrDesconto();
         }
 
-        return total;
+        BigDecimal bd = new BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN);
+        return bd.doubleValue();
     }
 
     public Double totalDescontoPedido(Pedido pedido){
@@ -173,7 +176,8 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
             desconto = desconto + itemPedido.getVlrDesconto();
         }
 
-        return desconto;
+        BigDecimal bd = new BigDecimal(desconto).setScale(2, RoundingMode.HALF_EVEN);
+        return bd.doubleValue();
     }
 
     public Double totalLiquidoPedido(Pedido pedido){
@@ -185,7 +189,8 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
             liquido = liquido + itemPedido.getVlrTotal();
         }
 
-        return liquido;
+        BigDecimal bd = new BigDecimal(liquido).setScale(2, RoundingMode.HALF_EVEN);
+        return bd.doubleValue();
     }
 
     public void salvaDados() throws Exceptions{
@@ -213,4 +218,5 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
 
     }
+
 }

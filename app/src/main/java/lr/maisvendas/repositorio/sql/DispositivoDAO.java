@@ -21,7 +21,8 @@ public class DispositivoDAO {
              "DATA_SINC_IMAGENS TEXT, " +
              "DATA_SINC_PEDIDOS TEXT, " +
              "DATA_SINC_CLIENTES TEXT, " +
-             "DATA_SINC_PRODUTOS TEXT)";
+             "DATA_SINC_PRODUTOS TEXT, " +
+             "DATA_SINC_ATIVIDADES)";
 
     public static final String SCRIPT_DELECAO_TABELA =  "DROP TABLE IF EXISTS " + DISPOSITIVO_TABLE_NAME;
 

@@ -20,10 +20,12 @@ public class SegmentoMercadoSinc extends BaseActivity implements CarregarSegment
     private static final String TAG = "SegmentoMercadoSinc";
     private List<SegmentoMercado> segmentoMercadoOld;
     private Notify notify;
+    private Integer peso;
 
-    public SegmentoMercadoSinc(Notify notify) {
+    public SegmentoMercadoSinc(Notify notify,Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        this.peso = peso;
     }
 
     public void sincronizaSegmentoMercado(){
@@ -33,7 +35,7 @@ public class SegmentoMercadoSinc extends BaseActivity implements CarregarSegment
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincClientes() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
@@ -55,7 +57,7 @@ public class SegmentoMercadoSinc extends BaseActivity implements CarregarSegment
     public void onCarregarSegmentoMercadoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
 
-        notify.setProgress(100,40,false);
+        notify.setProgress(100,peso,false);
     }
 
     private void trataRegistrosInternos(List<SegmentoMercado> segmentoMercadoes){
@@ -79,7 +81,7 @@ public class SegmentoMercadoSinc extends BaseActivity implements CarregarSegment
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
-        notify.setProgress(100,40,false);
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de SegmentoMercado externos");
     }
 }

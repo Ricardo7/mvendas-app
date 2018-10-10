@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_cadastro_atividade_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".tela.interfaces.CadastroAtividadeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <include layout="@layout/base_layout" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="9"
+            android:orientation="vertical"
+            android:textColor="@color/linhaViewText"
+            android:textSize="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="Assunto" />
+
+            <EditText
+                android:id="@+id/activity_cadastro_atividade_assunto"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_edit_text_filder"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/border_field"
+                android:inputType="text"
+                android:textSize="@dimen/text_size_edit_text_filder" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Cliente" />
+
+            <Spinner
+                android:id="@+id/activity_cadastro_atividade_cliente"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_edit_text_filder"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/border_field"
+                android:textSize="@dimen/text_size_edit_text_filder" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Observação" />
+
+            <EditText
+                android:id="@+id/activity_cadastro_atividade_observacao"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_edit_text_filder"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/border_field"
+                android:inputType="text"
+                android:textSize="@dimen/text_size_edit_text_filder" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Data" />
+
+            <EditText
+                android:id="@+id/activity_cadastro_atividade_data"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_edit_text_filder"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/border_field"
+                android:inputType="date"
+                android:textSize="@dimen/text_size_edit_text_filder" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Hora" />
+
+            <EditText
+                android:id="@+id/activity_cadastro_atividade_hora"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_edit_text_filder"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/border_field"
+                android:inputType="time"
+                android:textSize="@dimen/text_size_edit_text_filder" />
+
+            <TextView
+                android:id="@+id/activity_cadastro_atividade_text_sugestao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/colorAlert"
+                android:fontFamily="sans-serif"
+                android:justificationMode="inter_word"
+                android:text="" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/activity_cadastro_atividade_button_salvar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/customborderbutton"
+            android:text="@string/button_salvar"
+            android:textColor="@color/buttonText"
+            android:textSize="@dimen/sizeTextButtonSave" />
+
+    </LinearLayout>
+
+    <include layout="@layout/base_navigation_view" />
+
+</android.support.v4.widget.DrawerLayout>

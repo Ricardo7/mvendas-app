@@ -121,8 +121,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 return true;
             case R.id.menu_principal_agenda:
-                /*intent = new Intent(this,ListaClientesActivity.class);
-                startActivity(intent);*/
+                intent = new Intent(this,AgendaActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_principal_configuracoes:
                 intent = new Intent(this,ConfiguracaoActivity.class);

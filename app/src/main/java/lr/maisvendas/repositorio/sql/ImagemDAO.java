@@ -23,11 +23,10 @@ public class ImagemDAO {
     public static final String IMAGEM_TABLE_CREATE = "CREATE TABLE if not exists " + IMAGEM_TABLE_NAME + " (" +
             "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "ID_WS TEXT, " +
-            "PRODUTO_ID INTEGER, " +
+            "PRODUTO_ID_WS TEXT, " +
             "NOME TEXT," +
             "PRINCIPAL INTEGER," +
             "CAMINHO TEXT," +
-            "TAMANHO REAL," +
             "DT_CRIACAO TEXT," +
             "DT_ATUALIZACAO TEXT);";
 
@@ -69,12 +68,12 @@ public class ImagemDAO {
         return imagem;
     }
 
-    public List<Imagem> buscaImagensProduto(Integer produtoId){
+    public List<Imagem> buscaImagensProduto(String produtoIdWS){
         List<Imagem> imagens = new ArrayList<>();
         Imagem imagem = null;
 
         //Busca o grupo
-        String sql = "SELECT * FROM timagens WHERE produto_id = "+ produtoId ;
+        String sql = "SELECT * FROM timagens WHERE produto_id_ws = '"+ produtoIdWS+"'";
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){
@@ -93,11 +92,11 @@ public class ImagemDAO {
         return imagens;
     }
 
-    public Imagem insereImagem(Imagem imagem, Integer produtoId) {
+    public Imagem insereImagem(Imagem imagem) {
 
         ImagemAdap imagemAdap = new ImagemAdap();
         //Converte o objeto em um contetValue para inserir no banco
-        ContentValues content = imagemAdap.imagemToContentValue(imagem,produtoId);
+        ContentValues content = imagemAdap.imagemToContentValue(imagem);
         //Insere o imagem no banco
         Integer imagemId = (int) dataBase.insert(IMAGEM_TABLE_NAME, null, content);
         /*
@@ -111,11 +110,11 @@ public class ImagemDAO {
 
     }
 
-    public Imagem atualizaImagem(Imagem imagem, Integer produtoId) throws Exceptions {
+    public Imagem atualizaImagem(Imagem imagem) throws Exceptions {
 
         ImagemAdap imagemAdap = new ImagemAdap();
         //Converte o objeto em um contetValue para inserir no banco
-        ContentValues content = imagemAdap.imagemToContentValue(imagem,produtoId);
+        ContentValues content = imagemAdap.imagemToContentValue(imagem);
         String sqlWhere = "id = "+imagem.getId();
         //Insere o imagem no banco
         Integer executou = (int) dataBase.update(IMAGEM_TABLE_NAME, content, sqlWhere,null);

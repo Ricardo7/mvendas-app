@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface ImagemServico {
 
-    @GET("Imagem/GetListaImagens") //Busca
+    @GET("Imagem/GetListaImagensAtualizadas") //Busca
     public Call<Response<List<Imagem>>> carregarImagem(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
 
     @PUT("Imagem") //Insere (não utilizado no imagem)

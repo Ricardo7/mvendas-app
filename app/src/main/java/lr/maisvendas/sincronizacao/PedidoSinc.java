@@ -24,10 +24,14 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
     private static final String TAG = "PedidoSinc";
     private List<Pedido> pedidosOld;
     private Notify notify;
+    private Integer peso;
+    private Integer pesoEnvio;
 
-    public PedidoSinc(Notify notify) {
+    public PedidoSinc(Notify notify, Integer peso) {
         this.notify = notify;
         this.ferramentas = new Ferramentas();
+        //O peso da sincronização é dividido por 2 pois são dois processos, sendo busca e envio de dados
+        this.peso = peso / 2;
     }
 
     public void sincronizaPedido(){
@@ -37,13 +41,13 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-        if (dispositivo == null || dispositivo.getId() <= 0){
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincPedidos() == null){
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         }else{
             dataSincronizacao = dispositivo.getDataSincPedidos();
         }
-
+        ferramentas.customLog("RRRRR",dataSincronizacao);
         //Antes de atualizar o banco interno com o retorno do servidor, deve buscar os produtos do banco interno
         PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
         pedidosOld = pedidoDAO.buscaPedidosData(dataSincronizacao);
@@ -65,6 +69,8 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
     @Override
     public void onCarregarPedidoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
+
+        notify.setProgress(100,peso,false);
         //Chama a função para buscar  os pedidos atualizados internamente e envia ao servidor
         trataRegistrosExternos();
     }
@@ -100,6 +106,7 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
+        notify.setProgress(100,peso,false);
         ferramentas.customLog(TAG,"Fim do tratamento de PEDIDOS externos");
     }
 
@@ -109,18 +116,30 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
      */
     private void trataRegistrosExternos(){
         ferramentas.customLog(TAG,"Inicio do tratamento de PEDIDOS internos");
+
+        //O peso da parte de envio será subdividido para cada item que será enviado e,
+        // a cada item enviado, será incrementando este peso na barra de progresso(notificação)
+        if (pedidosOld.size() > 0) {
+            pesoEnvio = peso / pedidosOld.size();
+        }else{
+
+            pesoEnvio = peso;
+            notify.setProgress(100,pesoEnvio,false);
+        }
+
         for (Pedido pedidoOld:pedidosOld) {
+
             if (pedidoOld.getIdWS() != null && pedidoOld.getIdWS().equals("") == false ) {
                 //Se tiver IDs já existe no servidor, deverá ser atualizado
                 new EditarPedidoCom(this).execute(pedidoOld);
             } else{
+
                 //Se não tiver IDs não existe no servidor, deverá ser inserido no WS e atualizado internamente com o novo IDs
                 new CadastrarPedidoCom(this).execute(pedidoOld);
 
             }
         }
 
-        notify.setProgress(100,100,false);
         ferramentas.customLog(TAG,"Fim do tratamento de PEDIDOS internos");
 
         atualizaDataSincPedido();
@@ -129,28 +148,32 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
     @Override
     public void onEditarPedidoSuccess(Pedido pedido) {
         ferramentas.customLog(TAG,"Atualizou PEDIDO id ("+pedido.getIdWS()+")");
+        notify.setProgress(100,pesoEnvio,false);
     }
 
     @Override
     public void onEditarPedidoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
+        notify.setProgress(100,pesoEnvio,false);
     }
 
     @Override
     public void onCadastrarPedidoSuccess(Pedido pedido) {
-        //Atualiza o módulo principalmente para setar o IDs, caso ainda não tenha ocorrido
+        //Atualiza o módulo principalmente para setar o IDWS, caso ainda não tenha ocorrido
         PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
         try {
             pedidoDAO.atualizaPedido(pedido);
         } catch (Exceptions ex) {
             ferramentas.customLog(TAG,ex.getMessage());
         }
+        notify.setProgress(100,pesoEnvio,false);
         ferramentas.customLog(TAG,"Inseriu PEDIDO id ("+pedido.getIdWS()+")");
     }
 
     @Override
     public void onCadastrarPedidoFailure(String mensagem) {
         ferramentas.customLog(TAG,mensagem);
+        notify.setProgress(100,pesoEnvio,false);
     }
 
     private void atualizaDataSincPedido() {
@@ -172,6 +195,7 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
                 ferramentas.customLog(TAG, ex.getMessage());
             }
         }
+        notify.setProgress(100,pesoEnvio,false);
     }
 
     private void trataItemPedido(List<ItemPedido> itensPedido, Integer pedidoId){
@@ -184,6 +208,7 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
 
             if (itemPedidoTst != null){
                 try {
+                    itemPedido.setId(itemPedidoTst.getId());
                     itemPedidoDAO.atualizaItemPedido(itemPedido,pedidoId);
                 } catch (Exceptions ex) {
                     ferramentas.customLog(TAG,ex.getMessage());

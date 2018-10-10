@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import lr.maisvendas.modelo.Atividade;
+import lr.maisvendas.utilitarios.TipoAgenda;
 
 public class AtividadeAdap {
 
@@ -17,14 +18,16 @@ public class AtividadeAdap {
     public Atividade sqlToAtividade (Cursor cursor){
         Atividade atividade = new Atividade();
 
-        atividade.setId(cursor.getInt(0));
-        atividade.setAssunto(cursor.getString(1));
-        //Cliente | CLIENTE_ID INTEGER
-        atividade.setObservacao(cursor.getString(3));
-        atividade.setDataAtividade(cursor.getString(4));
-        atividade.setHoraAtividade(cursor.getString(5));
-        atividade.setDtCriacao(cursor.getString(6));
-        atividade.setDtAtualizacao(cursor.getString(7));
+        atividade.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+        atividade.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
+        atividade.setAssunto(cursor.getString(cursor.getColumnIndex("ASSUNTO")));
+        atividade.setObservacao(cursor.getString(cursor.getColumnIndex("OBSERVACAO")));
+        atividade.setDataAtividade(cursor.getString(cursor.getColumnIndex("DATA_ATIVIDADE")));
+        atividade.setHoraAtividade(cursor.getString(cursor.getColumnIndex("HORA_ATIVIDADE")));
+        //Tudo que vem do banco será do tipo Efetiva, agendas sugeridas serão buscadas diretamente na API
+        atividade.setTipo(TipoAgenda.EFETIVA);
+        atividade.setDtCadastro(cursor.getString(cursor.getColumnIndex("DT_CADASTRO")));
+        atividade.setDtAtualizacao(cursor.getString(cursor.getColumnIndex("DT_ATUALIZACAO")));
 
         return atividade;
     }
@@ -33,12 +36,14 @@ public class AtividadeAdap {
         ContentValues content = new ContentValues();
 
         content.put("ID", atividade.getId());
+        content.put("ID_WS", atividade.getIdWS());
         content.put("ASSUNTO", atividade.getAssunto());
         content.put("CLIENTE_ID", atividade.getCliente().getId());
+        content.put("USUARIO_ID", atividade.getUsuario().getId());
         content.put("OBSERVACAO", atividade.getObservacao());
         content.put("DATA_ATIVIDADE", atividade.getDataAtividade());
         content.put("HORA_ATIVIDADE", atividade.getHoraAtividade());
-        content.put("DT_CRIACAO", atividade.getDtCriacao());
+        content.put("DT_CADASTRO", atividade.getDtCadastro());
         content.put("DT_ATUALIZACAO", atividade.getDtAtualizacao());
 
         return content;

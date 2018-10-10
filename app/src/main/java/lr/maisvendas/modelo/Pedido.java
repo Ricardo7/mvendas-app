@@ -29,8 +29,8 @@ public class Pedido implements Serializable{
     private String dtAtualizacao;
     @JsonProperty("Cliente")
     private Cliente cliente;
-    @JsonProperty("CondicaoPgto")
-    private CondicaoPgto condicaoPgto;
+    @JsonProperty("CondicaoPagamento")
+    private CondicaoPagamento condicaoPagamento;
     @JsonProperty("TabelaPreco")
     private TabelaPreco tabelaPreco;
     @JsonProperty("ItensPedido")
@@ -110,12 +110,12 @@ public class Pedido implements Serializable{
         this.cliente = cliente;
     }
 
-    public CondicaoPgto getCondicaoPgto() {
-        return condicaoPgto;
+    public CondicaoPagamento getCondicaoPagamento() {
+        return condicaoPagamento;
     }
 
-    public void setCondicaoPgto(CondicaoPgto condicaoPgto) {
-        this.condicaoPgto = condicaoPgto;
+    public void setCondicaoPagamento(CondicaoPagamento condicaoPagamento) {
+        this.condicaoPagamento = condicaoPagamento;
     }
 
     public TabelaPreco getTabelaPreco() {
@@ -132,5 +132,56 @@ public class Pedido implements Serializable{
 
     public void setItensPedido(List<ItemPedido> itensPedido) {
         this.itensPedido = itensPedido;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pedido)) return false;
+        Pedido pedido = (Pedido) o;
+
+        if (getId() 				!= null ? !getId().equals(pedido.getId()) : pedido.getId() != null)
+            return false;
+        if (getIdWS()				!= null ? !getIdWS().equals(pedido.getIdWS()) : pedido.getIdWS() != null)
+            return false;
+        if (getNumero()				!= null ? !getNumero().equals(pedido.getNumero()) : pedido.getNumero() != null)
+            return false;
+        if (getSituacao()			!= null ? !getSituacao().equals(pedido.getSituacao()) : pedido.getSituacao() != null)
+            return false;
+        if (getStatus()				!= null ? !getStatus().equals(pedido.getStatus()) : pedido.getStatus() != null)
+            return false;
+        if (getObservacao()			!= null ? !getObservacao().equals(pedido.getObservacao()) : pedido.getObservacao() != null)
+            return false;
+        if (getDtCriacao()			!= null ? !getDtCriacao().equals(pedido.getDtCriacao()) : pedido.getDtCriacao() != null)
+            return false;
+        if (getDtAtualizacao()		!= null ? !getDtAtualizacao().equals(pedido.getDtAtualizacao()) : pedido.getDtAtualizacao() != null)
+            return false;
+        if (getCliente()			!= null ? !getCliente().equals(pedido.getCliente()) : pedido.getCliente() != null)
+            return false;
+        if (getCondicaoPagamento()	!= null ? !getCondicaoPagamento().equals(pedido.getCondicaoPagamento()) : pedido.getCondicaoPagamento() != null)
+            return false;
+        if (getTabelaPreco()		!= null ? !getTabelaPreco().equals(pedido.getTabelaPreco()) : pedido.getTabelaPreco() != null)
+            return false;
+        return getItensPedido()		!= null ? getItensPedido().equals(pedido.getItensPedido()) : pedido.getItensPedido() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getIdWS() != null ? getIdWS().hashCode() : 0);
+        result = 31 * result + (getNumero()	!= null ? getNumero().hashCode() : 0);
+        result = 31 * result + (getSituacao() != null ? getSituacao().hashCode() : 0);
+        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
+        result = 31 * result + (getObservacao() != null ? getObservacao().hashCode() : 0);
+        result = 31 * result + (getDtCriacao() != null ? getDtCriacao().hashCode() : 0);
+        result = 31 * result + (getDtAtualizacao() != null ? getDtAtualizacao().hashCode() : 0);
+        result = 31 * result + (getCliente() != null ? getCliente().hashCode() : 0);
+        result = 31 * result + (getCondicaoPagamento() != null ? getCondicaoPagamento().hashCode() : 0);
+        result = 31 * result + (getTabelaPreco() != null ? getTabelaPreco().hashCode() : 0);
+        result = 31 * result + (getItensPedido() != null ? getItensPedido().hashCode() : 0);
+
+        return result;
     }
 }

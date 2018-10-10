@@ -20,7 +20,7 @@ public class TabelaPreco implements Serializable {
     private String cod;
     @JsonProperty("Descricao")
     private String descricao;
-    @JsonProperty("ItensTabelaPreco")
+    @JsonProperty("ItensTabelaPrecos")
     private List<ItemTabelaPreco> itensTabelaPreco;
 
     public Integer getId() {
