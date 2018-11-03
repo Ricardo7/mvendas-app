@@ -40,6 +40,7 @@
 
             dispositivo = dispositivoDAO.buscaDispositivo();
 
+<<<<<<< HEAD
             if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincClientes() == null){
                 //Dispositivo ainda não sincronizado
                 dataSincronizacao = "2000-01-01 00:00:00";
@@ -50,6 +51,14 @@
             //Antes de atualizar o banco interno com o retorno do servidor, deve buscar os produtos do banco interno
             ClienteDAO clienteDAO = ClienteDAO.getInstance(this);
             clientesOld = clienteDAO.buscaClientesData(dataSincronizacao);
+=======
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincClientes() == null){
+            //Dispositivo ainda não sincronizado
+            dataSincronizacao = "2000-01-01 00:00:00";
+        }else{
+            dataSincronizacao = dispositivo.getDataSincClientes();
+        }
+>>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
 
             if (getUsuario() != null && getUsuario().getToken() != null) {
                 new CarregarClienteCom(this).execute(getUsuario().getToken(), dataSincronizacao);

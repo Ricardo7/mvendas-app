@@ -81,6 +81,7 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
 
                     /*Verifica quantos módulos serão atualizados para gerar o percentual de avanço da barra de progresso*/
                     if (switchSincTudo.isChecked() || switchSincImagens.isChecked()) {
+<<<<<<< HEAD
                         modulos = modulos + 1;
                     }
 
@@ -108,6 +109,14 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
                     if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()) {
 
                         ProdutoSinc produtoSinc = new ProdutoSinc(notify,peso);
+=======
+                        ImagemSinc imagemSinc = new ImagemSinc(notify);
+                        imagemSinc.sincronizaImagem();
+                    }
+
+                    if (switchSincTudo.isChecked() || switchSincProdutos.isChecked()) {
+                        ProdutoSinc produtoSinc = new ProdutoSinc(notify);
+>>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
                         produtoSinc.sincronizaProduto();
                     }
 
@@ -132,6 +141,7 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
                     }
 
                     if (switchSincTudo.isChecked() || switchSincPedidos.isChecked()) {
+<<<<<<< HEAD
 
                         CondicaoPgtoSinc condicaoPgtoSinc = new CondicaoPgtoSinc(notify,peso);
                         condicaoPgtoSinc.sincronizaCondicaoPgto();
@@ -140,6 +150,15 @@ public class SincronicacaoManualActivity extends BaseActivity implements View.On
                         tabelaPrecoSinc.sincronizaTabelaPreco();
 
                         PedidoSinc pedidoSinc = new PedidoSinc(notify,peso);
+=======
+                        CondicaoPgtoSinc condicaoPgtoSinc = new CondicaoPgtoSinc(notify);
+                        condicaoPgtoSinc.sincronizaCondicaoPgto();
+
+                        TabelaPrecoSinc tabelaPrecoSinc = new TabelaPrecoSinc(notify);
+                        tabelaPrecoSinc.sincronizaTabelaPreco();
+
+                        PedidoSinc pedidoSinc = new PedidoSinc(notify);
+>>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
                         pedidoSinc.sincronizaPedido();
                     }
 

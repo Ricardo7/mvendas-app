@@ -217,9 +217,12 @@ public class PedidoDAO {
 
     public Pedido inserePedido(Pedido pedido) {
 
+<<<<<<< HEAD
         //Na inserção o ID(IDAP) do aplicativo deve ser limpo, para que o ID seja gerado e controlado somente pelo dispositivo
         pedido.setId(null);
 
+=======
+>>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
         pedido = trataDependentes(pedido);
 
         PedidoAdap pedidoAdap = new PedidoAdap();
@@ -295,7 +298,10 @@ public class PedidoDAO {
             TabelaPrecoDAO tabelaPrecoDAO = TabelaPrecoDAO.getInstance(context);
             TabelaPreco tabelaPreco;
             tabelaPreco = tabelaPrecoDAO.buscaTabelaPrecoIdWs(pedido.getTabelaPreco().getIdWS());
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
             pedido.setTabelaPreco(tabelaPreco);
         }
 

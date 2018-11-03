@@ -45,7 +45,11 @@ public class ImagemSinc extends BaseActivity implements CarregarImagemCom.Carreg
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
+<<<<<<< HEAD
         if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincImagens() == null) {
+=======
+        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincImagens() == null){
+>>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         } else {
