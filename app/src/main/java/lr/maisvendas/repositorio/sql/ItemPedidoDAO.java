@@ -77,7 +77,7 @@ public class ItemPedidoDAO {
     }
 
     public ItemPedido buscaItemPedidoProduto(Integer pedidoId, String codProduto){
-        ItemPedido itemPedido = new ItemPedido();
+        ItemPedido itemPedido = null;
 
         //Busca o grupo
         String sql = "SELECT itpd.* " +
@@ -88,6 +88,7 @@ public class ItemPedidoDAO {
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){
+            itemPedido = new ItemPedido();
             ProdutoDAO produtoDAO = ProdutoDAO.getInstance(context);
 
             ItemPedidoAdap itemPedidoAdap = new ItemPedidoAdap();

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -61,5 +62,23 @@ public class Estado implements Serializable {
 
     public void setPais(Pais pais) {
         this.pais = pais;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Estado)) return false;
+        Estado estado = (Estado) o;
+        return Objects.equals(getId(), estado.getId()) &&
+                Objects.equals(getIdWS(), estado.getIdWS()) &&
+                Objects.equals(getDescricao(), estado.getDescricao()) &&
+                Objects.equals(getSigla(), estado.getSigla()) &&
+                Objects.equals(getPais(), estado.getPais());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getIdWS(), getDescricao(), getSigla(), getPais());
     }
 }

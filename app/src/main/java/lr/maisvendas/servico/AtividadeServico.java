@@ -22,11 +22,11 @@ public interface AtividadeServico {
     public Call<Response<List<Atividade>>> carregarAtividadesSugeridas(@Header("X-Auth-Token") String token, @Query("data") String data, @Query("usuarioID") String usuarioIDWS);
 
     @POST("Atividade/AddAtividade") //Insere
-    public Call<Response<Atividade>>criarAtividade(@Header("X-Auth-Token") String token, @Body Atividade Atividade);
+    public Call<Response<Atividade>>criarAtividade(@Header("X-Auth-Token") String token, @Body Atividade atividade);
 
     @PUT("Atividade/EditaAtividade") //Atualiza
-    public Call<Response<Atividade>>editarAtividade(@Header("X-Auth-Token") String token, @Query("IDWS") String idWS, @Body Atividade Atividade);
+    public Call<Response<Atividade>>editarAtividade(@Header("X-Auth-Token") String token, @Query("IDWS") String idWS, @Body Atividade atividade);
 
-    @DELETE("Atividade/DeleteAtividade") //Deleta
+    @DELETE("Atividade/RemoveAtividade") //Deleta
     public Call<Response<Boolean>>excluirAtividade(@Header("X-Auth-Token") String token, @Query("IDWS") Integer id);
 }

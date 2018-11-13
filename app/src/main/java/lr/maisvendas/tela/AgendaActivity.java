@@ -3,13 +3,14 @@ package lr.maisvendas.tela;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CalendarView;
 import android.widget.ListView;
 
-import android.support.design.widget.FloatingActionButton;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +22,13 @@ import lr.maisvendas.repositorio.sql.AtividadeDAO;
 import lr.maisvendas.servico.VerificaConexao;
 import lr.maisvendas.servico.VerificaServico;
 import lr.maisvendas.tela.adaptador.ListaAtividadesAdapter;
-import lr.maisvendas.tela.interfaces.CadastroAtividadeActivity;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.TipoAgenda;
 
 public class AgendaActivity extends BaseActivity implements CalendarView.OnDateChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, CarregarAtividadeSugeridaCom.CarregarAtividadeSugeridaTaskCallBack {
 
     private static final String TAG = "AgendaActivity";
+    public static final String PARAM_DATA_ATIVIDADE = "PARAM_DATA_ATIVIDADE";
     //Campos Tela
     private CalendarView calendarView;
     private FloatingActionButton buttonAdd;
@@ -39,6 +40,7 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
     private List<Atividade> listaAtividades;
     private Ferramentas ferramentas;
     private ProgressDialog progressDialog;
+    private String dataAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +74,37 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
     protected void onResume() {
         super.onResume();
 
-        // Colocado para atualizar a lista ao voltar dos Detalhes, caso tenha mexido em alguma coisa no pedido
+        // Colocado para atualizar a lista ao voltar dos Detalhes, caso tenha mexido em alguma coisa
         if (listaAtividadesAdapter != null) {
             listaAtividadesAdapter.notifyDataSetChanged();
         }
         //loadDataFromActivity();
+    }
+
+    //Resultado/retorno de uma Activity seginte
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String dataAtividade = null;
+        if (data != null) {
+            //Pega os parâmetros passados pela intent anterior
+            dataAtividade = data.getStringExtra(PARAM_DATA_ATIVIDADE);
+        }
+        if (dataAtividade != null && dataAtividade.equals("") == false) {
+            //Recarrega as atividades para o dia selecionado pelo usuário na atividade
+            AtividadeDAO atividadeDAO = AtividadeDAO.getInstance(this);
+            listaAtividades = atividadeDAO.buscaAtividadesDia(dataAtividade);
+
+            try {
+                //Seta a data informada pelo usuário no calendário
+                calendarView.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(ferramentas.formatDateUser(dataAtividade)).getTime(), true, true);
+            } catch (ParseException e) {
+                ferramentas.customLog(TAG,e.getMessage());
+            }
+
+            //Busca as atividades sugeridas para o dia
+            buscaAtividadesSugeridas(dataAtividade);
+        }
     }
 
     @Override
@@ -84,14 +112,16 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
 
         if (view == buttonAdd) {
             Intent intent = new Intent(this, CadastroAtividadeActivity.class);
-            startActivity(intent);
+            intent.putExtra(CadastroAtividadeActivity.PARAM_DATA_ATUAL,dataAtual);
+            // Utilizado o startActivityForResult() para que possa ser retornado as informações de uma activity para outra.
+            startActivityForResult(intent, 1);
         }
     }
 
     @Override
     public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
         month = month + 1;
-        String dataAtual = year + "-" + String.format("%02d",month) + "-" + String.format("%02d",dayOfMonth);
+        dataAtual = year + "-" + String.format("%02d",month) + "-" + String.format("%02d",dayOfMonth);
 
         AtividadeDAO atividadeDAO = AtividadeDAO.getInstance(this);
         listaAtividades = atividadeDAO.buscaAtividadesDia(dataAtual);
@@ -113,7 +143,7 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
 
     //Metodo para carregar informação ao abriar a Activity.
     private void loadDataFromActivity() {
-        String dataAtual = ferramentas.getCurrentDate().substring(0, 10);
+        dataAtual = ferramentas.getCurrentDate().substring(0, 10);
         AtividadeDAO atividadeDAO = AtividadeDAO.getInstance(this);
         listaAtividades = atividadeDAO.buscaAtividadesDia(dataAtual);
         //Busca as atividades sugeridas para o dia
@@ -159,19 +189,15 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
     }
 
     @Override
-    public void onCarregarAtividadeSugeridaSuccess(List<Atividade> Atividades) {
+    public void onCarregarAtividadeSugeridaSuccess(List<Atividade> atividades) {
         progressDialog.dismiss();
-        trataAtividades(listaAtividades);
-    }
-
-    @Override
-    public void onCarregarAtividadeSugeridaFailure(String mensagem) {
         //TESTE
-        /*Atividade atividade = new Atividade();
+        /*
+        Atividade atividade = new Atividade();
         atividade.setAssunto("Atividade criada pela IA");
         atividade.setObservacao("");
-        atividade.setHoraAtividade("22:00");
-        atividade.setDataAtividade("2018-11-03");
+        atividade.setHoraAtividade("22:15");
+        atividade.setDataAtividade("2018-11-07");
         atividade.setTipo(TipoAgenda.SUGESTAO);
         atividade.setDtCadastro(ferramentas.getCurrentDate());
         atividade.setDtAtualizacao(ferramentas.getCurrentDate());
@@ -179,9 +205,19 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
         ClienteDAO clienteDAO = ClienteDAO.getInstance(this);
         Cliente cliente = clienteDAO.buscaClienteId(1);
         atividade.setCliente(cliente);
-        List<Atividade> atividades = new ArrayList<>();
-        atividades.add(atividade);*/
+
+        if (atividades == null) {
+            atividades = new ArrayList<>();
+        }
+        atividades.add(atividade);
+        */
         //-/TESTE
+        trataAtividades(atividades);
+    }
+
+    @Override
+    public void onCarregarAtividadeSugeridaFailure(String mensagem) {
+
         progressDialog.dismiss();
         trataAtividades(null);
     }
@@ -189,7 +225,7 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
     public void trataAtividades(List<Atividade> atividadesNew) {
         List<Atividade> atividadesRemov = new ArrayList<>();
 
-        if (atividadesNew != null) {
+        if (atividadesNew != null && listaAtividades != null) {
             //Percorre as atividades sugeridas a fim de remover as atividades que já existem na base
             for (Atividade atividadeOld : listaAtividades) {
 
@@ -213,6 +249,7 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
                 atividade.setTipo(TipoAgenda.SUGESTAO);
                 listaAtividades.add(atividade);
             }
+
         }
 
         listaAtividadesAdapter = new ListaAtividadesAdapter(this, listaAtividades);

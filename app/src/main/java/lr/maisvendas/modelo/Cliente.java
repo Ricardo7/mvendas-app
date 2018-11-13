@@ -209,8 +209,9 @@ public class Cliente implements Serializable {
         if( getId() 				!= null ? !getId().equals(cliente.getId()) : cliente.getId() != null)
             return false;
         if( getIdWS()				!= null ? !getIdWS().equals(cliente.getIdWS()) : cliente.getIdWS() != null)
-            if( getCod()				!= null ? !getCod().equals(cliente.getCod()) : cliente.getCod() != null)
-                return false;
+            return false;
+        if( getCod()				!= null ? !getCod().equals(cliente.getCod()) : cliente.getCod() != null)
+            return false;
         if( getCnpj()				!= null ? !getCnpj().equals(cliente.getCnpj()) : cliente.getCnpj() != null)
             return false;
         if( getRazaoSocial()		!= null ? !getRazaoSocial().equals(cliente.getRazaoSocial()) : cliente.getRazaoSocial() != null)
@@ -270,4 +271,5 @@ public class Cliente implements Serializable {
 
         return result;
     }
+
 }

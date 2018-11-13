@@ -184,10 +184,10 @@ public class ListaProdutosActivity extends BaseActivity implements ItemProdutoCl
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        /*
+
         listaProdutosAdapter.getFilter().filter(newText);
-        */
-        return super.onQueryTextChange(newText);
+
+        return false;
 
 
     }

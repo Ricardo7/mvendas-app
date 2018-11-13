@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -60,5 +61,23 @@ public class CondicaoPagamento implements Serializable {
 
     public void setDescAcr(Double descAcr) {
         this.descAcr = descAcr;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CondicaoPagamento)) return false;
+        CondicaoPagamento that = (CondicaoPagamento) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getIdWS(), that.getIdWS()) &&
+                Objects.equals(getCod(), that.getCod()) &&
+                Objects.equals(getDescricao(), that.getDescricao()) &&
+                Objects.equals(getDescAcr(), that.getDescAcr());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getIdWS(), getCod(), getDescricao(), getDescAcr());
     }
 }

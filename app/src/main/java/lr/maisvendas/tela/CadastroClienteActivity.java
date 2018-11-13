@@ -136,7 +136,6 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         //Objeto para setar o primeiro item do spinner com default
         Estado estado = new Estado();
         estado.setId(0);
-        //produto.setCodInterno(0);
         estado.setSigla("");
         estado.setDescricao("Selecione");
 
@@ -160,6 +159,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
 
         if (cliente != null){
 
+            spinnerSegmentoMercado.setSelection(listaSegmentoMercadoSpinnerAdapter.getPosition(cliente.getSegmentoMercado()));
             editRazSocial.setText(cliente.getRazaoSocial());
             editNomeFant.setText(cliente.getNomeFantasia());
             editCnpj.setText(ferramentas.formatCnpjCpf(cliente.getCnpj(), TipoPessoa.juridica));
@@ -203,7 +203,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
     }
 
     public void salvaDados() throws Exceptions {
-        if (spinnerSegmentoMercado.getSelectedItem() == null) {
+        if (spinnerSegmentoMercado.getSelectedItem() == null || ((SegmentoMercado)spinnerSegmentoMercado.getSelectedItem()).getId() == 0) {
             throw new Exceptions("Segmento de mercado não selecionado.");
         } else if (editRazSocial.getText().toString().equals("")) {
             throw new Exceptions("Razão Social não informada.");
@@ -215,10 +215,10 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
             throw new Exceptions("Fone não informada.");
         } else if (editCep.getText().toString().equals("")){
             throw new Exceptions("CEP não informada.");
-        } else if (spinnerEstado.getSelectedItem() == null){
+        } else if (spinnerEstado.getSelectedItem() == null || ((Estado) spinnerEstado.getSelectedItem()).getId() == 0){
             throw new Exceptions("Estado não selecionado.");
-        } else if (spinnerCidade.getSelectedItem() == null){
-            throw new Exceptions("Cidade não selecionado.");
+        } else if (spinnerCidade.getSelectedItem() == null || ((Cidade) spinnerCidade.getSelectedItem()).getId() == 0){
+            throw new Exceptions("Cidade não selecionada.");
         } else if (editBairro.getText().toString().equals("")) {
             throw new Exceptions("Bairro não informada.");
         } else if (editLogradouro.getText().toString().equals("")) {
@@ -281,16 +281,17 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() != android.R.id.home) {
+            super.onOptionsItemSelected(item);
+        }
         switch (item.getItemId()) {
 
             case android.R.id.home:
                 finish();
                 break;
-            default:break;
         }
         return true;
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

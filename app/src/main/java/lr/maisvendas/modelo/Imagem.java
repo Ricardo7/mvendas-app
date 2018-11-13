@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -102,5 +103,27 @@ public class    Imagem implements Serializable {
 
     public void setDtAtualizacao(String dtAtualizacao) {
         this.dtAtualizacao = dtAtualizacao;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Imagem)) return false;
+        Imagem imagem1 = (Imagem) o;
+        return Objects.equals(getId(), imagem1.getId()) &&
+                Objects.equals(getIdWS(), imagem1.getIdWS()) &&
+                Objects.equals(getNome(), imagem1.getNome()) &&
+                Objects.equals(getPrincipal(), imagem1.getPrincipal()) &&
+                Objects.equals(getCaminho(), imagem1.getCaminho()) &&
+                Objects.equals(getImagem(), imagem1.getImagem()) &&
+                Objects.equals(getProdutoIdWS(), imagem1.getProdutoIdWS()) &&
+                Objects.equals(getDtCriacao(), imagem1.getDtCriacao()) &&
+                Objects.equals(getDtAtualizacao(), imagem1.getDtAtualizacao());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getIdWS(), getNome(), getPrincipal(), getCaminho(), getImagem(), getProdutoIdWS(), getDtCriacao(), getDtAtualizacao());
     }
 }

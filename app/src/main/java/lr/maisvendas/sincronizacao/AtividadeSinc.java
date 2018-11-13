@@ -45,6 +45,7 @@ public class AtividadeSinc extends BaseActivity implements CarregarAtividadeCom.
         }else{
             dataSincronizacao = dispositivo.getDataSincAtividades();
         }
+
         ferramentas.customLog("RRRRR",dataSincronizacao);
         //Antes de atualizar o banco interno com o retorno do servidor, deve buscar os produtos do banco interno
         AtividadeDAO atividadeDAO = AtividadeDAO.getInstance(this);

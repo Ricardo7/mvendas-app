@@ -245,7 +245,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/customborderbutton"
-            android:text="@string/button_cadastrar"
+            android:text="@string/button_salvar"
             android:textColor="@color/buttonText"
             android:textSize="@dimen/sizeTextButtonSave" />
     </LinearLayout>

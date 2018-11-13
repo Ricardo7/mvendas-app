@@ -4,7 +4,7 @@
     android:id="@+id/activity_cadastro_atividade_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tela.interfaces.CadastroAtividadeActivity">
+    tools:context=".tela.CadastroAtividadeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

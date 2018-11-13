@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -75,4 +76,22 @@ public class Produto implements Serializable {
         this.imagens = imagens;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Produto)) return false;
+        Produto produto = (Produto) o;
+        return Objects.equals(getId(), produto.getId()) &&
+                Objects.equals(getIdWS(), produto.getIdWS()) &&
+                Objects.equals(getCod(), produto.getCod()) &&
+                Objects.equals(getDescricao(), produto.getDescricao()) &&
+                Objects.equals(getObservacao(), produto.getObservacao()) &&
+                Objects.equals(getImagens(), produto.getImagens());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getIdWS(), getCod(), getDescricao(), getObservacao(), getImagens());
+    }
 }

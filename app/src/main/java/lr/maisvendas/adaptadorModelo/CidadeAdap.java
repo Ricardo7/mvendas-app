@@ -20,7 +20,7 @@ public class CidadeAdap {
         cidade.setId(cursor.getInt(cursor.getColumnIndex("ID")));
         cidade.setIdWS(cursor.getString(cursor.getColumnIndex("ID_WS")));
         cidade.setDescricao(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
-        cidade.setDescricao(cursor.getString(cursor.getColumnIndex("SIGLA")));
+        cidade.setSigla(cursor.getString(cursor.getColumnIndex("SIGLA")));
         //Estado | ESTADO_ID INTEGER
 
         return cidade;

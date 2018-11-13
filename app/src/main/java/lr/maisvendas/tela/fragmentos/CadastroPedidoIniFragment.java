@@ -202,6 +202,12 @@ public class CadastroPedidoIniFragment extends Fragment implements View.OnClickL
             if (pedido.getObservacao() != null) {
                 editObservacao.setText(pedido.getObservacao().toString());
             }
+            //Se pedido não está mais pendente não irá mais permitir editar
+            if(pedido.getSituacao() != 0){
+                spinnerCliente.setEnabled(false);
+                spinnerTabelaPreco.setEnabled(false);
+                spinnerCondPgto.setEnabled(false);
+            }
         }else{
             //Se o pedido não existe é porque é novo, neste caso popula os campos de cabeçalho com as informações iniciais
             textSituacao.setText("Pendente");

@@ -67,6 +67,22 @@ public class Ferramentas {
         }
     }
 
+    public boolean isTimeValid(String data) {
+        // Configure o SimpleDateFormat no onCreate ou onCreateView
+        String pattern = "HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        sdf.setLenient(false);
+
+        try {
+            Date date = sdf.parse(data);
+
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
     public String formatDateUser(String date){
         String pattern = "yyyy-MM-dd";
         String patternUser = "dd/MM/yyyy";

@@ -18,8 +18,8 @@ public class ListaCidadesSpinnerAdapter extends ArrayAdapter<Cidade> {
 
     private Context context;
 
-    public ListaCidadesSpinnerAdapter(Context context, List<Cidade> lojas) {
-        super(context, 0, lojas);
+    public ListaCidadesSpinnerAdapter(Context context, List<Cidade> cidades) {
+        super(context, 0, cidades);
         this.context = context;
 
     }

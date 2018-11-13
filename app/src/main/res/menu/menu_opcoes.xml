@@ -8,4 +8,13 @@
         android:title=""
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom"/>
+
+    <item
+        android:id="@+id/menu_carrinho"
+        android:icon="@drawable/ic_carrinho"
+        app:showAsAction="always"
+        android:title="Carrinho"/>
+
+
 </menu>
+

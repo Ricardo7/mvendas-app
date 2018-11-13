@@ -2,6 +2,7 @@ package lr.maisvendas.tela.fragmentos;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import lr.maisvendas.R;
+import lr.maisvendas.comunicacao.pedido.CadastrarPedidoCom;
+import lr.maisvendas.comunicacao.pedido.EditarPedidoCom;
 import lr.maisvendas.modelo.ItemPedido;
 import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.repositorio.sql.PedidoDAO;
@@ -24,7 +27,7 @@ import lr.maisvendas.tela.interfaces.ComunicadorCadastroPedido;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 
-public class CadastroPedidoFimFragment extends Fragment implements View.OnClickListener{
+public class CadastroPedidoFimFragment extends Fragment implements View.OnClickListener, CadastrarPedidoCom.CadastrarPedidoTaskCallBack, EditarPedidoCom.EditarPedidoTaskCallBack {
 
     private static final String TAG = "CadastroPedidoFimFragment";
     public static final String PARAM_PEDIDO_INI = "PARAM_PEDIDO_FIM";
@@ -42,6 +45,7 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
     private ComunicadorCadastroPedido comunicadorCadastroPedido;
     private Pedido pedido;
     private Ferramentas ferramentas;
+    public ProgressDialog progressDialog;
 
     public CadastroPedidoFimFragment(){};
 
@@ -110,7 +114,7 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
             getActivity().getFragmentManager().beginTransaction().replace(R.id.activity_cadastro_pedido_container,cadastroPedidoItemFragment).commit();
         }else */
         if(view == buttonEnviar){
-
+            enviarPedido();
         }else if (view == buttonExcluir){
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -151,7 +155,17 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
             textVlrTotal.setText("R$ "+totalTotalPedido(pedido).toString());
             textVlrDescoto.setText("R$ "+totalDescontoPedido(pedido).toString());
             textVlrFinal.setText("R$ "+totalLiquidoPedido(pedido).toString());
+
+            if(pedido.getStatus() != 0){
+                //Caso o pedido já tenha sido enviado ao servidor o botão 'Excluir' deverá ser ocultado.
+                buttonExcluir.setVisibility(View.INVISIBLE);
+            }
+            if (pedido.getSituacao() != 0){
+                //Se o pedido já tenha sido fechado o botão Enviar' deverá ser ocultado.
+                buttonEnviar.setVisibility(View.INVISIBLE);
+            }
         }
+
     }
 
     public Double totalTotalPedido(Pedido pedido){
@@ -193,17 +207,17 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
         return bd.doubleValue();
     }
 
-    public void salvaDados() throws Exceptions{
+    public void enviarPedido(){
 
-        pedido.setDtAtualizacao(ferramentas.getCurrentDate());
-        pedido.setStatus(1);
-
-        PedidoDAO pedidoDAO = PedidoDAO.getInstance(getActivity());
-        pedidoDAO.atualizaPedido(pedido);
-
-        comunicadorCadastroPedido.setPedido(pedido);
-
-        //Enviar pedido
+        //Se não foi sincronizado ainda o pedido será inserido caso contrário, será atualizado
+        if(pedido.getStatus() == 0 && pedido.getIdWS().equals("")) {
+            progressDialog = ProgressDialog.show(getActivity(), "Aguarde", "Enviando pedido, por favor aguarde", true, false);
+            //Enviar pedido
+            new CadastrarPedidoCom(this).execute(pedido);
+        }else{
+            progressDialog = ProgressDialog.show(getActivity(), "Aguarde", "Atualizando pedido, por favor aguarde", true, false);
+            new EditarPedidoCom(this).execute(pedido);
+        }
 
     }
 
@@ -219,4 +233,50 @@ public class CadastroPedidoFimFragment extends Fragment implements View.OnClickL
 
     }
 
+    @Override
+    public void onCadastrarPedidoSuccess(Pedido pedido) {
+
+        //Atualiza o módulo principalmente para setar o IDWS, caso ainda não tenha ocorrido
+        PedidoDAO pedidoDAO = PedidoDAO.getInstance(getActivity());
+        try {
+            pedidoDAO.atualizaPedido(pedido);
+        } catch (Exceptions ex) {
+            ferramentas.customLog(TAG,ex.getMessage());
+        }
+
+        progressDialog.dismiss();
+        ferramentas.customToast(getActivity(),"Pedido enviado com sucesso.");
+        ferramentas.customLog(TAG,"Inseriu PEDIDO id ("+pedido.getIdWS()+")");
+
+        comunicadorCadastroPedido.setPedido(pedido);
+    }
+
+    @Override
+    public void onCadastrarPedidoFailure(String mensagem) {
+
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void onEditarPedidoSuccess(Pedido pedido) {
+
+        //Atualiza o módulo principalmente para setar o IDWS, caso ainda não tenha ocorrido
+        PedidoDAO pedidoDAO = PedidoDAO.getInstance(getActivity());
+        try {
+            pedidoDAO.atualizaPedido(pedido);
+        } catch (Exceptions ex) {
+            ferramentas.customLog(TAG,ex.getMessage());
+        }
+
+        progressDialog.dismiss();
+        ferramentas.customToast(getActivity(),"Pedido atualizado com sucesso.");
+        ferramentas.customLog(TAG,"Atualizou PEDIDO id ("+pedido.getIdWS()+")");
+
+        comunicadorCadastroPedido.setPedido(pedido);
+    }
+
+    @Override
+    public void onEditarPedidoFailure(String mensagem) {
+        progressDialog.dismiss();
+    }
 }

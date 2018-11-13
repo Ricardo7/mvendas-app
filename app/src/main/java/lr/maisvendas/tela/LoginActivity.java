@@ -95,6 +95,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }else{
             usuarioDAO.insereUsuario(usuario);
         }
+
+        //Inicia o alarme que gerencia o sincronismo
+        sendBroadcast(new Intent("INICIAR_GERENTE_DE_ALARME"));
+
         //Chama activity principal
         Intent intent = new Intent(this, TelaInicialActivity.class);
         //intent.putExtra(TelaInicialActivity.PARAM_USUARIO, usuario);

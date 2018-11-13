@@ -140,6 +140,7 @@ public class AtividadeDAO {
         String sql = "SELECT * " +
                 "  FROM tatividades " +
                 " WHERE dt_atualizacao >= ifnull('" + dataAt +"','1990-01-01 00:00:00')";
+
         Cursor cursor = dataBase.rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0 ){
@@ -153,6 +154,8 @@ public class AtividadeDAO {
                 atividade = atividadeAdap.sqlToAtividade(cursor);
                 atividade.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
                 atividade.setUsuario(usuarioDAO.buscaUsuarioId(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
+
+                atividades.add(atividade);
             }
 
             cursor.close();

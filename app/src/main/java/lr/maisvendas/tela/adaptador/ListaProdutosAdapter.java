@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,10 +28,11 @@ import lr.maisvendas.tela.interfaces.ItemProdutoClickListener;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.StatusPedido;
 
-public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdapter.ProdutoViewHolder> {//implements Filterable {
+public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdapter.ProdutoViewHolder> implements Filterable {
 
     private Context context;
     private List<Produto> itens;
+    private List<Produto> produtos;
     private List<Pedido> pedidos;
     private List<ItemTabelaPreco> itensTabelaPreco;
     private Object lock = new Object();
@@ -39,9 +42,10 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
     //private Pedido pedido;
     //private ItemTabelaPreco itemTabelaPreco;
 
-    public ListaProdutosAdapter(Context context, List<Produto> Produtos) {
+    public ListaProdutosAdapter(Context context, List<Produto> produtos) {
         this.context = context;
-        this.itens = Produtos;
+        this.itens = produtos;
+        this.produtos = produtos;
         pedidos = new ArrayList<>();
         itensTabelaPreco = new ArrayList<>();
         ferramentas = new Ferramentas();
@@ -55,7 +59,7 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
 
     @Override
     public void onBindViewHolder(ProdutoViewHolder viewHolder, int i) {
-        Produto produto = itens.get(i);
+        Produto produto = produtos.get(i);
         Pedido pedido;
         ItemTabelaPreco itemTabelaPreco=null;
         viewHolder.textCodigoDesc.setText("("+produto.getCod()+") "+produto.getDescricao());
@@ -118,7 +122,7 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
 
     @Override
     public int getItemCount() {
-        return itens.size();
+        return produtos.size();
     }
 
     public void setClickListener(ItemProdutoClickListener itemProdutoClickListener) {
@@ -159,7 +163,7 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
 
     public Produto getItem(int position)
     {
-        return itens.get(position);
+        return produtos.get(position);
     }
 
     public Pedido getPedido(int position){
@@ -177,68 +181,43 @@ public class ListaProdutosAdapter extends RecyclerView.Adapter<ListaProdutosAdap
     public void setItemTabelaPreco(int position,ItemTabelaPreco itemTabelaPreco){
         this.itensTabelaPreco.add(position,itemTabelaPreco);
     }
-    /*
+
     @Override
     public Filter getFilter() {
-        return filter;
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    produtos = itens;
+                } else {
+                    List<Produto> filteredList = new ArrayList<>();
+                    for (Produto row : itens) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getCod().toLowerCase().contains(charString.toLowerCase()) || row.getDescricao().contains(charSequence)) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    produtos = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = produtos;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                produtos = (ArrayList<Produto>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
-    //Verificar possíbilidade de melhorar código
-    private class ProdutoFilter extends Filter {
-
-        private ArrayList<Produto> originalItens;
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-
-            if (originalItens == null) {
-                synchronized (lock) {
-                    originalItens = new ArrayList<Produto>(itens);
-                }
-            }
-
-            if (constraint == null || constraint.length() == 0) {
-                ArrayList<Produto> list = new ArrayList<Produto>(originalItens);
-
-                results.count = list.size();
-                results.values = list;
-            } else {
-                ArrayList<Produto> newValues = new ArrayList<Produto>(originalItens.size());
-
-                String prefix = constraint.toString().toLowerCase();
-                for (Produto Produto : originalItens) {
-                    //Aqui filtro o objeto Produto
-                    if (Produto.getCod().toString().contains(prefix)) {
-                        newValues.add(Produto);
-                    } else if(Produto.getDescricao().toLowerCase().contains(prefix)){
-                        newValues.add(Produto);
-                    }
-                }
-
-                results.count = newValues.size();
-                results.values = newValues;
-            }
-
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results.count > 0) {
-                itens = (List<Produto>) results.values;
-                clear();
-
-                for (Produto Produto : itens)
-                    add(Produto);
-
-                notifyDataSetChanged();
-            } else {
-                notifyDataSetInvalidated();
-            }
-        }
-
-
-    }*/
-
+    public interface ProdutoAdapterListener {
+        void onProdutoSelected(Produto produto);
+    }
 }

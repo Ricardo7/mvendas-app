@@ -18,8 +18,11 @@ import android.view.MenuItem;
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 
 import lr.maisvendas.R;
+import lr.maisvendas.modelo.Pedido;
 import lr.maisvendas.modelo.Usuario;
+import lr.maisvendas.repositorio.sql.PedidoDAO;
 import lr.maisvendas.repositorio.sql.UsuarioDAO;
+import lr.maisvendas.utilitarios.StatusPedido;
 //import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
@@ -97,6 +100,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == android.R.id.home) {
             drawerLayout.openDrawer(GravityCompat.START);
             return true;
+        } else if (item.getItemId() == R.id.menu_carrinho){
+            PedidoDAO pedidoDAO = PedidoDAO.getInstance(this);
+            Pedido pedido = pedidoDAO.buscaPedidoStatus(StatusPedido.emConstrucao);
+
+            Intent intent = new Intent(this,CadastroPedidoActivity.class);
+            if (pedido != null) {
+                intent.putExtra(CadastroPedidoActivity.PARAM_PEDIDO,pedido);
+            }
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

@@ -57,10 +57,10 @@
                     android:layout_weight="3"
                     android:layout_marginLeft="10dp"
                     android:textSize="@dimen/configuracao_text"
-                    android:text="Imagens"/>
+                    android:text="Produtos"/>
 
                 <Switch
-                    android:id="@+id/activity_sincronicacao_manual_switch_imagens"
+                    android:id="@+id/activity_sincronicacao_manual_switch_produtos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -80,10 +80,10 @@
                     android:layout_weight="3"
                     android:layout_marginLeft="10dp"
                     android:textSize="@dimen/configuracao_text"
-                    android:text="Produtos"/>
+                    android:text="Imagens"/>
 
                 <Switch
-                    android:id="@+id/activity_sincronicacao_manual_switch_produtos"
+                    android:id="@+id/activity_sincronicacao_manual_switch_imagens"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -130,6 +130,29 @@
 
                 <Switch
                     android:id="@+id/activity_sincronicacao_manual_switch_pedidos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/configuracao_text"
+                    android:text="Agenda"/>
+
+                <Switch
+                    android:id="@+id/activity_sincronicacao_manual_switch_agenda"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

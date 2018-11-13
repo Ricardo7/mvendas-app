@@ -84,10 +84,10 @@ public class ListaClientesActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public boolean onQueryTextChange(String newText) {
-
         listaClientesAdapter.getFilter().filter(newText);
 
         return super.onQueryTextChange(newText);
 
     }
+
 }

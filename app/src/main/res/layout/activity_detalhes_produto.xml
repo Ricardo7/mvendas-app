@@ -11,205 +11,231 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <include layout="@layout/base_layout" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:background="@color/colorWhite">
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/activity_detalhes_produto_img_produtos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginRight="60dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/activity_detalhes_produto_tab_detalhes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#bddaf5dc"
-                    app:tabGravity="fill"
-                    app:tabMode="fixed"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/activity_detalhes_produto_viewPager_detalhes"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="15dp"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.8"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
-
-                <!--Linha 01-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:background="@color/colorWhite"
                     android:orientation="horizontal"
-                    android:layout_weight="1">
-                    <!--Coluna 01-->
-                    <LinearLayout
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/activity_detalhes_produto_prev"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.1"
+                        android:foregroundGravity="fill_horizontal"
+                        android:layout_marginLeft="50dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/ic_prev"/>
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/activity_detalhes_produto_img_produtos"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:orientation="vertical">
+                        android:layout_weight="0.6"
+                        />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Desconto (%)"/>
+                    <ImageView
+                        android:id="@+id/activity_detalhes_produto_next"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.1"
+                        android:layout_marginRight="40dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/ic_next" />
 
-                        <EditText
-                            android:id="@+id/activity_detalhes_produto_edit_per_desc"
-                            android:layout_width="match_parent"
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/activity_detalhes_produto_tab_detalhes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#bddaf5dc"
+                        app:tabGravity="fill"
+                        app:tabMode="fixed"
+                        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/activity_detalhes_produto_viewPager_detalhes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="10dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1.8"
+                    android:orientation="vertical">
+
+                    <!--Linha 01-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <!--Coluna 01-->
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:inputType="numberDecimal" />
+                            android:layout_weight="2"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Desconto (%)" />
+
+                            <EditText
+                                android:id="@+id/activity_detalhes_produto_edit_per_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:inputType="numberDecimal" />
+
+                        </LinearLayout>
+                        <!--Coluna 02-->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Desconto (R$)" />
+
+                            <EditText
+                                android:id="@+id/activity_detalhes_produto_edit_vlr_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:inputType="numberDecimal" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+
+                        </LinearLayout>
 
                     </LinearLayout>
-                    <!--Coluna 02-->
+
+                    <!--Linha 02-->
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Desconto (R$)"/>
-
-                        <EditText
-                            android:id="@+id/activity_detalhes_produto_edit_vlr_desc"
-                            android:layout_width="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <!--Coluna 01-->
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:inputType="numberDecimal" />
+                            android:layout_weight="2"
+                            android:orientation="vertical">
 
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Quantidade" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_weight="1">
+                            <EditText
+                                android:id="@+id/activity_detalhes_produto_edit_quantidade"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:inputType="numberDecimal" />
 
+                        </LinearLayout>
+                        <!--Coluna 02-->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total"
+                                android:textColor="@color/cadastro_pedido_text_total_label" />
+
+                            <EditText
+                                android:id="@+id/activity_detalhes_produto_edit_total"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:enabled="false"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/cadastro_pedido_text_total_vlr" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageButton
+                                android:id="@+id/activity_detalhes_produto_button_pedido"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@mipmap/ic_carrinho_add" />
+
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <!--Linha 02-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
-                    <!--Coluna 01-->
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    android:layout_weight="1.2"
+                    android:background="@color/colorField"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/activity_detalhes_produto_sugestao_list_view"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:orientation="vertical">
+                        android:layout_marginTop="2dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Quantidade"/>
-
-                        <EditText
-                            android:id="@+id/activity_detalhes_produto_edit_quantidade"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:inputType="numberDecimal" />
-
-                    </LinearLayout>
-                    <!--Coluna 02-->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/cadastro_pedido_text_total_label"
-                            android:text="Total"/>
-
-                        <EditText
-                            android:id="@+id/activity_detalhes_produto_edit_total"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/cadastro_pedido_text_total_vlr"
-                            android:enabled="false"
-                            android:inputType="numberDecimal"/>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_weight="1">
-                        <ImageButton
-                            android:id="@+id/activity_detalhes_produto_button_pedido"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@mipmap/ic_carrinho_add"/>
-
-
-                    </LinearLayout>
+                    </android.support.v7.widget.RecyclerView>
 
                 </LinearLayout>
-
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.2"
-                android:background="@color/colorField"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/activity_detalhes_produto_sugestao_list_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="2dp">
-
-                </android.support.v7.widget.RecyclerView>
-
-            </LinearLayout>
-        </LinearLayout>
-
     </LinearLayout>
 
     <include layout="@layout/base_navigation_view" />

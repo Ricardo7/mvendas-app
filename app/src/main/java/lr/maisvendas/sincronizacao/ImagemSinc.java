@@ -1,7 +1,14 @@
 package lr.maisvendas.sincronizacao;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
@@ -20,9 +27,11 @@ import lr.maisvendas.tela.BaseActivity;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.Notify;
+import lr.maisvendas.utilitarios.PermissoesAndroid;
 import lr.maisvendas.utilitarios.ProcessaArquivo;
 
 public class ImagemSinc extends BaseActivity implements CarregarImagemCom.CarregarImagemTaskCallBack {
+
 
     private Ferramentas ferramentas;
     private Dispositivo dispositivo = null;
@@ -45,11 +54,7 @@ public class ImagemSinc extends BaseActivity implements CarregarImagemCom.Carreg
 
         dispositivo = dispositivoDAO.buscaDispositivo();
 
-<<<<<<< HEAD
         if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincImagens() == null) {
-=======
-        if (dispositivo == null || dispositivo.getId() <= 0 || dispositivo.getDataSincImagens() == null){
->>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
             //Dispositivo ainda não sincronizado
             dataSincronizacao = "2000-01-01 00:00:00";
         } else {
@@ -162,9 +167,10 @@ public class ImagemSinc extends BaseActivity implements CarregarImagemCom.Carreg
 
     public File getOutputMediaFile(String nome) {
         ProcessaArquivo processaArquivo = new ProcessaArquivo();
+
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new File(processaArquivo.homeDirectory()
+        File mediaStorageDir = processaArquivo.customDirectory(processaArquivo.homeDirectory().getPath()
                 + "/maisvendas");
 
         // This location works best if you want the created images to be shared
@@ -188,5 +194,7 @@ public class ImagemSinc extends BaseActivity implements CarregarImagemCom.Carreg
             throw new Exceptions("Não foi possível remover o arquivo "+caminho);
         }
     }
+
+
 }
 

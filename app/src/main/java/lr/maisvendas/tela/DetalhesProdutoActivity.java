@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -46,7 +47,7 @@ import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.StatusPedido;
 
-public class DetalhesProdutoActivity extends BaseActivity implements ComunicadorDetalhesProduto, ComunicadorCadastroPedido, View.OnClickListener, TextWatcher, ProdutoSugeridoClickListener, CarregarProdutosSugeridosCom.CarregarProdutosSugeridosTaskCallBack {
+public class DetalhesProdutoActivity extends BaseActivity implements ComunicadorDetalhesProduto, ComunicadorCadastroPedido, View.OnClickListener, TextWatcher, ProdutoSugeridoClickListener, CarregarProdutosSugeridosCom.CarregarProdutosSugeridosTaskCallBack, ViewPager.OnPageChangeListener {
 
     private static final String TAG = "DetalhesProdutoActivity";
     public static final String PARAM_PRODUTO = "PARAM_PRODUTO";
@@ -61,6 +62,8 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     private ImageButton buttonPedido;
     private ViewPager viewPagerImagens;
     private RecyclerView recyclerViewProdutosSugeridos;
+    private ImageView imagePrev;
+    private ImageView imageNext;
 
     //Variáveis
     private Produto produto;
@@ -71,6 +74,7 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
     private Boolean editandoAutomarico = false;
     private List<Produto> listaProdutosSugeridos;
     private ListaProdutosSugestaoAdapter listaProdutosSugeridosAdapter;
+    private DetalhesProdutoImgAdapter detalhesProdutoImgAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +96,8 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         buttonPedido = (ImageButton) findViewById(R.id.activity_detalhes_produto_button_pedido);
         viewPagerImagens = (ViewPager) findViewById(R.id.activity_detalhes_produto_img_produtos);
         recyclerViewProdutosSugeridos = (RecyclerView) findViewById(R.id.activity_detalhes_produto_sugestao_list_view);
-
+        imagePrev = (ImageView) findViewById(R.id.activity_detalhes_produto_prev);
+        imageNext = (ImageView) findViewById(R.id.activity_detalhes_produto_next);
         ferramentas = new Ferramentas();
 
         loadDataFromActivity();
@@ -110,6 +115,9 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         editQuantidade.addTextChangedListener(this);
 
         buttonPedido.setOnClickListener(this);
+        imagePrev.setOnClickListener(this);
+        imageNext.setOnClickListener(this);
+        viewPagerImagens.setOnPageChangeListener(this);
     }
 
     @Override
@@ -152,6 +160,25 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
                 } catch (Exceptions ex) {
                     ferramentas.customToast(this,ex.getMessage());
                 }
+            }
+        }else if(view == imagePrev){
+            viewPagerImagens.setCurrentItem(viewPagerImagens.getCurrentItem() - 1);
+            //Quando chegar no primeiro item irá esconder o Preview
+            if(viewPagerImagens.getCurrentItem() == 0){
+                imagePrev.setVisibility(View.INVISIBLE);
+            }
+            if(viewPagerImagens.getCurrentItem() < detalhesProdutoImgAdapter.getCount()-1){
+                imageNext.setVisibility(View.VISIBLE);
+            }
+        }else if(view == imageNext){
+            viewPagerImagens.setCurrentItem(viewPagerImagens.getCurrentItem() + 1);
+            //Quando andar um item irá mostrar a seta para voltar
+            if(viewPagerImagens.getCurrentItem() > 0){
+                imagePrev.setVisibility(View.VISIBLE);
+            }
+            //Quando chegar no último item irá esconder a botão Next
+            if(viewPagerImagens.getCurrentItem() == detalhesProdutoImgAdapter.getCount()-1){
+                imageNext.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -213,8 +240,13 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         }
 
         //Carrega imagens
-        DetalhesProdutoImgAdapter detalhesProdutoImgAdapter = new DetalhesProdutoImgAdapter(this,produto.getImagens());
+        detalhesProdutoImgAdapter = new DetalhesProdutoImgAdapter(this,produto.getImagens());
         viewPagerImagens.setAdapter(detalhesProdutoImgAdapter);
+        //Na primeira imagem irá esconder o preview pois não pode voltar
+        imagePrev.setVisibility(View.INVISIBLE);
+        if(detalhesProdutoImgAdapter.getCount() == 1){
+            imageNext.setVisibility(View.INVISIBLE);
+        }
 
         //Carrega Tab de detalhes
         Resources resources = getResources();
@@ -225,6 +257,7 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         ViewPager viewPager = (ViewPager) findViewById(R.id.activity_detalhes_produto_viewPager_detalhes);
         viewPager.setAdapter(detalhesProdutoTabAdapter);
 
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_detalhes_produto_tab_detalhes);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -233,6 +266,7 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         buscaProdutosSugeridos();
 
     }
+
 
     private void salvaDados() throws Exceptions{
         if (editQuantidade.getText().toString().equals("0.0") || editQuantidade.getText().toString().equals("")) {
@@ -292,6 +326,9 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() != android.R.id.home) {
+            super.onOptionsItemSelected(item);
+        }
         switch (item.getItemId()) {
 
             case android.R.id.home:
@@ -394,21 +431,25 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
 
         if (getUsuario() != null && getUsuario().getToken() != null) {
             try {
-                if (verificaConexao.isNetworkAvailable(this) && verificaServico.execute(enderecoHost.getHostHTTPRaiz()).get()) {
-                    new CarregarProdutosSugeridosCom(this).execute(getUsuario().getToken(), produto.getIdWS(),pedido.getIdWS());
+
+                if (pedido != null && verificaConexao.isNetworkAvailable(this) && verificaServico.execute(enderecoHost.getHostHTTPRaiz()).get()) {
+                    //Só irá buscar produtos sugeridos caso tenha algum pedido em aberto para buscar o cliente
+                    new CarregarProdutosSugeridosCom(this).execute(getUsuario().getToken(), pedido.getCliente().getIdWS(), produto.getIdWS());
                 }else{
                     trataProdutos(null);
                 }
             }catch (Exception ex) {
                 ferramentas.customLog(TAG, ex.getMessage());
             }
+        }else {
+            ferramentas.customLog(TAG, "Usuário sem acesso ao sistema");
         }
-
     }
 
     @Override
     public void onCarregarProdutosSugeridosSuccess(List<Produto> produtos) {
-
+        //Hoje passa null para que os produtos sejam buscados internamente, pois nao está rentornando nada da API.
+        trataProdutos(null);
     }
 
     @Override
@@ -422,7 +463,6 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
 
         ProdutoDAO produtoDAO = ProdutoDAO.getInstance(this);
         if (produtosNew != null){
-
             //Percorre os produtos sugeridos a fim de remover os produtos que já estão no pedido
             for (ItemPedido itemPedido : pedido.getItensPedido()) {
 
@@ -450,5 +490,32 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
         listaProdutosSugeridosAdapter = new ListaProdutosSugestaoAdapter(this,listaProdutosSugeridos);
         recyclerViewProdutosSugeridos.setAdapter(listaProdutosSugeridosAdapter);
         listaProdutosSugeridosAdapter.setClickListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+        
+        if(viewPagerImagens.getCurrentItem() > 0){
+            imagePrev.setVisibility(View.VISIBLE);
+        }
+        if(viewPagerImagens.getCurrentItem() == detalhesProdutoImgAdapter.getCount()-1){
+            imageNext.setVisibility(View.INVISIBLE);
+        }
+        if(viewPagerImagens.getCurrentItem() > 0 && viewPagerImagens.getCurrentItem() < detalhesProdutoImgAdapter.getCount()-1){
+            imageNext.setVisibility(View.VISIBLE);
+        }
+        if(viewPagerImagens.getCurrentItem() == 0){
+            imagePrev.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
     }
 }

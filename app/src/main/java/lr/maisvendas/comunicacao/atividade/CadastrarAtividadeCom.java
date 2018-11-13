@@ -38,16 +38,16 @@ public class CadastrarAtividadeCom extends AsyncTask<Atividade,Void,Response<Ati
     }
 
     @Override
-    protected Response<Atividade> doInBackground(Atividade... Atividade) {
+    protected Response<Atividade> doInBackground(Atividade... atividade) {
         //==DEVE ser testado o funcionamento, foi utilizado dessa forma pois não é possível passar o token por parâmetro
         String token = BaseActivity.getUsuario().getToken();
 
-        if (Atividade.length == 0) {
+        if (atividade.length == 0) {
             return null;
         }
 
         // Cria a chamada para o método
-        Call<Response<Atividade>> criarAtividadeCall = service.criarAtividade(token,Atividade[0]);
+        Call<Response<Atividade>> criarAtividadeCall = service.criarAtividade(token,atividade[0]);
 
         try {
             // Executa a chamada e pega o retorno para devolver para a task no método "onPostExecute"

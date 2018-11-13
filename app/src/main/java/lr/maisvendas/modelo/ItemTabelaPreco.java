@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -52,5 +53,22 @@ public class ItemTabelaPreco implements Serializable {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ItemTabelaPreco)) return false;
+        ItemTabelaPreco that = (ItemTabelaPreco) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getVlrUnitario(), that.getVlrUnitario()) &&
+                Objects.equals(getMaxDesc(), that.getMaxDesc()) &&
+                Objects.equals(getProduto(), that.getProduto());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getVlrUnitario(), getMaxDesc(), getProduto());
     }
 }

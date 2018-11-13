@@ -118,6 +118,11 @@ public class CadastroPedidoItemFragment extends Fragment  implements View.OnClic
             if (setAdapter) {
                 listViewItesPedido.setAdapter(listaItensPedidoAdapter);
             }
+
+            //Se pedido não está mais pendente não irá mais permitir editar
+            if(pedido.getSituacao() != 0 && buttonAdd != null){
+                buttonAdd.setClickable(false);
+            }
         }
     }
 }

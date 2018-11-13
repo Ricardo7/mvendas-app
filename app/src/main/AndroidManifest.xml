@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_OWNER_DATA" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_maisvendas"
@@ -35,7 +36,24 @@
         <activity android:name=".tela.SincronicacaoManualActivity" />
         <activity android:name=".tela.DetalhesProdutoActivity" />
         <activity android:name=".tela.AgendaActivity" />
-        <activity android:name=".tela.interfaces.CadastroAtividadeActivity"></activity>
+        <activity android:name=".tela.CadastroAtividadeActivity"></activity>
+
+        <receiver android:name=".broadcast.BootReciever">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="CHECAR_AGENDAMENTOS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".broadcast.Alarme">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="INICIAR_GERENTE_DE_ALARME" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

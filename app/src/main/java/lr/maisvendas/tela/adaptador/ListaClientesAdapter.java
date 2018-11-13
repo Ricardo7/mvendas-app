@@ -93,12 +93,11 @@ public class ListaClientesAdapter extends ArrayAdapter<Cliente> implements Filte
 
                 String prefix = constraint.toString().toLowerCase();
                 for (Cliente Cliente : originalItens) {
+
                     //Aqui filtro o objeto Cliente
-                    if (Cliente.getCod().toLowerCase().contains(prefix)) {
+                    if(Cliente.getRazaoSocial().toLowerCase().contains(prefix)){
                         newValues.add(Cliente);
-                    } else if(Cliente.getRazaoSocial().toLowerCase().contains(prefix)){
-                        newValues.add(Cliente);
-                    } else if(Cliente.getNomeFantasia().toLowerCase().contains(prefix)){
+                    } else if(Cliente.getCnpj().contains(prefix)){
                         newValues.add(Cliente);
                     }
                 }

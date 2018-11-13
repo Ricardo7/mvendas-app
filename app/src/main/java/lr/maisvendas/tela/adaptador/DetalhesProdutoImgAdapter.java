@@ -26,6 +26,7 @@ public class DetalhesProdutoImgAdapter extends PagerAdapter {
     public DetalhesProdutoImgAdapter(Context context, List<Imagem> imagens) {
         this.context = context;
         this.imagens = imagens;
+
     }
 
     @Override
@@ -60,10 +61,6 @@ public class DetalhesProdutoImgAdapter extends PagerAdapter {
                 Bitmap reduzirBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, true);
 
                 Ferramentas ferramentas = new Ferramentas();
-                ferramentas.customLog(TAG,"getWidth: "+reduzirBitmap.getWidth());
-                ferramentas.customLog(TAG,"getHeight: "+reduzirBitmap.getHeight());
-                ferramentas.customLog(TAG,"getPixel: "+reduzirBitmap.getPixel(1,1));
-
 
                 imageView.setImageBitmap(reduzirBitmap);
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);

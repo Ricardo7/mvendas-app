@@ -34,7 +34,10 @@ public class Sincronizacao extends BaseActivity{
             if (getUsuario() != null && getUsuario().getToken() != null) {
                 try {
                     if (verificaConexao.isNetworkAvailable(context) && verificaServico.execute(enderecoHost.getHostHTTPRaiz()).get()) {
-                        Integer peso = 10;
+                        Integer peso = 100;
+                        Integer modulos = 11;
+
+                        peso = peso / modulos;
 
                         notify = new Notify(context);
                         notify.iniciaNotificacao("Sincronização", "Sincronização iniciada");
@@ -75,6 +78,10 @@ public class Sincronizacao extends BaseActivity{
                         PedidoSinc pedidoSinc = new PedidoSinc(notify,peso);
                         pedidoSinc.sincronizaPedido();
 
+                        //Agenda(Atividades)
+                        AtividadeSinc atividadeSinc = new AtividadeSinc(notify,peso);
+                        atividadeSinc.sincronizaAtividade();
+
                         Dispositivo dispositivo = null;
                         DispositivoDAO dispositivoDAO = DispositivoDAO.getInstance(context);
                         dispositivo = dispositivoDAO.buscaDispositivo();
@@ -84,6 +91,7 @@ public class Sincronizacao extends BaseActivity{
                             dispositivo.setDataSincPedidos(ferramentas.getCurrentDate());
                             dispositivo.setDataSincClientes(ferramentas.getCurrentDate());
                             dispositivo.setDataSincProdutos(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincAtividades(ferramentas.getCurrentDate());
 
                             dispositivoDAO.insereDispositivo(dispositivo);
                         } else {
@@ -91,6 +99,7 @@ public class Sincronizacao extends BaseActivity{
                             dispositivo.setDataSincPedidos(ferramentas.getCurrentDate());
                             dispositivo.setDataSincClientes(ferramentas.getCurrentDate());
                             dispositivo.setDataSincProdutos(ferramentas.getCurrentDate());
+                            dispositivo.setDataSincAtividades(ferramentas.getCurrentDate());
                             try {
                                 dispositivoDAO.atualizaDispositivo(dispositivo);
                             } catch (Exceptions ex) {

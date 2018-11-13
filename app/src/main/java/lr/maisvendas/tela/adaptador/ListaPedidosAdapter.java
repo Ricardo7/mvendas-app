@@ -118,11 +118,11 @@ public class ListaPedidosAdapter extends ArrayAdapter<Pedido> implements Filtera
                 String prefix = constraint.toString().toLowerCase();
                 for (Pedido Pedido : originalItens) {
                     //Aqui filtro o objeto Pedido
-                    if (Pedido.getNumero().toString().contains(prefix)) {
+                    if (Pedido.getNumero().equals("") == false && Pedido.getNumero().toString().contains(prefix)) {
                         newValues.add(Pedido);
                     } else if(Pedido.getCliente().getRazaoSocial().toLowerCase().contains(prefix)){
                         newValues.add(Pedido);
-                    } else if(Pedido.getCliente().getCnpj().toLowerCase().contains(prefix)){
+                    } else if(Pedido.getCliente().getCnpj().contains(prefix)){
                         newValues.add(Pedido);
                     }
                 }

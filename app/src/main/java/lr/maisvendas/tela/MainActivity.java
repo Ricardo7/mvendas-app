@@ -58,11 +58,7 @@ public class MainActivity extends AppCompatActivity implements ValidaLoginCom.Ve
 
         try {
             DatabaseHelper banco = new DatabaseHelper(null);
-<<<<<<< HEAD
            //banco.onUpgrade(sqlLite,17,18);
-=======
-            //banco.onUpgrade(sqlLite,16,17);
->>>>>>> 9c8cd3eb1ea10273ee031473f87c6ba6dc4609e8
             // Cria o banco de dados caso não exista
             banco.onCreate(sqlLite);
 
@@ -105,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ValidaLoginCom.Ve
 
     @Override
     public void onVerificaLoginSuccess(Boolean retorno) {
+        sendBroadcast(new Intent("INICIAR_GERENTE_DE_ALARME"));
 
         Intent intent = new Intent(this, TelaInicialActivity.class);
         //intent.putExtra(TelaInicialActivity.PARAM_USUARIO, usuario);

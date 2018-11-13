@@ -11,6 +11,8 @@ public abstract class EditTextMask {
     private static final String maskFone11 = "(##) #####-####";
     private static final String maskCnpj14 = "##.###.###/####-##";
     private static final String maskCep8 = "#####-###";
+    private static final String maskHora = "##:##";
+    private static final String maskData = "##/##/####";
 
     public static String unmask(String s) {
         return s.replaceAll("[^0-9]*", "");
@@ -81,6 +83,12 @@ public abstract class EditTextMask {
                 break;
             case TipoMask.CEP:
                 mask = maskCep8;
+                break;
+            case TipoMask.HORA:
+                mask = maskHora;
+                break;
+            case TipoMask.DATA:
+                mask = maskData;
                 break;
         }
         return mask;
