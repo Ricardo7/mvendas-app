@@ -1,6 +1,8 @@
 package lr.maisvendas.tela;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,10 +24,11 @@ import lr.maisvendas.repositorio.sql.AtividadeDAO;
 import lr.maisvendas.servico.VerificaConexao;
 import lr.maisvendas.servico.VerificaServico;
 import lr.maisvendas.tela.adaptador.ListaAtividadesAdapter;
+import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
 import lr.maisvendas.utilitarios.TipoAgenda;
 
-public class AgendaActivity extends BaseActivity implements CalendarView.OnDateChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, CarregarAtividadeSugeridaCom.CarregarAtividadeSugeridaTaskCallBack {
+public class AgendaActivity extends BaseActivity implements CalendarView.OnDateChangeListener, View.OnClickListener, AdapterView.OnItemClickListener, CarregarAtividadeSugeridaCom.CarregarAtividadeSugeridaTaskCallBack, AdapterView.OnItemLongClickListener {
 
     private static final String TAG = "AgendaActivity";
     public static final String PARAM_DATA_ATIVIDADE = "PARAM_DATA_ATIVIDADE";
@@ -67,6 +70,7 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
         buttonAdd.setOnClickListener(this);
         //buttonSugestoes.setOnClickListener(this);
         listViewAtividades.setOnItemClickListener(this);
+        listViewAtividades.setOnItemLongClickListener(this);
 
     }
 
@@ -141,6 +145,41 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
         startActivity(intent);
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        final Atividade atividade = listaAtividadesAdapter.getItem(i);
+
+        if(atividade.getIdWS() != null && atividade.getIdWS() != ""){
+            ferramentas.customToast(this,"Atividade já sincronizada com o servidor. Não é permitido excluir.");
+            return false;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder
+            .setMessage("A atividade será removida." +
+                    "\nDeseja continuar?")
+            .setPositiveButton("Sim",  new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                    AtividadeDAO atividadeDAO = AtividadeDAO.getInstance(AgendaActivity.this);
+                    try {
+                        atividadeDAO.deletaAtividade(atividade);
+                    } catch (Exceptions ex) {
+                        ferramentas.customLog(TAG,ex.getMessage());
+                    }
+                }
+            })
+            .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog,int id) {
+                    return;
+                }
+            })
+            .show();
+        return false;
+    }
+
     //Metodo para carregar informação ao abriar a Activity.
     private void loadDataFromActivity() {
         dataAtual = ferramentas.getCurrentDate().substring(0, 10);
@@ -191,27 +230,7 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
     @Override
     public void onCarregarAtividadeSugeridaSuccess(List<Atividade> atividades) {
         progressDialog.dismiss();
-        //TESTE
-        /*
-        Atividade atividade = new Atividade();
-        atividade.setAssunto("Atividade criada pela IA");
-        atividade.setObservacao("");
-        atividade.setHoraAtividade("22:15");
-        atividade.setDataAtividade("2018-11-07");
-        atividade.setTipo(TipoAgenda.SUGESTAO);
-        atividade.setDtCadastro(ferramentas.getCurrentDate());
-        atividade.setDtAtualizacao(ferramentas.getCurrentDate());
-        atividade.setUsuario(getUsuario());
-        ClienteDAO clienteDAO = ClienteDAO.getInstance(this);
-        Cliente cliente = clienteDAO.buscaClienteId(1);
-        atividade.setCliente(cliente);
 
-        if (atividades == null) {
-            atividades = new ArrayList<>();
-        }
-        atividades.add(atividade);
-        */
-        //-/TESTE
         trataAtividades(atividades);
     }
 
@@ -224,6 +243,29 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
 
     public void trataAtividades(List<Atividade> atividadesNew) {
         List<Atividade> atividadesRemov = new ArrayList<>();
+
+        //TESTE
+        /*
+        Atividade atividadeT = new Atividade();
+        atividadeT.setAssunto("Atividade criada pela IA");
+        atividadeT.setObservacao("");
+        atividadeT.setHoraAtividade("23:15");
+        atividadeT.setDataAtividade("2018-11-14");
+        atividadeT.setTipo(TipoAgenda.SUGESTAO);
+        atividadeT.setDtCadastro(ferramentas.getCurrentDate());
+        atividadeT.setDtAtualizacao(ferramentas.getCurrentDate());
+        atividadeT.setUsuario(getUsuario());
+        ClienteDAO clienteDAO = ClienteDAO.getInstance(this);
+        Cliente cliente = clienteDAO.buscaClienteId(4);
+        atividadeT.setCliente(cliente);
+
+        if (atividadesNew == null) {
+            atividadesNew = new ArrayList<>();
+        }
+
+        atividadesNew.add(atividadeT);
+*/
+        //-/TESTE
 
         if (atividadesNew != null && listaAtividades != null) {
             //Percorre as atividades sugeridas a fim de remover as atividades que já existem na base
@@ -256,4 +298,5 @@ public class AgendaActivity extends BaseActivity implements CalendarView.OnDateC
         listViewAtividades.setAdapter(listaAtividadesAdapter);
 
     }
+
 }

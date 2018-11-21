@@ -1,12 +1,15 @@
 package lr.maisvendas.tela;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
@@ -20,10 +23,11 @@ import lr.maisvendas.tela.adaptador.ListaClientesSpinnerAdapter;
 import lr.maisvendas.utilitarios.EditTextMask;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
+import lr.maisvendas.utilitarios.MyLocation;
 import lr.maisvendas.utilitarios.TipoAgenda;
 import lr.maisvendas.utilitarios.TipoMask;
 
-public class CadastroAtividadeActivity extends BaseActivity implements View.OnClickListener {
+public class CadastroAtividadeActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = "CadastroAtividadeActivity";
     public static final String PARAM_ATIVIDADE = "PARAM_ATIVIDADE";
@@ -37,6 +41,8 @@ public class CadastroAtividadeActivity extends BaseActivity implements View.OnCl
     private EditText editHora;
     private Button buttonSalvar;
     private TextView textSugestao;
+    //private Button buttonCheckin;
+    private Switch switchCheckin;
 
     //Variáveis
     private Atividade atividade;
@@ -63,6 +69,8 @@ public class CadastroAtividadeActivity extends BaseActivity implements View.OnCl
         editHora = (EditText) findViewById(R.id.activity_cadastro_atividade_hora);
         textSugestao = (TextView) findViewById(R.id.activity_cadastro_atividade_text_sugestao);
         buttonSalvar = (Button) findViewById(R.id.activity_cadastro_atividade_button_salvar);
+        //buttonCheckin = (Button) findViewById(R.id.activity_cadastro_atividade_button_checkin);
+        switchCheckin = (Switch) findViewById(R.id.activity_cadastro_atividade_switch_checkin);
         ferramentas = new Ferramentas();
 
         //Seta o gerador de máscaras
@@ -72,6 +80,8 @@ public class CadastroAtividadeActivity extends BaseActivity implements View.OnCl
         loadDataFromActivity();
 
         buttonSalvar.setOnClickListener(this);
+        //buttonCheckin.setOnClickListener(this);
+        switchCheckin.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -82,6 +92,18 @@ public class CadastroAtividadeActivity extends BaseActivity implements View.OnCl
             } catch (Exceptions ex) {
                 ferramentas.customToast(this,ex.getMessage());
             }
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+        if(switchCheckin.isChecked()) {
+            MyLocation myLocation = new MyLocation(this);
+
+            myLocation.getLocation(locationResult);
+
+            boolean location = myLocation.getLocation(locationResult);
         }
     }
 
@@ -107,11 +129,23 @@ public class CadastroAtividadeActivity extends BaseActivity implements View.OnCl
             editData.setText(ferramentas.formatDateUser(atividade.getDataAtividade()));
             editHora.setText(atividade.getHoraAtividade());
             spinnerCliente.setSelection(listaClientesSpinnerAdapter.getPosition(atividade.getCliente()));
+            ferramentas.customLog("RRRRRR",atividade.getDataCkeckin());
+            if(atividade.getDataCkeckin() != null) {
+                switchCheckin.setChecked(true);
+                //Se já foi feito Check-in não permite mais fazer
+                switchCheckin.setEnabled(false);
+            }
             if(atividade.getTipo().equals(TipoAgenda.SUGESTAO)){
                 textSugestao.setText("Esta atividade foi sugerida para este dia, pois é um ótimo momento para visitar o cliente "+atividade.getCliente().getRazaoSocial()+".\nBoas Vendas!");
             }
+
+            if(ferramentas.stringToDate(ferramentas.getCurrentDate()).after(ferramentas.stringToDate(atividade.getDataAtividade()+" "+atividade.getHoraAtividade()+":00"))){
+                bloqueiaCampos();
+            }
         }else{
             editData.setText(ferramentas.formatDateUser(dataAtual));
+            //buttonCheckin.setVisibility(View.INVISIBLE);
+            switchCheckin.setEnabled(false);
         }
     }
 
@@ -170,6 +204,24 @@ public class CadastroAtividadeActivity extends BaseActivity implements View.OnCl
         finish();
     }
 
+    private void salvaCheckin(Double latitude, Double longitude){
+
+        atividade.setLatitude(latitude);
+        atividade.setLongitude(longitude);
+        atividade.setDataCkeckin(ferramentas.getCurrentDate());
+
+        AtividadeDAO atividadeDAO = AtividadeDAO.getInstance(this);
+
+        try {
+            atividadeDAO.atualizaAtividade(atividade);
+            ferramentas.customToast(this,"Check-in efetuado com sucesso.");
+            switchCheckin.setEnabled(false);
+        } catch (Exceptions ex) {
+            ferramentas.customLog(TAG,ex.getMessage());
+        }
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() != android.R.id.home) {
@@ -183,6 +235,28 @@ public class CadastroAtividadeActivity extends BaseActivity implements View.OnCl
             default:break;
         }
         return true;
+    }
+
+    public MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
+
+        @Override
+        public void getLocation(Location location) {
+            // TODO Auto-generated method stub
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+
+            salvaCheckin(latitude,longitude);
+
+        }
+    };
+
+    private void bloqueiaCampos(){
+        editAssunto.setEnabled(false);
+        spinnerCliente.setEnabled(false);
+        editObservacao.setEnabled(false);
+        editData.setEnabled(false);
+        editHora.setEnabled(false);
+        buttonSalvar.setVisibility(View.INVISIBLE);
     }
 
 }

@@ -61,6 +61,7 @@ public class ClienteAdap {
         content.put("DT_CADASTRO", cliente.getDtCadastro());
         content.put("DT_ATUALIZACAO", cliente.getDtAtualizacao());
         content.put("SEGMER_ID", cliente.getSegmentoMercado().getId());
+        content.put("USUARIO_ID", cliente.getUsuario().getId());
 
         return content;
     }

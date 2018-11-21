@@ -494,7 +494,7 @@ public class DetalhesProdutoActivity extends BaseActivity implements Comunicador
 
     @Override
     public void onPageScrolled(int i, float v, int i1) {
-        
+
         if(viewPagerImagens.getCurrentItem() > 0){
             imagePrev.setVisibility(View.VISIBLE);
         }

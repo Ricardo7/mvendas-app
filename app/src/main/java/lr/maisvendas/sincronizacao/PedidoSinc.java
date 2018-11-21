@@ -53,7 +53,7 @@ public class PedidoSinc extends BaseActivity implements CarregarPedidoCom.Carreg
         pedidosOld = pedidoDAO.buscaPedidosData(dataSincronizacao);
 
         if (getUsuario() != null && getUsuario().getToken() != null) {
-            new CarregarPedidoCom(this).execute(getUsuario().getToken(), dataSincronizacao);
+            new CarregarPedidoCom(this).execute(getUsuario().getToken(), dataSincronizacao,getUsuario().getIdWS());
         }
 
     }

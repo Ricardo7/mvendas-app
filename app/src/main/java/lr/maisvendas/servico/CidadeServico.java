@@ -16,14 +16,14 @@ import retrofit2.http.Query;
 public interface CidadeServico {
 
     @GET("Locais/GetListaCidadesAtualizadas") //Busca
-    public Call<Response<List<Cidade>>> carregarCidade(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
+    public Call<Response<List<Cidade>>> carregarCidade(@Header("Authorization") String token, @Query("dataAt") String dataAt);
 
     @PUT("Cidade") //Insere (não utilizado no cidade)
-    public Call<Response<Cidade>>criarCidade(@Header("X-Auth-Token") String token, @Body Cidade cidade);
+    public Call<Response<Cidade>>criarCidade(@Header("Authorization") String token, @Body Cidade cidade);
 
     @POST("Cidade/{id}/") //Atualiza (não utilizado no cidade)
-    public Call<Response<Cidade>>editarCidade(@Header("X-Auth-Token") String token, @Query("id") Integer id, @Body Cidade cidade);
+    public Call<Response<Cidade>>editarCidade(@Header("Authorization") String token, @Query("id") Integer id, @Body Cidade cidade);
 
     @DELETE("Cidade/{id}/") //Deleta (não utilizado no cidade)
-    public Call<Response<Boolean>>excluirCidade(@Header("X-Auth-Token") String token, @Query("id") Integer id);
+    public Call<Response<Boolean>>excluirCidade(@Header("Authorization") String token, @Query("id") Integer id);
 }

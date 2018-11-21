@@ -267,6 +267,7 @@ public class CadastroClienteActivity extends BaseActivity implements View.OnClic
         cliente.setLogradouro(editLogradouro.getText().toString());
         cliente.setNumero(Integer.valueOf(editNumero.getText().toString()));
         cliente.setDtAtualizacao(ferramentas.getCurrentDate());
+        cliente.setUsuario(getUsuario());
 
         if(cliente.getId() == null || cliente.getId() <= 0) {
             //Insere o produto na base de dados

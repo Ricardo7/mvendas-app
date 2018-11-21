@@ -16,14 +16,14 @@ import retrofit2.http.Query;
 public interface SegmentoMercadoServico {
 
     @GET("SegmentoMercado/GetListaSegmentosMercadoAtualizados") //Busca
-    public Call<Response<List<SegmentoMercado>>> carregarSegmentoMercado(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
+    public Call<Response<List<SegmentoMercado>>> carregarSegmentoMercado(@Header("Authorization") String token, @Query("dataAt") String dataAt);
 
     @PUT("SegmentoMercado") //Insere (não utilizado no segmentoMercado)
-    public Call<Response<SegmentoMercado>>criarSegmentoMercado(@Header("X-Auth-Token") String token, @Body SegmentoMercado segmentoMercado);
+    public Call<Response<SegmentoMercado>>criarSegmentoMercado(@Header("Authorization") String token, @Body SegmentoMercado segmentoMercado);
 
     @POST("SegmentoMercado/{id}/") //Atualiza (não utilizado no segmentoMercado)
-    public Call<Response<SegmentoMercado>>editarSegmentoMercado(@Header("X-Auth-Token") String token, @Query("id") Integer id, @Body SegmentoMercado segmentoMercado);
+    public Call<Response<SegmentoMercado>>editarSegmentoMercado(@Header("Authorization") String token, @Query("id") Integer id, @Body SegmentoMercado segmentoMercado);
 
     @DELETE("SegmentoMercado/{id}/") //Deleta (não utilizado no segmentoMercado)
-    public Call<Response<Boolean>>excluirSegmentoMercado(@Header("X-Auth-Token") String token, @Query("id") Integer id);
+    public Call<Response<Boolean>>excluirSegmentoMercado(@Header("Authorization") String token, @Query("id") Integer id);
 }

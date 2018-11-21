@@ -12,6 +12,6 @@ import retrofit2.http.Query;
 public interface CondicaoPgtoServico {
 
     @GET("CondicaoPagamento/GetListaCondicaoPagamentoAtualizados") //Busca
-    public Call<Response<List<CondicaoPagamento>>> carregarCondicaoPgto(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
+    public Call<Response<List<CondicaoPagamento>>> carregarCondicaoPgto(@Header("Authorization") String token, @Query("dataAt") String dataAt);
 
 }

@@ -16,17 +16,17 @@ import retrofit2.http.Query;
 public interface AtividadeServico {
 
     @GET("Atividade/GetListaAtividadesAtualizados") //Busca
-    public Call<Response<List<Atividade>>> carregarAtividade(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
+    public Call<Response<List<Atividade>>> carregarAtividade(@Header("Authorization") String token, @Query("dataAt") String dataAt, @Query("usuarioID") String usuarioIDWS);
 
     @GET("Atividade/GetListaAtividadesSugeridas") //Busca
-    public Call<Response<List<Atividade>>> carregarAtividadesSugeridas(@Header("X-Auth-Token") String token, @Query("data") String data, @Query("usuarioID") String usuarioIDWS);
+    public Call<Response<List<Atividade>>> carregarAtividadesSugeridas(@Header("Authorization") String token, @Query("data") String data, @Query("usuarioID") String usuarioIDWS);
 
     @POST("Atividade/AddAtividade") //Insere
-    public Call<Response<Atividade>>criarAtividade(@Header("X-Auth-Token") String token, @Body Atividade atividade);
+    public Call<Response<Atividade>>criarAtividade(@Header("Authorization") String token, @Body Atividade atividade);
 
     @PUT("Atividade/EditaAtividade") //Atualiza
-    public Call<Response<Atividade>>editarAtividade(@Header("X-Auth-Token") String token, @Query("IDWS") String idWS, @Body Atividade atividade);
+    public Call<Response<Atividade>>editarAtividade(@Header("Authorization") String token, @Query("IDWS") String idWS, @Body Atividade atividade);
 
     @DELETE("Atividade/RemoveAtividade") //Deleta
-    public Call<Response<Boolean>>excluirAtividade(@Header("X-Auth-Token") String token, @Query("IDWS") Integer id);
+    public Call<Response<Boolean>>excluirAtividade(@Header("Authorization") String token, @Query("IDWS") Integer id);
 }

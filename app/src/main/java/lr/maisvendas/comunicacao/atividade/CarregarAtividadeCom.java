@@ -45,7 +45,7 @@ public class CarregarAtividadeCom extends AsyncTask<String,Void,Response<List<At
             }
 
             // Cria a chamada para o método
-            Call<Response<List<Atividade>>> carregarAtividadeCall = service.carregarAtividade(params[0],params[1]);
+            Call<Response<List<Atividade>>> carregarAtividadeCall = service.carregarAtividade(params[0],params[1],params[2]);
 
             try {
                 // Executa a chamada e pega o retorno para devolver para a task no método "onPostExecute"

@@ -12,6 +12,7 @@ import lr.maisvendas.adaptadorModelo.ClienteAdap;
 import lr.maisvendas.modelo.Cidade;
 import lr.maisvendas.modelo.Cliente;
 import lr.maisvendas.modelo.SegmentoMercado;
+import lr.maisvendas.modelo.Usuario;
 import lr.maisvendas.repositorio.DatabaseHelper;
 import lr.maisvendas.utilitarios.Exceptions;
 import lr.maisvendas.utilitarios.Ferramentas;
@@ -40,6 +41,7 @@ public class ClienteDAO {
                     "STATUS INTEGER," +
                     "ATIVO INTEGER," +
                     "SEGMER_ID INTEGER," +
+                    "USUARIO_ID INTEGER,"+
                     "DT_CADASTRO TEXT," +
                     "DT_ATUALIZACAO TEXT);";
 
@@ -74,12 +76,14 @@ public class ClienteDAO {
 
             CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
             SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
+            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(context);
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
                 cliente = clienteAdap.sqlToCliente(cursor);
 
                 cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
                 cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+                cliente.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
             }
             cursor.close();
         }
@@ -99,12 +103,14 @@ public class ClienteDAO {
 
             CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
             SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
+            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(context);
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
                 cliente = clienteAdap.sqlToCliente(cursor);
 
                 cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
                 cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+                cliente.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
             }
             cursor.close();
         }
@@ -124,12 +130,14 @@ public class ClienteDAO {
 
             CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
             SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
+            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(context);
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
                 cliente = clienteAdap.sqlToCliente(cursor);
 
                 cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
                 cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+                cliente.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
             }
             cursor.close();
         }
@@ -151,13 +159,14 @@ public class ClienteDAO {
 
             CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
             SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
-
+            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(context);
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
                 cliente = clienteAdap.sqlToCliente(cursor);
                 Ferramentas ferramentas = new Ferramentas();
                 cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
                 cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+                cliente.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
                 clientes.add(cliente);
             }
             cursor.close();
@@ -183,13 +192,15 @@ public class ClienteDAO {
 
             CidadeDAO cidadeDAO = CidadeDAO.getInstance(context);
             SegmentoMercadoDAO segmentoMercadoDAO = SegmentoMercadoDAO.getInstance(context);
-
+            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(context);
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
                 cliente = clienteAdap.sqlToCliente(cursor);
                 Ferramentas ferramentas = new Ferramentas();
                 cliente.setCidade(cidadeDAO.buscaCidadeId(cursor.getInt(cursor.getColumnIndex("CID_ID"))));
                 cliente.setSegmentoMercado(segmentoMercadoDAO.buscaSegmentoMercadoId(cursor.getInt(cursor.getColumnIndex("SEGMER_ID"))));
+                cliente.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
+                
                 clientes.add(cliente);
             }
             cursor.close();
@@ -259,6 +270,14 @@ public class ClienteDAO {
             cliente.setSegmentoMercado(segmentoMercado);
         }
 
+        if (cliente.getUsuario() == null || cliente.getUsuario().getId() == null || cliente.getUsuario().getId() <= 0) {
+            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance(context);
+            Usuario usuario;
+
+            usuario = usuarioDAO.buscaUsuarioIdWs(cliente.getUsuario().getIdWS());
+            cliente.setUsuario(usuario);
+        }
+        
         return cliente;
     }
 

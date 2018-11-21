@@ -52,7 +52,7 @@
             clientesOld = clienteDAO.buscaClientesData(dataSincronizacao);
 
             if (getUsuario() != null && getUsuario().getToken() != null) {
-                new CarregarClienteCom(this).execute(getUsuario().getToken(), dataSincronizacao);
+                new CarregarClienteCom(this).execute(getUsuario().getToken(), dataSincronizacao,getUsuario().getIdWS());
             }
 
         }

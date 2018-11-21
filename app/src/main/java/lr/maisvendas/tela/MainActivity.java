@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ValidaLoginCom.Ve
 
         try {
             DatabaseHelper banco = new DatabaseHelper(null);
-           //banco.onUpgrade(sqlLite,17,18);
+            //banco.onUpgrade(sqlLite,17,18);
             // Cria o banco de dados caso não exista
             banco.onCreate(sqlLite);
 

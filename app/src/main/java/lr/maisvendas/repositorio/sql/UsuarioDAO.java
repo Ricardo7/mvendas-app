@@ -23,6 +23,7 @@ public class UsuarioDAO {
             "EMAIL TEXT NOT NULL, " +
             "SENHA TEXT, " +
             "ATIVO INTEGER NOT NULL," +
+            "TIPO INTEGER," +
             "TOKEN TEXT);";
 
     public static final String SCRIPT_DELECAO_TABELA =  "DROP TABLE IF EXISTS " + USUARIO_TABLE_NAME;
@@ -57,6 +58,26 @@ public class UsuarioDAO {
             while(cursor.moveToNext()) {
                 //Converte o cursor em um objeto
                 usuario = usuarioAdap.sqlToUsuario(cursor);
+            }
+            cursor.close();
+        }
+
+        return usuario;
+    }
+
+    public Usuario buscaUsuarioIdRef(Integer usuarioId){
+        Usuario usuario = null;
+
+        //Busca o grupo
+        String sql = "SELECT * FROM tusuarios WHERE id = "+ usuarioId ;
+        Cursor cursor = dataBase.rawQuery(sql, null);
+
+        if (cursor != null && cursor.getCount() > 0 ){
+            UsuarioAdap usuarioAdap = new UsuarioAdap();
+
+            while(cursor.moveToNext()) {
+                //Converte o cursor em um objeto
+                usuario = usuarioAdap.sqlToUsuarioRef(cursor);
             }
             cursor.close();
         }

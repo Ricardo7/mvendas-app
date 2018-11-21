@@ -24,6 +24,12 @@ public class Atividade implements Serializable{
     private String dataAtividade;
     @JsonProperty("HoraAtividade")
     private String horaAtividade;
+    @JsonProperty("Latitude")
+    private Double latitude;
+    @JsonProperty("Longitude")
+    private Double longitude;
+    @JsonProperty("DataCheckin")
+    private String dataCkeckin;
     @JsonProperty("Cliente")
     private Cliente cliente;
     @JsonProperty("Usuario")
@@ -81,6 +87,30 @@ public class Atividade implements Serializable{
 
     public void setHoraAtividade(String horaAtividade) {
         this.horaAtividade = horaAtividade;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getDataCkeckin() {
+        return dataCkeckin;
+    }
+
+    public void setDataCkeckin(String dataCkeckin) {
+        this.dataCkeckin = dataCkeckin;
     }
 
     public Cliente getCliente() {

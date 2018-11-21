@@ -45,7 +45,7 @@ public class CarregarClienteCom extends AsyncTask<String,Void,Response<List<Clie
             }
 
             // Cria a chamada para o método
-            Call<Response<List<Cliente>>> carregarClienteCall = service.carregarCliente(params[0],params[1]);
+            Call<Response<List<Cliente>>> carregarClienteCall = service.carregarCliente(params[0],params[1],params[2]);
 
             try {
                 // Executa a chamada e pega o retorno para devolver para a task no método "onPostExecute"

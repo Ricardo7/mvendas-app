@@ -48,6 +48,8 @@ public class Cliente implements Serializable {
     private Cidade cidade;
     @JsonProperty("SegmentoMercado")
     private SegmentoMercado segmentoMercado;
+    @JsonProperty("Usuario")
+    private Usuario usuario;
 
     public Integer getId() {
         return id;
@@ -185,6 +187,14 @@ public class Cliente implements Serializable {
         this.segmentoMercado = segmentoMercado;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     public String getDtCadastro() {
         return dtCadastro;
     }
@@ -242,6 +252,8 @@ public class Cliente implements Serializable {
             return false;
         if( getCidade()				!= null ? !getCidade().equals(cliente.getCidade()) : cliente.getCidade() != null)
             return false;
+        if( getUsuario()				!= null ? !getUsuario().equals(cliente.getUsuario()) : cliente.getUsuario() != null)
+            return false;
         return getSegmentoMercado()	!= null ? getSegmentoMercado().equals(cliente.getSegmentoMercado()) : cliente.getSegmentoMercado() == null;
 
     }
@@ -268,6 +280,7 @@ public class Cliente implements Serializable {
         result = 31 * result + (getDtAtualizacao()      != null ? getDtAtualizacao().hashCode() : 0);
         result = 31 * result + (getCidade()             != null ? getCidade().hashCode() : 0);
         result = 31 * result + (getSegmentoMercado()    != null ? getSegmentoMercado().hashCode() : 0);
+        result = 31 * result + (getUsuario()            != null ? getUsuario().hashCode() : 0);
 
         return result;
     }

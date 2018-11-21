@@ -16,14 +16,14 @@ import retrofit2.http.Query;
 public interface ImagemServico {
 
     @GET("Imagem/GetListaImagensAtualizadas") //Busca
-    public Call<Response<List<Imagem>>> carregarImagem(@Header("X-Auth-Token") String token, @Query("dataAt") String dataAt);
+    public Call<Response<List<Imagem>>> carregarImagem(@Header("Authorization") String token, @Query("dataAt") String dataAt);
 
     @PUT("Imagem") //Insere (não utilizado no imagem)
-    public Call<Response<Imagem>>criarImagem(@Header("X-Auth-Token") String token, @Body Imagem imagem);
+    public Call<Response<Imagem>>criarImagem(@Header("Authorization") String token, @Body Imagem imagem);
 
     @POST("Imagem/{id}/") //Atualiza (não utilizado no imagem)
-    public Call<Response<Imagem>>editarImagem(@Header("X-Auth-Token") String token, @Query("id") Integer id, @Body Imagem imagem);
+    public Call<Response<Imagem>>editarImagem(@Header("Authorization") String token, @Query("id") Integer id, @Body Imagem imagem);
 
     @DELETE("Imagem/{id}/") //Deleta (não utilizado no imagem)
-    public Call<Response<Boolean>>excluirImagem(@Header("X-Auth-Token") String token, @Query("id") Integer id);
+    public Call<Response<Boolean>>excluirImagem(@Header("Authorization") String token, @Query("id") Integer id);
 }

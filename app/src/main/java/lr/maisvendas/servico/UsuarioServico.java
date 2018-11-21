@@ -15,5 +15,5 @@ public interface UsuarioServico {
 
     //Eventos
     @GET("Usuario/ValidarUsuarioToken")
-    public Call<Response<Boolean>> verificaToken(@Header("X-Auth-Token")  String token);
+    public Call<Response<Boolean>> verificaToken(@Header("Authorization")  String token);
 }

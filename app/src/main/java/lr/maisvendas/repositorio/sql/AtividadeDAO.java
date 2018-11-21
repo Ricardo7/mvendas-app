@@ -31,6 +31,9 @@ public class AtividadeDAO {
             "OBSERVACAO TEXT," +
             "DATA_ATIVIDADE TEXT NOT NULL, " +
             "HORA_ATIVIDADE TEXT NOT NULL, " +
+            "LATITUDE REAL, " +
+            "LONGITUDE REAL, " +
+            "DATA_CHECKIN TEXT, " +
             "DT_CADASTRO TEXT, " +
             "DT_ATUALIZACAO TEXT);";
 
@@ -69,7 +72,7 @@ public class AtividadeDAO {
                 //Converte o cursor em um objeto
                 atividade = atividadeAdap.sqlToAtividade(cursor);
                 atividade.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                atividade.setUsuario(usuarioDAO.buscaUsuarioId(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
+                atividade.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
             }
             cursor.close();
         }
@@ -97,7 +100,7 @@ public class AtividadeDAO {
                 //Converte o cursor em um objeto
                 atividade = atividadeAdap.sqlToAtividade(cursor);
                 atividade.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                atividade.setUsuario(usuarioDAO.buscaUsuarioId(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
+                atividade.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
 
                 atividades.add(atividade);
             }
@@ -123,7 +126,7 @@ public class AtividadeDAO {
                 //Converte o cursor em um objeto
                 atividade = atividadeAdap.sqlToAtividade(cursor);
                 atividade.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                atividade.setUsuario(usuarioDAO.buscaUsuarioId(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
+                atividade.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
             }
             cursor.close();
         }
@@ -153,7 +156,7 @@ public class AtividadeDAO {
                 //Converte o cursor em um objeto
                 atividade = atividadeAdap.sqlToAtividade(cursor);
                 atividade.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                atividade.setUsuario(usuarioDAO.buscaUsuarioId(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
+                atividade.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
 
                 atividades.add(atividade);
             }
@@ -183,7 +186,7 @@ public class AtividadeDAO {
                 //Converte o cursor em um objeto
                 atividade = atividadeAdap.sqlToAtividade(cursor);
                 atividade.setCliente(clienteDAO.buscaClienteId(cursor.getInt(cursor.getColumnIndex("CLIENTE_ID"))));
-                atividade.setUsuario(usuarioDAO.buscaUsuarioId(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
+                atividade.setUsuario(usuarioDAO.buscaUsuarioIdRef(cursor.getInt(cursor.getColumnIndex("USUARIO_ID"))));
             }
             cursor.close();
         }
@@ -230,6 +233,13 @@ public class AtividadeDAO {
 
         return atividade;
 
+    }
+
+    public long deletaAtividade(Atividade atividade) throws Exceptions{
+
+        String sqlWhere = "id = " + atividade.getId();
+        long atividadeId = dataBase.delete(ATIVIDADE_TABLE_NAME, sqlWhere, null);
+        return atividadeId;
     }
 
     private Atividade trataDependencias(Atividade atividade){

@@ -23,6 +23,8 @@ public class Usuario implements Serializable {
     private String senha;
     @JsonProperty("Ativo")
     private Integer ativo;
+    @JsonProperty("Tipo")
+    private Integer tipo;
     @JsonProperty("Token")
     private String token;
 
@@ -74,6 +76,14 @@ public class Usuario implements Serializable {
 
     public void setAtivo(Integer ativo) {
         this.ativo = ativo;
+    }
+
+    public Integer getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Integer tipo) {
+        this.tipo = tipo;
     }
 
     public String getToken() {
